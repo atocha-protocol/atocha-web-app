@@ -7,6 +7,7 @@ import {useAtoContext} from "./AtoContext";
 import {web3FromSource} from "@polkadot/extension-dapp";
 
 import UserHomeLink from "./UserHomeLink";
+import AtoDeleteThousand from "./AtoDeleteThousand";
 
 function Main (props) {
   const { api, currentAccount } = useSubstrateState('');
@@ -17,7 +18,8 @@ function Main (props) {
   const [userBalance, setUserBalance] = useState(null);
   const [relationInfos, setRelationInfos] = useState(null);
   const [currentAccountId, setCurrentAccountId] = useState(null);
-
+  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  
   useEffect(async () => {
     console.log("currentAccount = ", currentAccount)
     if (currentAccount) {
@@ -35,6 +37,7 @@ function Main (props) {
     currentAccount &&
     api.query.system
       .account(currentAccountId, balance =>{
+          //setUserBalance(balance.data.free.toHuman());
           setUserBalance(balance.data.free.toHuman());
       }) .then(unsub => {
     }) .catch(console.error)
@@ -149,8 +152,8 @@ function Main (props) {
       <h3>Basic information</h3>
       <div>
         <div className="ui basic label">Address</div>&nbsp;&nbsp;&nbsp;&nbsp;{currentAccountId}&nbsp;&nbsp;&nbsp;&nbsp;
-        <div className="ui basic label">Balance</div>&nbsp;&nbsp;&nbsp;&nbsp;{userBalance?userBalance:'Loading...'}&nbsp;&nbsp;&nbsp;&nbsp;
-        <div className="ui basic label">Points</div>&nbsp;&nbsp;&nbsp;&nbsp;{userPoints?userPoints:'Loading...'}
+        <div className="ui basic label">Balance</div>&nbsp;&nbsp;&nbsp;&nbsp;{userBalance?<AtoDeleteThousand withThousand={userBalance} />:'Loading...'}&nbsp;&nbsp;&nbsp;&nbsp;
+        <div className="ui basic label">Points</div>&nbsp;&nbsp;&nbsp;&nbsp;{userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}
       </div>
       <h3>Social connection</h3>
       <div>Twitter: Not connected.&nbsp;&nbsp;&nbsp;&nbsp;<a href="" className="ui tiny button">Connect</a></div>

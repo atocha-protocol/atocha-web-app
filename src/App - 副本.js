@@ -41,7 +41,6 @@ function Main() {
   const { apiState, apiError, keyringState} = useSubstrateState()
   const [menuItemCss, setMenuItemCss] = useState({
     itemHome: 'item active',
-    itemPuzzleList: 'item',
     itemRanklist: 'item',
     itemCreate: 'item',
     itemUser: 'item',
@@ -72,20 +71,19 @@ function Main() {
   function menuClick(menuName){
     let newClass = {
       itemHome: 'item',
-      itemPuzzleList: 'item',
+      itemRanklist: 'item',
       itemCreate: 'item',
-      itemMyProfile: 'item',
       itemUser: 'item',
-      itemRanklist: 'item',      
+      itemMyProfile: 'item',
       itemParm: 'item',
     };
     switch (menuName) {
       case 'home':
         newClass.itemHome='item active';
         break;
-      case 'puzzlelist':
-        newClass.itemPuzzleList='item active';
-        break;                  
+      case 'ranklist':
+        newClass.itemRanklist='item active';
+        break;        
       case 'create':
         newClass.itemCreate='item active';
         break;
@@ -95,9 +93,6 @@ function Main() {
       case 'MyProfile':
         newClass.itemMyProfile='item active';
         break;        
-      case 'ranklist':
-        newClass.itemRanklist='item active';
-        break;         
       case 'chain_status':
         newClass.itemParm='item active';
         break;
@@ -124,40 +119,28 @@ function Main() {
       <br/><br/>
       <Container>
         <h1 className="ui header ReSeTs_h1">Atocha <i>Puzzles</i></h1>
-        <h3>Hello world! Finally, we meet. I am the first web-application of the decentralized Atocha Protocol.</h3>
+        <h3>A web-application of the decentralized Atocha Protocol, version: 0.11</h3>
         <BrowserRouter>
         <div className="ui secondary pointing menu" style={{marginBottom:"2rem"}}>
           <Link className={menuItemCss.itemHome} to="/" onClick={()=>{menuClick("home")}}>Home</Link>                
-          <Link className={menuItemCss.itemPuzzleList} to="/puzzle-list" onClick={()=>{menuClick("puzzlelist")}}>Puzzle list</Link>
           <Link className={menuItemCss.itemCreate} to="/create" onClick={()=>{menuClick("create")}}>Create a puzzle</Link>          
           <Link className={menuItemCss.itemMyProfile} to="/my_profile" onClick={()=>{menuClick("MyProfile")}}>My profile</Link>
           <Link className={menuItemCss.itemUser} to="/my_home" onClick={()=>{menuClick("user")}}>My account</Link>                
           <Link className={menuItemCss.itemRanklist} to="/points_rank_list" onClick={()=>{menuClick("ranklist")}}>Ranking & rewards</Link>
-          {/*<Link className={menuItemCss.itemParm} to="/chain_status" onClick={()=>{menuClick("chain_status")}}>Chain parms</Link>*/}
+          <Link className={menuItemCss.itemParm} to="/chain_status" onClick={()=>{menuClick("chain_status")}}>Chain parms</Link>
         </div>
         <Routes>
-          <Route path="/" element={<AtochaHome />} />
-          <Route path="/puzzle-list" element={<PuzzleList />} />          
-          <Route path="/create" element={<ClientAtochaCreator />} />
-          <Route path="/my_profile" element={<MyProfile />} />
-          <Route path="/my_home" element={<MyHome />} />          
+          <Route path="/" element={<PuzzleList />} />
           <Route path="/points_rank_list" element={<PointsRankList />} />
+          <Route path="/create" element={<ClientAtochaCreator />} />
+          <Route path="/my_home" element={<MyHome />} />
+          <Route path="/my_profile" element={<MyProfile />} />
           <Route path="/chain_status" element={<ChainStatus />} />
           <Route path="/user_home/:account_id" element={<UserHome />} />
           <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail />} />
         </Routes>
         </BrowserRouter>
         <DeveloperConsole />
-
-        <br/><br/><br/>
-        <div className="ui divider"></div>
-        <div class="ui text menu">
-          <div class="header item">Atocha Puzzles 2022</div>
-          <a class="item" href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki">Doc & Wiki & Help</a>
-          <a class="item" href="https://atocha.io">Atocha Protocol</a>
-          <a class="item" href="https://polkadot.js.org/extension/">Polkadotjs wallet extension</a>
-        </div>
-        <br/>
       </Container>
     </div>
   )

@@ -108,6 +108,19 @@ function Main(props) {
   )
 }
 
+function atoDeleteThousand(withThousand){
+    if(withThousand && withThousand!=undefined && withThousand!=null){
+      let _num = withThousand;
+      _num = _num.toString();
+      _num = _num.replace(/,/gi,'');
+      _num = _num/(10**18);
+      return _num;
+      //return withThousand;
+    }else{
+      return "@@Error@@";
+    }
+}
+
 function BalanceAnnotation(props) {
   const { api, currentAccount } = useSubstrateState()
   const [accountBalance, setAccountBalance] = useState(0)
@@ -131,7 +144,7 @@ function BalanceAnnotation(props) {
   return currentAccount ? (
     <Label pointing="left">
       <Icon name="money" color="green" />
-      {accountBalance}
+      {atoDeleteThousand(accountBalance)}
     </Label>
   ) : null
 }

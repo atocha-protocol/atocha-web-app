@@ -8,12 +8,13 @@ import config from "../config";
 import PuzzleAnswer from "./PuzzleAnswer";
 import {useAtoContext} from "./AtoContext";
 import UserHomeLink from "./UserHomeLink";
+import AtoBlock2Time from "./AtoBlock2Time";
 
 function Main (props) {
   const { api } = useSubstrateState();
   const { puzzle_hash } = props;
   const { puzzle_status } = props;
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck},chainData: {pubBlockNumber}, } = useAtoContext()
 
   // Puzzle information.
   const [answerList, setAnswerList] = useState([]);
@@ -62,10 +63,10 @@ function Main (props) {
     <div>      
       <ul>
         {answerList.map((answerData, idx)=><li key={idx}>
-          Solver: <UserHomeLink user_address={answerData.whoId} />, submitted <strong>{answerData.answerContent}</strong> on Block {answerData.eventBn}
+          Solver: <UserHomeLink user_address={answerData.whoId} /> submitted <strong>{answerData.answerContent}</strong>, <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={answerData.eventBn} /> ago.
         </li>)}
       </ul>
-      {(puzzle_status=="UNSOLVED")?(<PuzzleAnswer puzzle_hash={puzzle_hash} answerList={answerList} />):(<p>Submissions closed.</p>)}    
+      {(puzzle_status=="UNSOLVED")?(<PuzzleAnswer puzzle_hash={puzzle_hash} answerList={answerList} />):(<p>Submission closed.</p>)}    
     </div>
   );
 }

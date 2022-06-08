@@ -18,10 +18,11 @@ import SponsorList from "./SponsorList";
 import {useAtoContext} from "./AtoContext";
 import {useSubstrateState} from "../substrate-lib";
 import UserHomeLink from "./UserHomeLink";
+import AtoBlock2Time from "./AtoBlock2Time";
 
 
 function Main (props) {
-  const {apollo_client, gql, puzzleSets: {pubRefresh} , chainData: {pubBlockNumber}, } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubRefresh} , chainData: {pubBlockNumber}, } = useAtoContext();
   const {puzzle_hash} = useParams();
   const request = `${config.ARWEAVE_EXPLORE}/${puzzle_hash}`;
   const [arweaveInfo, setArweaveInfo] = useState(null);
@@ -30,7 +31,9 @@ function Main (props) {
   const [matchAnswerBn, setMatchAnswerBn] = useState(BigInt(0));
   const [financeConfig, setFinanceConfig] = useState(null);
   const [atoIfShowFull, setAtoIfShowFull] = useState(0);
-  
+  //alert(pubBlockNumber);
+
+
   // load json data.
   function loadJsonData() {
     axios.get(request, {}).then(function (response) {
@@ -195,10 +198,12 @@ function Main (props) {
         // id: "454081-3"
         // whoId: "5Dth1UgcLMRYFyv6ykLTwmCpZC45uL1bmJ7S7uEvfLdu8y3f"
         const sponsorData = depositInfo[idx]
+        console.log("@@@@@@@@@@@@@@@@@@@@@PuzzleDetail.js|getEstimatedPoints|sponsorData",sponsorData);
         const diff = BigInt(finalPointBn) - BigInt(sponsorData.eventBn)
-        const pointNum = diff * BigInt(1000) / BigInt(preBn) / BigInt(1000)
+        const pointNum = diff * BigInt(1000) / BigInt(preBn) / BigInt(1000) * BigInt(sponsorData["deposit"]);
         sumPoint+=pointNum
       }
+      sumPoint=sumPoint/BigInt(10**18);
       console.log("sumPoint = ", sumPoint)
       return sumPoint.toString()
   }
@@ -243,9 +248,9 @@ function Main (props) {
 
         <div>Puzzle hash: {puzzleInfo?.puzzleHash}</div>
         <div>Creator: <UserHomeLink user_address={puzzleInfo?.whoId} /></div>
-        <div>Created on: block {puzzleInfo?.eventBn}, current: block {pubBlockNumber}</div>
-        <div>Total prize: <strong>{puzzleInfo?.dynTotalDeposit}</strong></div>
-        <div>Estimated points: {puzzleInfo?getEstimatedPoints(puzzleInfo, financeConfig?financeConfig.pointRewardEpochBlockLength:0):'Loading...'}</div>
+        <div>Created: <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={puzzleInfo?.eventBn} /> ago</div>
+        <div>Total prize: <strong>{puzzleInfo?.dynTotalDeposit/(10**18)}</strong></div>
+        <div title={`Points reward era length = ${financeConfig?financeConfig.pointRewardEpochBlockLength:"loading..."} blocks`}>Estimated points: {puzzleInfo?getEstimatedPoints(puzzleInfo, financeConfig?financeConfig.pointRewardEpochBlockLength:0):'Loading...'}</div>
         <div>Puzzle status:&nbsp;&nbsp;
         {puzzleInfo?(
           (getPuzzleStatus(puzzleInfo)=="UNSOLVED")?<div className="ui tiny yellow label">UNSOLVED</div>:
@@ -259,7 +264,7 @@ function Main (props) {
         <br/>
 
         {arweaveInfo?arweaveInfo.puzzle_content.map((body, idx) => <div key={idx}>
-          {body.type?body.type === 'text'?<h3>{body.data}</h3>:'':''}
+          {body.type?body.type === 'text'?<h3 style={{lineHeight:'150%'}}>{body.data}</h3>:'':''}
         </div>):'Loading...'}<br/>
 
         {puzzle_hash=="AfoKgHOYOnOxVGUsSuUCAsFZxSfg_j45gZS1aYfjEAU"?
@@ -272,7 +277,7 @@ function Main (props) {
           <div className="ReSeTs_fixedRight">
             <h1 className="1ReSeTs_puzzleDetail_h1">{arweaveInfo?arweaveInfo.puzzle_title:'Loading...'}</h1>
             {arweaveInfo?arweaveInfo.puzzle_content.map((body, idx) => <div key={idx}>
-              {body.type?body.type === 'text'?<h3>{body.data}</h3>:'':''}
+              {body.type?body.type === 'text'?<h3 style={{lineHeight:'150%'}}>{body.data}</h3>:'':''}
             </div>):'Loading...'}
             <AnswerList puzzle_hash={puzzle_hash} puzzle_status={puzzleInfo?getPuzzleStatus(puzzleInfo):'Loading...'} />
             <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleCloseFull()}><i class="compress icon"></i> Exit full screen</a>

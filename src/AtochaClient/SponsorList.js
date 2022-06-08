@@ -10,6 +10,8 @@ import PuzzleCommitChallenge from "./PuzzleCommitChallenge";
 import PuzzleCommitSponsorship from "./PuzzleCommitSponsorship";
 import {useAtoContext} from "./AtoContext";
 import UserHomeLink from "./UserHomeLink";
+import AtoBlock2Time from "./AtoBlock2Time";
+import AtoDeleteThousand from "./AtoDeleteThousand";
 
 function Main (props) {
   const { api } = useSubstrateState();
@@ -18,7 +20,7 @@ function Main (props) {
 
   // Puzzle information.
   const [puzzleDepositList, setPuzzleDepositList] = useState([]);
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck},chainData: {pubBlockNumber},} = useAtoContext()
 
   async function loadChallengeDepositList() {
     if (!puzzle_hash){
@@ -51,7 +53,6 @@ function Main (props) {
     });
   }
 
-
   useEffect(() => {
     loadChallengeDepositList();
   }, [pubRefresh]);
@@ -61,7 +62,7 @@ function Main (props) {
     <div>
       <ul>
       {puzzleDepositList.map((sponsorDepositData, idx)=><li key={idx}>
-        <UserHomeLink user_address={sponsorDepositData.whoId} /> sponsored {sponsorDepositData.deposit} on Block {sponsorDepositData.eventBn}
+        <UserHomeLink user_address={sponsorDepositData.whoId} /> sponsored {sponsorDepositData.deposit/(10**18)}, <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={sponsorDepositData.eventBn} /> ago.
         {(sponsorDepositData.tip=="" || sponsorDepositData.tip=="none") ? (
           <></>
         ):(
@@ -69,7 +70,7 @@ function Main (props) {
         )} 
         </li>)}
       </ul>
-      {(puzzle_status=="UNSOLVED")?(<PuzzleCommitSponsorship puzzle_hash={puzzle_hash} puzzleDepositList={puzzleDepositList} />):(<p>Submissions closed.</p>)}
+      {(puzzle_status=="UNSOLVED")?(<PuzzleCommitSponsorship puzzle_hash={puzzle_hash} puzzleDepositList={puzzleDepositList} />):(<p>Submission closed.</p>)}
     </div>
   );
 }

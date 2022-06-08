@@ -6,6 +6,7 @@ import { TxButton } from '../substrate-lib/components';
 import {useAtoContext} from "./AtoContext";
 import UserHomeLink from "./UserHomeLink";
 import KButton from "./KButton";
+import AtoDeleteThousand from "./AtoDeleteThousand";
 
 function Main (props) {
   const { api } = useSubstrateState();
@@ -18,7 +19,8 @@ function Main (props) {
   const [lastUpBn, setLastUpBn] = useState('*');
   const [currentExchangeRewardEra, setCurrentExchangeRewardEra] = useState(0);
   const [previousExchangeRewardEra, setPreviousExchangeRewardEra] = useState(0);
-
+  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  
   useEffect(() => {
     api.query.atochaFinance.pointExchangeInfo(currentExchangeRewardEra).then(res => {
       console.log('exchangeInfo current = ', res.toHuman());
@@ -83,16 +85,18 @@ function Main (props) {
 
   return (
     <div>
-      <h1>Top players of current reward era <small style={{fontSize:"50%"}}>Reward era: {currentExchangeRewardEra}</small></h1>
+      <h1>Ranking & rewards</h1>  
+      <h2>Top players of current reward era <small style={{fontSize:"50%"}}>Reward era: {currentExchangeRewardEra}</small></h2>
       <ul>
-        <li>You can apply for era rewards if your points is positive. Your current points: {userPoints} (Block {lastUpBn}). </li>
+        <li>You can apply for era rewards if your points is positive. Your current points: <AtoDeleteThousand withThousand={userPoints} /> on Block {lastUpBn}.</li>
         <li>
           You will receive era rewards automatically at the end of current era if...
           <ul>
-            <li>You applied for it during current era.</li>
+            <li>You have applied for it during current era.</li>
             <li>You are in the top list at the end of current era.</li>
           </ul>
         </li>
+        <li>Your points will be 0 once you have won era rewards.</li>
       </ul>
       {exchangeInfo.length>0?
       <Table className="ui very basic celled table" style={{width:"100%"}}>
@@ -103,7 +107,7 @@ function Main (props) {
           </Table.Row>
           {exchangeInfo.map((infoData,idx) => <Table.Row key={idx}>
             <Table.Cell><UserHomeLink user_address={infoData[0]} /></Table.Cell>
-            <Table.Cell>{infoData[1]}</Table.Cell>
+            <Table.Cell><AtoDeleteThousand withThousand={infoData[1]} /></Table.Cell>
           </Table.Row>)}
         </Table.Body>
       </Table>
@@ -128,7 +132,7 @@ function Main (props) {
           <div style={{ overflowWrap: 'break-word' }}>{status}</div>
         </Form.Field>
       </Form>               
-      <h1>Top players of previous reward era <small style={{fontSize:"50%"}}>Reward era: {previousExchangeRewardEra}</small></h1>
+      <h2>Top players of previous reward era <small style={{fontSize:"50%"}}>Reward era: {previousExchangeRewardEra}</small></h2>
       {previousExchangeInfo.length>0?
       <Table className="ui very basic celled table" style={{width:"100%"}}>
         <Table.Body>
@@ -140,9 +144,9 @@ function Main (props) {
           </Table.Row>
           {previousExchangeInfo.map((infoData, idx) => <Table.Row key={idx}>
             <Table.Cell><UserHomeLink user_address={infoData[0]} /></Table.Cell>
-            <Table.Cell>{infoData[1]}</Table.Cell>
-            <Table.Cell>{infoData[2]?infoData[2].proportion?infoData[2].proportion:'Err':'Err'}</Table.Cell>
-            <Table.Cell>{infoData[2]?infoData[2].takeToken?infoData[2].takeToken:'Err':'Err'}</Table.Cell>
+            <Table.Cell><AtoDeleteThousand withThousand={infoData[1]} /></Table.Cell>
+            <Table.Cell>{infoData[2]?infoData[2].proportion?infoData[2].proportion:'@Error@':'@Error@'}</Table.Cell>
+            <Table.Cell>{infoData[2]?infoData[2].takeToken?<AtoDeleteThousand withThousand={infoData[2].takeToken} />:'@Error@':'@Error@'}</Table.Cell>
           </Table.Row>)}
         </Table.Body>
       </Table>

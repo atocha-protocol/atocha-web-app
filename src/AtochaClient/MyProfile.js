@@ -12,7 +12,7 @@ import UserHome from "./UserHome";
 function Main (props) {
   const {apollo_client, gql, puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType} , chainData: {pubBlockNumber} } = useAtoContext()
   const { api } = useSubstrateState();
-
+  
 
   // Puzzle information.
   useEffect(async () => {

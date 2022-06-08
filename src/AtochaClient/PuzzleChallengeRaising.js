@@ -5,6 +5,7 @@ import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import { TxButton } from '../substrate-lib/components';
 import KButton from "./KButton";
 import {useAtoContext} from "./AtoContext";
+import AtoBlock2Time from "./AtoBlock2Time";
 
 function Main (props) {
   const { api } = useSubstrateState();
@@ -73,7 +74,7 @@ function Main (props) {
   return (
     <Form>
       <Form.Field>
-        {puzzle_challengeDeadline-pubBlockNumber} blocks left to the deadline.
+        <AtoBlock2Time bigBlock={puzzle_challengeDeadline} smallBlock={pubBlockNumber} /> left to the deadline.
       </Form.Field>    
       <Form.Field>
         <Input

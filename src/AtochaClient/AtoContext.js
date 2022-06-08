@@ -96,6 +96,7 @@ const AtoContextProvider = props => {
     }
 
     async function loadPuzlleList() {
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@AtoContext.js|loadPuzzleList");
         console.log('pubPuzzleListType = ', pubPuzzleListType);
         const filter_UNSOLVED = `
             filter: {

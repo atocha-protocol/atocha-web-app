@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+  import React, { useEffect, useState } from 'react';
 import {Form, Input, Grid, Card, Statistic, TextArea, Label, Table, Button} from 'semantic-ui-react';
 
 import {useSubstrate, useSubstrateState} from '../substrate-lib';
@@ -15,6 +15,7 @@ import {
 } from "react-router-dom";
 import PuzzleDetailLink from "./PuzzleDetailLink";
 import {web3FromSource} from "@polkadot/extension-dapp";
+import AtoDeleteThousand from "./AtoDeleteThousand";
 
 function Main (props) {
   const { api, currentAccount } = useSubstrateState('');
@@ -26,7 +27,8 @@ function Main (props) {
   const [userBalance, setUserBalance] = useState(null);
   const [relationInfos, setRelationInfos] = useState(null);
   const [currentAccountId, setCurrentAccountId] = useState(null);
-
+  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  
   useEffect(async () => {
     if (currentAccount) {
       fillCurrentAccountId();
@@ -180,14 +182,15 @@ function Main (props) {
 
   return (
     <div>
+      <h1>Player profile</h1>
       <div style={{textAlign:"center"}}>
         <img src="https://atocha.io/wp-content/uploads/2021/12/img_210318.png" style={{width:"100px"}} /><br/>
-        <h3 style={{lineHeight:"150%"}}>{currentAccountId?currentAccountId:'loading...'}<br/>Points: {userPoints?userPoints:'Loading...'}</h3>
+        <h3 style={{lineHeight:"150%"}}>{currentAccountId?currentAccountId:'loading...'}<br/>Points: {userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}</h3>
       </div>
       <br/>
       <div className="ui stackable four column grid">
         <div className="column">
-          <h3>>> Created</h3>
+          <h2>>> Created</h2>
           {relationInfos?
           <ul>
             {relationInfos.ref_create_events.nodes.map((data, idx)=><li key={idx}>
@@ -197,7 +200,7 @@ function Main (props) {
           :"Nothing here."}        
         </div>
         <div className="column">
-          <h3>>> Solved</h3>
+          <h2>>> Solved</h2>
           {relationInfos?
           <ul>
             {relationInfos.ref_answer_events.nodes.map((data, idx)=><li key={idx}>
@@ -207,7 +210,7 @@ function Main (props) {
           :"Nothing here."}        
         </div>
         <div className="column">
-          <h3>>> Challenged</h3>
+          <h2>>> Challenged</h2>
           {relationInfos?
           <ul>
             {relationInfos.ref_challenge_depoist_events.nodes.map((data, idx)=><li key={idx}>
@@ -217,7 +220,7 @@ function Main (props) {
           :"Nothing here."}          
         </div>
         <div className="column">
-          <h3>>> Sponsored</h3>
+          <h2>>> Sponsored</h2>
           {relationInfos?
           <ul>
             {relationInfos.ref_deposit_events.nodes.map((data, idx)=><li key={idx}>

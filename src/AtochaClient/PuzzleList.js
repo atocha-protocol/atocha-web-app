@@ -17,8 +17,10 @@ function Main (props) {
   const [newPuzzle, setNewPuzzle] = useState(null);
   const [atoCurrentPuzzleListStatusClass, setAtoCurrentPuzzleListStatusClass] = useState("ui tiny yellow label");
   const [atoCurrentPuzzleListStatusTitle, setAtoCurrentPuzzleListStatusTitle] = useState("UNSOLVED");
+  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
   function updatePuzzleList(type) {
+    //alert("updatePuzzleList");
     if(type=="UNSOLVED"){
       setAtoCurrentPuzzleListStatusClass("ui tiny yellow label");
       setAtoCurrentPuzzleListStatusTitle(type);
@@ -47,23 +49,25 @@ function Main (props) {
   }
 
   // Puzzle information.
-  useEffect(async () => {
-
-  }, [newPuzzle]);
+  useEffect(() => {
+    //alert("useEffect");
+    //updatePuzzleList(atoCurrentPuzzleListStatusTitle);
+  }, [pubRefresh]);
 
   return (
     <div>
-      <div>
-        <Button className="ui yellow button ReSeTs_statusButton" onClick={()=>updatePuzzleList('UNSOLVED')}>UNSOLVED</Button>
-        <Button className="ui orange button ReSeTs_statusButton" onClick={()=>updatePuzzleList('CHALLENGABLE')}>CHALLENGABLE</Button>
-        <Button className="ui violet button ReSeTs_statusButton" onClick={()=>updatePuzzleList('SOLVED')}>SOLVED</Button>
-        <Button className="ui grey button ReSeTs_statusButton" onClick={()=>updatePuzzleList('JUDGING')}>JUDGING</Button>
-        <Button className="ui black button ReSeTs_statusButton" onClick={()=>updatePuzzleList('INVALID')}>INVALID</Button>
+      <h1>Puzzle list</h1>
+      <div style={{textAlign:"center"}}>
+        <Button className="ui small yellow button ReSeTs_statusButton" onClick={()=>updatePuzzleList('UNSOLVED')}>UNSOLVED</Button>
+        <Button className="ui small orange button ReSeTs_statusButton" onClick={()=>updatePuzzleList('CHALLENGABLE')}>CHALLENGABLE</Button>
+        <Button className="ui small violet button ReSeTs_statusButton" onClick={()=>updatePuzzleList('SOLVED')}>SOLVED</Button>
+        <Button className="ui small grey button ReSeTs_statusButton" onClick={()=>updatePuzzleList('JUDGING')}>JUDGING</Button>
+        <Button className="ui small black button ReSeTs_statusButton" onClick={()=>updatePuzzleList('INVALID')}>INVALID</Button>
       </div>
       <Table className="ui very basic celled table" style={{width:"100%"}}>
         <Table.Body>
           <Table.Row>
-            <Table.Cell><strong><div className={atoCurrentPuzzleListStatusClass}>{atoCurrentPuzzleListStatusTitle}</div> Puzzles</strong></Table.Cell>
+            <Table.Cell style={{width:"50%"}}><strong><div className={atoCurrentPuzzleListStatusClass}>{atoCurrentPuzzleListStatusTitle}</div> Puzzles</strong></Table.Cell>
             <Table.Cell><strong>Creator</strong></Table.Cell>
             <Table.Cell><strong>Created</strong></Table.Cell>
             <Table.Cell><strong>Prize</strong></Table.Cell>
@@ -73,10 +77,10 @@ function Main (props) {
             <Table.Cell><UserHomeLink user_address={puzzleObj.whoId} /></Table.Cell>
             <Table.Cell>
               <a href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/explorer/query/${puzzleObj.eventHash}`} target="_blank">
-                {puzzleObj.eventBn}
+                Block {puzzleObj.eventBn}
               </a>
             </Table.Cell>
-            <Table.Cell>{puzzleObj.dynTotalDeposit}</Table.Cell>
+            <Table.Cell>{puzzleObj.dynTotalDeposit/(10**18)}</Table.Cell>
           </Table.Row>)}
         </Table.Body>
       </Table>
