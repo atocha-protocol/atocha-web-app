@@ -267,15 +267,13 @@ function Main (props) {
           {body.type?body.type === 'text'?<h3 style={{lineHeight:'150%'}}>{body.data}</h3>:'':''}
         </div>):'Loading...'}<br/>
 
-        {typeof(atoIframe[puzzle_hash])=="undefined"?
-        <></>
-        :
+        {puzzle_hash=="AfoKgHOYOnOxVGUsSuUCAsFZxSfg_j45gZS1aYfjEAU"?
         <a style={{cursor:"pointer"}} onClick={()=>handleOpenFull()}><i class="expand arrows alternate icon"></i> Enter full screen</a>
-        }
+        :<></>}
 
         {atoIfShowFull==1?
         <div>  
-          <iframe src={atoIframe[puzzle_hash]} className="ReSeTs_fixedFull" ></iframe>
+          <iframe src="https://www.google.com/maps/embed?pb=!4v1654529419748!6m8!1m7!1sCAoSLEFGMVFpcE9VUkN5eWF4cF9QNkw1X2t3bWJwUTZZMENEZXIwR0FFRElKMEdK!2m2!1d51.49958295867093!2d-0.1289443441629601!3f95.24!4f28.760000000000005!5f0.42518105702959824" className="ReSeTs_fixedFull" ></iframe>
           <div className="ReSeTs_fixedRight">
             <h1 className="1ReSeTs_puzzleDetail_h1">{arweaveInfo?arweaveInfo.puzzle_title:'Loading...'}</h1>
             {arweaveInfo?arweaveInfo.puzzle_content.map((body, idx) => <div key={idx}>
