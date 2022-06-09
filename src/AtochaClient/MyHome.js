@@ -155,8 +155,6 @@ function Main (props) {
         <div className="ui basic label">Balance</div>&nbsp;&nbsp;&nbsp;&nbsp;{userBalance?<AtoDeleteThousand withThousand={userBalance} />:'Loading...'}&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="ui basic label">Points</div>&nbsp;&nbsp;&nbsp;&nbsp;{userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}
       </div>
-      <h3>Social connection</h3>
-      <div>Twitter: Not connected.&nbsp;&nbsp;&nbsp;&nbsp;<a href="" className="ui tiny button">Connect</a></div>
       <h3>As a creator/solver/challenger, claim your tokens from the following puzzles:</h3>
       {relationInfos?
         <Table className="ui very basic celled table" style={{width:"100%"}}>

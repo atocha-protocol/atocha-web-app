@@ -51,7 +51,7 @@ function Main (props) {
   // Puzzle information.
   useEffect(() => {
     //alert("useEffect");
-    //updatePuzzleList(atoCurrentPuzzleListStatusTitle);
+    updatePuzzleList(atoCurrentPuzzleListStatusTitle);
   }, [pubRefresh]);
 
   return (

@@ -19,7 +19,7 @@ function Main (props) {
   const [lastUpBn, setLastUpBn] = useState('*');
   const [currentExchangeRewardEra, setCurrentExchangeRewardEra] = useState(0);
   const [previousExchangeRewardEra, setPreviousExchangeRewardEra] = useState(0);
-  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  console.log("@@@@@ApplyTokenReward.js|main");
   
   useEffect(() => {
     api.query.atochaFinance.pointExchangeInfo(currentExchangeRewardEra).then(res => {
@@ -37,14 +37,15 @@ function Main (props) {
       }
     });
     loadLastUpdateBN();
-  }, [api.query.atochaModule, api.query.atochaFinance.pointExchangeInfo, currentExchangeRewardEra, previousExchangeRewardEra, pubRefresh]);
+  }, [api.query.atochaModule, api.query.atochaFinance.lastUpdateBlockInfoOfPointExchage, api.query.atochaFinance.pointExchangeInfo, currentExchangeRewardEra, previousExchangeRewardEra, pubRefresh]);
 
   function loadLastUpdateBN() {
     api.query.atochaFinance
       .lastUpdateBlockInfoOfPointExchage(bn =>{
-        setLastUpBn(bn.toHuman())
+        setLastUpBn(bn.toHuman());
+        console.log("@@@@@ApplyTokenReward.js|main|loadLastUpdateBN|bn",bn);
+        console.log("@@@@@ApplyTokenReward.js|main|loadLastUpdateBN|bn.toHuman",bn.toHuman());
       }) .then(unsub => {
-
     }) .catch(console.error)
   }
 
@@ -88,7 +89,7 @@ function Main (props) {
       <h1>Ranking & rewards</h1>  
       <h2>Top players of current reward era <small style={{fontSize:"50%"}}>Reward era: {currentExchangeRewardEra}</small></h2>
       <ul>
-        <li>You can apply for era rewards if your points is positive. Your current points: <AtoDeleteThousand withThousand={userPoints} /> on Block {lastUpBn}.</li>
+        <li>You can apply for era rewards if your points is positive. Your current points: <AtoDeleteThousand withThousand={userPoints} />.</li>
         <li>
           You will receive era rewards automatically at the end of current era if...
           <ul>
