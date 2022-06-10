@@ -236,7 +236,7 @@ function Main (props) {
   function handleCloseFull(){
     setAtoIfShowFull(0);
   }
-
+  //alert(puzzle_hash.slice(-6));
   return (
     <div className="ui two column stackable grid">
       <div className="ten wide column">

@@ -48,6 +48,20 @@ function Main (props) {
             <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[2]["hash"]}`}>{atoFeatured[2]["title"]}</Link></h3>
           </div>
         </div>       
+        <div className="three column row">
+          <div className="column">
+            <div><img style={{width:"90%"}} src={atoFeatured[3]["imageUrl"]} /></div>
+            <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[3]["hash"]}`}>{atoFeatured[3]["title"]}</Link></h3>
+          </div>
+          <div className="column">
+            <div><img style={{width:"90%"}} src={atoFeatured[4]["imageUrl"]} /></div>
+            <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[4]["hash"]}`}>{atoFeatured[4]["title"]}</Link></h3>
+          </div>
+          <div className="column">
+            <div><img style={{width:"90%"}} src={atoFeatured[5]["imageUrl"]} /></div>
+            <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[5]["hash"]}`}>{atoFeatured[5]["title"]}</Link></h3>
+          </div>
+        </div>       
       </div>
     </div>
   );
