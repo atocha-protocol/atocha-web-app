@@ -66,7 +66,7 @@ function Main (props) {
         {(sponsorDepositData.tip=="" || sponsorDepositData.tip=="none") ? (
           <></>
         ):(
-        ` with message: ${sponsorDepositData.tip}`
+        <i style={{color:'gray'}}> {sponsorDepositData.tip}</i>
         )} 
         </li>)}
       </ul>

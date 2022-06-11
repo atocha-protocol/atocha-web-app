@@ -62,7 +62,7 @@ function TxButton({
   const txResHandler = ({ status }) =>{
     extendsTriger(status)
     return status.isFinalized
-        ? setStatus(`😉 Finalized. Block hash: ${status.asFinalized.toString()}`)
+        ? setStatus(`Finalized. Block hash: ${status.asFinalized.toString()}`)
         : setStatus(`Current transaction status: ${status.type}`);
   }
 
@@ -74,7 +74,7 @@ function TxButton({
 
 
   const txErrHandler = err =>
-    setStatus(`😞 Transaction Failed: ${err.toString()}`)
+    setStatus(`Transaction Failed: ${err.toString()}`)
 
   const sudoTx = async () => {
     const fromAcct = await getFromAcct()

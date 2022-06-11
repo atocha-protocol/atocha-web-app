@@ -208,6 +208,14 @@ function Main (props) {
       return sumPoint.toString()
   }
 
+  var atoIfRemoteJsLoaded=false;
+  if(typeof(atoFeatured)=="undefined" || typeof(atoIframe)=="undefined"){
+    
+  }
+  else{
+    atoIfRemoteJsLoaded=true;
+  }
+
   // Puzzle information.
   useEffect(async () => {
         if(arweaveInfo===null) {
@@ -267,10 +275,12 @@ function Main (props) {
           {body.type?body.type === 'text'?<h3 style={{lineHeight:'150%'}}>{body.data}</h3>:'':''}
         </div>):'Loading...'}<br/>
 
-        {typeof(atoIframe[puzzle_hash])=="undefined"?
+        {atoIfRemoteJsLoaded?typeof(atoIframe[puzzle_hash])!="undefined"?
+        <a style={{cursor:"pointer"}} onClick={()=>handleOpenFull()}><i class="expand arrows alternate icon"></i> Enter full screen</a>
+        :
         <></>
         :
-        <a style={{cursor:"pointer"}} onClick={()=>handleOpenFull()}><i class="expand arrows alternate icon"></i> Enter full screen</a>
+        <></>
         }
 
         {atoIfShowFull==1?

@@ -17,8 +17,12 @@ function Main (props) {
   const [status, setStatus] = useState(null);
   // const [puzzleHash, setPuzzleHash] = useState('');
 
+  var newMinDeposit=-1;
   if(minDeposit<(10**18)){
-    var newMinDeposit=123;
+    newMinDeposit=1;
+  }
+  else{
+    newMinDeposit=minDeposit/(10**18);
   }
 
   useEffect(() => {
@@ -105,7 +109,7 @@ function Main (props) {
       </Form.Field>
       <Form.Field>
         <Input
-          label={`Amoun3t(Minimum=${newMinDeposit})`}
+          label={`Amount(Minimum=${newMinDeposit})`}
           type='number'
           state='amount'
           onChange={(_, { value }) => countDeposit(value) }

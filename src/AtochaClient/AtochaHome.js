@@ -27,12 +27,21 @@ import {hexToBigInt, hexToString} from "@polkadot/util";
 function Main (props) {
   const { api, currentAccount } = useSubstrateState();
 
+  var atoIfRemoteJsLoaded=false;
+  if(typeof(atoFeatured)=="undefined" || typeof(atoIframe)=="undefined"){
+    
+  }
+  else{
+    atoIfRemoteJsLoaded=true;
+  }
+
   useEffect(() => {
   });
 
   return (
     <div>
       <h1>Featured puzzles</h1>
+      {atoIfRemoteJsLoaded?
       <div className="ui grid">
         <div className="three column row">
           <div className="column">
@@ -63,6 +72,20 @@ function Main (props) {
           </div>
         </div>       
       </div>
+      :
+      "Loading..."
+      }
+      <br/>
+      
+      <div class="ui message">
+        <div class="header">
+          To play Atocha App, you need to...
+        </div>
+        <ul class="list">
+          <li><a href="https://polkadot.js.org/extension/">Download Polkadot JS wallet browser extension</a></li>
+          <li><a href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki/puzzle-game-webapp-user-guide/bridge-ato-from-near-wallet-to-polkadot-js-wallet">Bridge ATO From Near Wallet to Polkadot JS Wallet</a></li>
+        </ul>
+      </div>      
     </div>
   );
 }

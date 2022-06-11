@@ -93,7 +93,7 @@ function Main (props) {
     console.log(newStatus)
     if (newStatus.isInBlock) {
       console.log("Is InBlock")
-      setStatus("Extrinsic success.")
+      setStatus("Extrinsic succeed.")
       console.log('Send data to arweave.');
       axios.post(config.ARWEAVE_HTTP, storageJson).then(response => {
         console.log('Request data: ', response.data);
@@ -124,16 +124,18 @@ function Main (props) {
       return;
     }
     console.log(`Puzzle hash: ${puzzle_hash}, Puzzle answer: ${answer_hash}, deposit = ${deposit}`);
-    setStatus("submit puzzle info to atocha chain.")
+    setStatus("Submitting to the chain...")
     const fromAcct = await getFromAcct();
     const unsub = await api.tx.atochaModule
       .createPuzzle(puzzle_hash, answer_hash, deposit, 1)
       .signAndSend(fromAcct, (result) => {
-        setStatus(`submit status: ${result.status}`);
+        //setStatus(`4444submit status: ${result.status}`);
         if (result.status.isInBlock) {
-          setStatus(`submit status: ${result.status} - ${result.status.asInBlock}`);
+          //setStatus(`5555submit status: ${result.status} - ${result.status.asInBlock}`);
+          //setStatus("InBlock...");
         } else if (result.status.isFinalized) {
-          setStatus(`submit status: ${result.status} - ${result.status.asFinalized}`);
+          //setStatus(`6666submit status: ${result.status} - ${result.status.asFinalized}`);
+          setStatus("😉 Done! This puzzle has been saved on the chain and will be listed on the app in a minute.");
           unsub();
           const query_str = `
             query{
