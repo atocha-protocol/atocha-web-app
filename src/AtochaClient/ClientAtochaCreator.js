@@ -220,7 +220,6 @@ function Main (props) {
         <Form.Field style={{ textAlign: 'left' }}>
           <TxButton
             label='Submit your puzzle'
-            class="ui primary button blue"
             className="ui primary button blue"
             color="blue"
             type='SIGNED-TX'

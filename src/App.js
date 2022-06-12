@@ -38,7 +38,7 @@ import MyProfile from "./AtochaClient/MyProfile";
 import ChainStatus from "./AtochaClient/ChainStatus";
 
 function Main() {
-  const { apiState, apiError, keyringState} = useSubstrateState()
+  const { apiState, apiError, keyringState} = useSubstrateState();
   const [menuItemCss, setMenuItemCss] = useState({
     itemHome: 'item active',
     itemPuzzleList: 'item',
@@ -152,7 +152,7 @@ function Main() {
         <br/>
         <div className="ui divider"></div>
         <div class="ui text menu">
-          <div class="header item">Atocha Puzzles 2022</div>
+          <div class="header item">Atocha Puzzles</div>
           <a class="item" href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki">Doc & Wiki & Help</a>
           <a class="item" href="https://atocha.io">Atocha Protocol</a>
           <a class="item" href="https://polkadot.js.org/extension/">Polkadot JS wallet</a>

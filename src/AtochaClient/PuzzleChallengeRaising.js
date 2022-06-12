@@ -32,7 +32,13 @@ function Main (props) {
       //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",data[1].toString());
       //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",data[2].toString());
       //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",data[3].toString());
-      statusCallBack(1, data[3].toString());
+      //statusCallBack(1, data[3].toString());
+      if(data[3].toString()=="Crowdloan"){
+        statusCallBack(1, "Challenge has been made.");
+      }
+      else{
+        statusCallBack(1, data[3].toString());
+      }
       setDeposit(0);
       freshList(); // update list
     }else if(section == 'system' &&  method == 'ExtrinsicFailed') {

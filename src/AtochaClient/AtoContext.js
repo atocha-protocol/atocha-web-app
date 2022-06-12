@@ -25,6 +25,7 @@ const AtoContextProvider = props => {
     const [rewardRankList, setRewardRankList] = useState([])
     const [pubRefresh, setPubRefresh] = useState(0)
     const [userPoints, setUserPoints] = useState(null);
+    const [pubPuzzleRelist, setPubPuzzleRelist] = useState([]);
 
     const apollo_client = new ApolloClient({
         uri: config.SUBQUERY_HTTP,
@@ -87,6 +88,7 @@ const AtoContextProvider = props => {
     }
 
     function loadAccountPoints() {
+        console.log("==========AtoContext.js|main|loadAccountPoints");
         currentAccount &&
         api.query.atochaFinance
           .atoPointLedger(currentAccount.address, points =>{
@@ -96,14 +98,14 @@ const AtoContextProvider = props => {
     }
 
     async function loadPuzlleList() {
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@AtoContext.js|loadPuzzleList");
-        console.log('pubPuzzleListType = ', pubPuzzleListType);
+        console.log("==========AtoContext.js|main|loadPuzzleList");
+        //console.log('pubPuzzleListType = ', pubPuzzleListType);
         const filter_UNSOLVED = `
-            filter: {
-                dynHaveMatchedAnswer:{
-                  equalTo: false
-                }
+        filter: {
+            dynHaveMatchedAnswer:{
+                equalTo: false
             }
+        }
         `
         const filter_CHALLENGABLE = `
         filter: {
@@ -128,7 +130,7 @@ const AtoContextProvider = props => {
         `
 
         const filter_SOLVED = `
-            filter: {
+        filter: {
                 or:[
                   {
                     dynPuzzleStatus:{
@@ -186,11 +188,11 @@ const AtoContextProvider = props => {
         `
 
         const filter_INVALID = `
-            filter: {
+        filter: {
                 dynChallengeStatus:{
                     equalTo:"JudgePassed"
                 }
-            }
+        }
         `
 
         const filter_JUDGING = `
@@ -294,17 +296,38 @@ const AtoContextProvider = props => {
                 }
             `
         }).then(result => {
-            console.log("RUN KAMI- ", result.data.puzzleCreatedEvents)
-            setPubPuzzleList(result.data.puzzleCreatedEvents.nodes)
+            //console.log("RUN KAMI- ", result.data.puzzleCreatedEvents);
+            console.log("==========AtoContext.js|loadPuzzleList|result.data.puzzleCreatedEvents",result.data.puzzleCreatedEvents);
+            //setPubPuzzleList(result.data.puzzleCreatedEvents.nodes);
+            setPubPuzzleList(result.data.puzzleCreatedEvents.nodes);
+            var pl=new Array();
+            var i=0;            
+            result.data.puzzleCreatedEvents.nodes.forEach(function (item) {
+                pl[i]=new Object();
+                pl[i]["puzzleHash"]=item["puzzleHash"];
+                pl[i]["whoId"]=item["whoId"];
+                pl[i]["eventBn"]=item["eventBn"];
+                pl[i]["eventHash"]=item["eventHash"];
+                pl[i]["dynTotalDeposit"]=item["dynTotalDeposit"]/(10**18);
+                i++;
+            });
+            if(pubPuzzleListType=="UNSOLVED"){
+                pl.sort(function(a,b){
+                    return b.dynTotalDeposit - a.dynTotalDeposit
+                });
+            }            
+            setPubPuzzleRelist(pl);
         });
     }
 
-
     useEffect(() => {
+        //console.log("==========AtoContext.js|main|useEffect");
+        //alert("AtoContext.js|main|useEffect");
         if (apiState === 'READY' ) {
             let unsubscribeAll = null
             api.derive.chain.bestNumber(number => {
-                setPubBlockNumber(number.toString().toLocaleString('en-US'))
+                setPubBlockNumber(number.toString().toLocaleString('en-US'));
+                console.log("==========AtoContext.js|main|useEffect|setPubBlockNumber");
             }).then(unsub => {
                 unsubscribeAll = unsub
             }).catch(console.error)
@@ -317,7 +340,7 @@ const AtoContextProvider = props => {
         <>
             <AtoContext.Provider value={{ helloWorld, apollo_client, gql,
                 chainData: {pubBlockNumber, userPoints},
-                puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType, pubRefresh, updatePubRefresh, tryToPollCheck},
+                puzzleSets: {pubPuzzleList, setPubPuzzleList, pubPuzzleRelist, setPubPuzzleListType, pubRefresh, updatePubRefresh, tryToPollCheck},
                 extractErrorMsg
             }}>
                 {props.children}

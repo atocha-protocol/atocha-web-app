@@ -25,7 +25,9 @@ import {useAtoContext} from "./AtoContext";
 import {hexToBigInt, hexToString} from "@polkadot/util";
 
 function Main (props) {
-  const { api, currentAccount } = useSubstrateState();
+  //alert("AtochaHome.js|main");
+  const {api,currentAccount} = useSubstrateState();
+  const {chainData:{pubBlockNumber}} = useAtoContext();
 
   var atoIfRemoteJsLoaded=false;
   if(typeof(atoFeatured)=="undefined" || typeof(atoIframe)=="undefined"){
@@ -36,6 +38,7 @@ function Main (props) {
   }
 
   useEffect(() => {
+    //alert("atochaHome.js|main|useEffect");
   });
 
   return (
@@ -75,13 +78,13 @@ function Main (props) {
       :
       "Loading..."
       }
-      <br/>
+      <br/><br/>
       
-      <div class="ui message">
-        <div class="header">
+      <div className="ui message">
+        <div className="header">
           To play Atocha App, you need to...
         </div>
-        <ul class="list">
+        <ul className="list">
           <li><a href="https://polkadot.js.org/extension/">Download Polkadot JS wallet browser extension</a></li>
           <li><a href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki/puzzle-game-webapp-user-guide/bridge-ato-from-near-wallet-to-polkadot-js-wallet">Bridge ATO From Near Wallet to Polkadot JS Wallet</a></li>
         </ul>

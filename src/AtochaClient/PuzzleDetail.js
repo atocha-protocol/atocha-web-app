@@ -276,7 +276,7 @@ function Main (props) {
         </div>):'Loading...'}<br/>
 
         {atoIfRemoteJsLoaded?typeof(atoIframe[puzzle_hash])!="undefined"?
-        <a style={{cursor:"pointer"}} onClick={()=>handleOpenFull()}><i class="expand arrows alternate icon"></i> Enter full screen</a>
+        <a style={{cursor:"pointer"}} onClick={()=>handleOpenFull()}><i className="expand arrows alternate icon"></i> Enter full screen</a>
         :
         <></>
         :
@@ -292,7 +292,7 @@ function Main (props) {
               {body.type?body.type === 'text'?<h3 style={{lineHeight:'150%'}}>{body.data}</h3>:'':''}
             </div>):'Loading...'}
             <AnswerList puzzle_hash={puzzle_hash} puzzle_status={puzzleInfo?getPuzzleStatus(puzzleInfo):'Loading...'} />
-            <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleCloseFull()}><i class="compress icon"></i> Exit full screen</a>
+            <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleCloseFull()}><i className="compress icon"></i> Exit full screen</a>
           </div>          
         </div>
         :<></>}

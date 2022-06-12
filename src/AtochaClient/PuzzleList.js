@@ -11,46 +11,53 @@ import {useAtoContext, useAtoContextState} from "./AtoContext";
 import PointsRankList from "./PointsRankList";
 import UserHomeLink from "./UserHomeLink";
 
+var atoPuzzleList=new Array();
+
 function Main (props) {
-  const {apollo_client, gql, puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType, pubRefresh, updatePubRefresh} , chainData: {pubBlockNumber} } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubPuzzleList, setPubPuzzleList, pubPuzzleRelist, setPubPuzzleListType, pubRefresh, updatePubRefresh} , chainData: {pubBlockNumber} } = useAtoContext()
   const { api } = useSubstrateState();
   const [newPuzzle, setNewPuzzle] = useState(null);
   const [atoCurrentPuzzleListStatusClass, setAtoCurrentPuzzleListStatusClass] = useState("ui tiny yellow label");
   const [atoCurrentPuzzleListStatusTitle, setAtoCurrentPuzzleListStatusTitle] = useState("UNSOLVED");
-  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  const [atoCurrentPuzzleListStatusOrder, setAtoCurrentPuzzleListStatusOrder] = useState("ordered by prize");
 
   function updatePuzzleList(type) {
     //alert("updatePuzzleList");
     if(type=="UNSOLVED"){
       setAtoCurrentPuzzleListStatusClass("ui tiny yellow label");
       setAtoCurrentPuzzleListStatusTitle(type);
+      setAtoCurrentPuzzleListStatusOrder("ordered by prize");
     }
     else if(type=="CHALLENGABLE"){
       setAtoCurrentPuzzleListStatusClass("ui tiny orange label");
       setAtoCurrentPuzzleListStatusTitle(type);
+      setAtoCurrentPuzzleListStatusOrder("ordered by creation time");
     }
     else if(type=="SOLVED"){
       setAtoCurrentPuzzleListStatusClass("ui tiny violet label");
       setAtoCurrentPuzzleListStatusTitle(type);
+      setAtoCurrentPuzzleListStatusOrder("ordered by creation time");
     }    
     else if(type=="JUDGING"){
       setAtoCurrentPuzzleListStatusClass("ui tiny grey label");
       setAtoCurrentPuzzleListStatusTitle(type);
+      setAtoCurrentPuzzleListStatusOrder("ordered by creation time");
     } 
     else if(type=="INVALID"){
       setAtoCurrentPuzzleListStatusClass("ui tiny black label");
       setAtoCurrentPuzzleListStatusTitle(type);
+      setAtoCurrentPuzzleListStatusOrder("ordered by creation time");
     }  
     else{
       setAtoCurrentPuzzleListStatusClass("ui tiny label");
       setAtoCurrentPuzzleListStatusTitle(type);
+      setAtoCurrentPuzzleListStatusOrder("ordered by creation time");
     }                    
     setPubPuzzleListType(type);
   }
-
+  
   // Puzzle information.
   useEffect(() => {
-    //alert("useEffect");
     updatePuzzleList(atoCurrentPuzzleListStatusTitle);
   }, [pubRefresh]);
 
@@ -67,12 +74,12 @@ function Main (props) {
       <Table className="ui very basic celled table" style={{width:"100%"}}>
         <Table.Body>
           <Table.Row>
-            <Table.Cell style={{width:"50%"}}><strong><div className={atoCurrentPuzzleListStatusClass}>{atoCurrentPuzzleListStatusTitle}</div> Puzzles</strong></Table.Cell>
+            <Table.Cell style={{width:"50%"}}><strong><div className={atoCurrentPuzzleListStatusClass}>{atoCurrentPuzzleListStatusTitle}</div> Puzzles</strong> <small><i>{atoCurrentPuzzleListStatusOrder}</i></small></Table.Cell>
             <Table.Cell><strong>Creator</strong></Table.Cell>
             <Table.Cell><strong>Created</strong></Table.Cell>
             <Table.Cell><strong>Prize</strong></Table.Cell>
           </Table.Row>
-          {pubPuzzleList.map(puzzleObj=><Table.Row key={puzzleObj.puzzleHash}>
+          {pubPuzzleRelist.map(puzzleObj=><Table.Row key={puzzleObj.puzzleHash}>
             <Table.Cell><ArweaveTitle puzzle_hash={puzzleObj.puzzleHash}/></Table.Cell>
             <Table.Cell><UserHomeLink user_address={puzzleObj.whoId} /></Table.Cell>
             <Table.Cell>
@@ -80,7 +87,7 @@ function Main (props) {
                 Block {puzzleObj.eventBn}
               </a>
             </Table.Cell>
-            <Table.Cell>{puzzleObj.dynTotalDeposit/(10**18)}</Table.Cell>
+            <Table.Cell>{puzzleObj.dynTotalDeposit}</Table.Cell>
           </Table.Row>)}
         </Table.Body>
       </Table>
@@ -90,7 +97,7 @@ function Main (props) {
 
 export default function PuzzleList (props) {
   const { api } = useSubstrateState();
-  const { apollo_client, gql } = useAtoContext()
+  const { apollo_client, gql } = useAtoContext();
   return api.query && apollo_client && gql
     ? <Main {...props} />
     : null;

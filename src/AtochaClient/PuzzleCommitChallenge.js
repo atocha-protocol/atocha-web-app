@@ -63,15 +63,26 @@ function Main (props) {
       //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",data[1].toString());
       //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",data[2].toString());
       //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",data[3].toString());
-      statusCallBack(1, data[3].toString());
+      //statusCallBack(1, data[3].toString());
+      if(data[3].toString()=="Issue"){
+        statusCallBack(1, "Challenge has been Launched.");
+      }
+      else{
+        statusCallBack(1, data[3].toString());
+      }
       setDeposit(0);
       freshList(); // update list
     }else if(section == 'system' &&  method == 'ExtrinsicFailed') {
       // module: {index: 22, error: 0}
       const failedData = data.toJSON()[0].module
       const failedMsg = extractErrorMsg(failedData.index, failedData.error)
-      if(failedMsg) {
-        statusCallBack(2, `${failedMsg}`)
+      if(failedMsg){
+        if(failedMsg=="ChallengeDepositTooLow"){
+          statusCallBack(2, "Amount too small.")
+        }
+        else{
+          statusCallBack(2, `${failedMsg}`)  
+        }        
       }else{
         statusCallBack(2, "Unknown Mistake")
       }
@@ -80,6 +91,10 @@ function Main (props) {
 
   function preCheckCall(buttonKey, currentStatus, statusCallBack) {
     //console.log("currentStatus = ", currentStatus);
+    if(deposit<=0){
+      alert('Amount must be positive.');
+      return false;
+    }     
     if(currentStatus == 3) {
       alert('Wait for pending process.');
       return false;

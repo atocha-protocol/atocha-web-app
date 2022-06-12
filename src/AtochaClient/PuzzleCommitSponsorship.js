@@ -27,7 +27,12 @@ function Main (props) {
 
   function handlerEvent(section, method, statusCallBack, data) {
     if(section == 'atochaFinance' &&  method == 'PuzzleDeposit') {
-      statusCallBack(1, data[4].toString());
+      if(data[4].toString()=="Sponsored"){
+        statusCallBack(1, "Thank you for your sponsorship.");
+      }
+      else{
+        statusCallBack(1, data[4].toString());
+      }
       setDeposit(0);
       setSponsorshipExplain("none");
       freshList(); // update list
@@ -35,8 +40,13 @@ function Main (props) {
       // module: {index: 22, error: 0}
       const failedData = data.toJSON()[0].module
       const failedMsg = extractErrorMsg(failedData.index, failedData.error)
-      if(failedMsg) {
-        statusCallBack(2, `${failedMsg}`)
+      if(failedMsg){
+        if(failedMsg=="PuzzleMinBonusInsufficient"){
+          statusCallBack(2, "Amount too small.")
+        }
+        else{
+          statusCallBack(2, `${failedMsg}`)  
+        }        
       }else{
         statusCallBack(2, "Unknown Mistake")
       }
@@ -44,6 +54,10 @@ function Main (props) {
   }
 
   function preCheckCall(buttonKey, currentStatus, statusCallBack) {
+    if(deposit<=0){
+      alert('Amount must be positive.');
+      return false;
+    }    
     if(sponsorshipExplain==""){
       setSponsorshipExplain("none");
     }
@@ -75,7 +89,7 @@ function Main (props) {
     <Form>
       <Form.Field>
         <Input
-          label='Amount'
+          label='Amount(Minimum=10)'
           type='number'
           state='amount'
           onChange={(_, { value }) => countDeposit(value) }
