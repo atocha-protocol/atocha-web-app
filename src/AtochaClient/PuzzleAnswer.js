@@ -39,8 +39,17 @@ function Main (props) {
   };
 
   function handlerEvent(section, method, statusCallBack, data) {
-    if(section == 'atochaModule' &&  method == 'AnswerCreated') {
-      statusCallBack(1, data[4].toString());
+    if(section == 'atochaModule' &&  method == 'AnswerCreated') {      
+      //statusCallBack(1, data[4].toString());
+      if(data[4].toString()=="ANSWER_HASH_IS_MATCH"){
+        statusCallBack(1,"Bingo! Your answer is right.");
+      }
+      else if(data[4].toString()=="ANSWER_HASH_IS_MISMATCH"){
+        statusCallBack(1,"Sorry, Your answer is not right.");
+      }    
+      else{
+        statusCallBack(1, data[4].toString());
+      }  
       setAnswerTxt("");
       setAnswerExplain("none");
       freshList(); // update list
