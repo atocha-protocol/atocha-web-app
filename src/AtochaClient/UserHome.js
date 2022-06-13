@@ -132,6 +132,19 @@ function Main (props) {
     return result;
   }
 
+  function filterNotMatcha(nodes) {
+    const resultArr = []
+    for(const idx in nodes) {
+      if(
+        nodes[idx].puzzleInfo.dynPuzzleStatus == 'PUZZLE_STATUS_IS_SOLVED' &&
+        nodes[idx].resultType == 'ANSWER_HASH_IS_MATCH'
+      ) {
+        resultArr.push(nodes[idx])
+      }
+    }
+    return resultArr
+  }
+
   async function loadReleationPuzzles() {
     if (!currentAccountId){
       return;
@@ -199,11 +212,15 @@ function Main (props) {
           </ul>
           :"Nothing here."}        
         </div>
+        {/*<li key={idx}>*/}
+        {/*  {data?<><ArweaveTitle  puzzle_hash={data.puzzleInfoId} /> </> : '*'}*/}
+        {/*</li>*/}
+
         <div className="column">
           <h2>>> Solved</h2>
           {relationInfos?
           <ul>
-            {relationInfos.ref_answer_events.nodes.map((data, idx)=><li key={idx}>
+            {filterNotMatcha(relationInfos.ref_answer_events.nodes).map((data, idx)=><li key={idx}>
               {data?<ArweaveTitle  puzzle_hash={data.puzzleInfoId} /> : '*'}
             </li>)}
           </ul>
