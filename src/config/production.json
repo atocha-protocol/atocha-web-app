@@ -4,5 +4,6 @@
   "SUBQUERY_HTTP": "https://subquery.atocha.io/",
   "ARWEAVE_EXPLORE": "https://arweave.net",
   "POLKADOT_EXPLORE": "https://polkadot.js.org/apps/"，
-  "OCT_EXPLORER": "https://explorer.mainnet.oct.network/?appchain=atocha"
+  "OCT_EXPLORER": "https://explorer.mainnet.oct.network/?appchain=atocha",
+  "API_ATOCHA_URL": "https://api.atocha.io"
 }

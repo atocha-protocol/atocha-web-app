@@ -23,6 +23,7 @@ import MakeAnswerSha256WithSimple from '../units/MakeAnswerSha256';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import {useAtoContext} from "./AtoContext";
 import {hexToBigInt, hexToString} from "@polkadot/util";
+import BindAddressToTwitter from "./BindAddressToTwitter";
 
 function Main (props) {
   const { api, currentAccount } = useSubstrateState();
@@ -49,18 +50,7 @@ function Main (props) {
   return (
     <Grid.Column width={12}>
       <h2>Atocha Main module configuration parameters</h2>
-      {/*atochaModule.atoConfig*/}
-      {/*// "atochaModule": {*/}
-      {/*//   "minBonusOfPuzzle": 10000000000000000000,   Puzzle最小的保证金100ATO*/}
-      {/*//   "challengePeriodLength": 43200,  接受挑战期 3 天*/}
-      {/*//   "taxOfTcr": 100000000,  挑战者募集失败取回存款时扣除的费率 10%*/}
-      {/*//   "taxOfTvs": 50000000,  作者自问自答是扣除的税率 5%*/}
-      {/*//   "taxOfTvo": 100000000,  非作者答题时扣除的税率 10%*/}
-      {/*//   "taxOfTi": 100000000,   挑战成功后领取奖励时扣除的税率 10%*/}
-      {/*//   "penaltyOfCp": 100000000,  挑战成功后惩罚出题人的Piont比例 10%*/}
-      {/*//   "maxSponsorExplainLen": 256,  赞助人可以留言的最大字符数量*/}
-      {/*//   "maxAnswerExplainLen": 1024   答题人最大的留言长度*/}
-      {/*// },*/}
+      {currentAccount?<BindAddressToTwitter ato_address={currentAccount.address} />:null}
       <Table>
         <TableHeader>
           <TableRow>
