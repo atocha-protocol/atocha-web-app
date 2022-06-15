@@ -48,29 +48,53 @@ function Main (props) {
       <div className="ui grid">
         <div className="three column row">
           <div className="column">
-            <div><img style={{width:"90%"}} src={atoFeatured[0]["imageUrl"]} /></div>
+            <div>
+              <Link to={`/puzzle_detail/${atoFeatured[0]["hash"]}`}>
+                <img style={{width:"90%"}} src={atoFeatured[0]["imageUrl"]} />
+              </Link>
+            </div>
             <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[0]["hash"]}`}>{atoFeatured[0]["title"]}</Link></h3>
           </div>
           <div className="column">
-            <div><img style={{width:"90%"}} src={atoFeatured[1]["imageUrl"]} /></div>
+            <div>
+              <Link to={`/puzzle_detail/${atoFeatured[1]["hash"]}`}>
+                <img style={{width:"90%"}} src={atoFeatured[1]["imageUrl"]} />
+              </Link>
+            </div>
             <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[1]["hash"]}`}>{atoFeatured[1]["title"]}</Link></h3>
           </div>
           <div className="column">
-            <div><img style={{width:"90%"}} src={atoFeatured[2]["imageUrl"]} /></div>
+            <div>
+              <Link to={`/puzzle_detail/${atoFeatured[2]["hash"]}`}>
+                <img style={{width:"90%"}} src={atoFeatured[2]["imageUrl"]} />
+              </Link>
+            </div>
             <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[2]["hash"]}`}>{atoFeatured[2]["title"]}</Link></h3>
           </div>
         </div>       
         <div className="three column row">
           <div className="column">
-            <div><img style={{width:"90%"}} src={atoFeatured[3]["imageUrl"]} /></div>
+            <div>
+              <Link to={`/puzzle_detail/${atoFeatured[3]["hash"]}`}>
+                <img style={{width:"90%"}} src={atoFeatured[3]["imageUrl"]} />
+              </Link>
+            </div>
             <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[3]["hash"]}`}>{atoFeatured[3]["title"]}</Link></h3>
           </div>
           <div className="column">
-            <div><img style={{width:"90%"}} src={atoFeatured[4]["imageUrl"]} /></div>
+            <div>
+              <Link to={`/puzzle_detail/${atoFeatured[4]["hash"]}`}>
+                <img style={{width:"90%"}} src={atoFeatured[4]["imageUrl"]} />
+              </Link>  
+            </div>
             <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[4]["hash"]}`}>{atoFeatured[4]["title"]}</Link></h3>
           </div>
           <div className="column">
-            <div><img style={{width:"90%"}} src={atoFeatured[5]["imageUrl"]} /></div>
+            <div>
+              <Link to={`/puzzle_detail/${atoFeatured[5]["hash"]}`}>
+                <img style={{width:"90%"}} src={atoFeatured[5]["imageUrl"]} />
+              </Link>  
+            </div>
             <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[5]["hash"]}`}>{atoFeatured[5]["title"]}</Link></h3>
           </div>
         </div>       

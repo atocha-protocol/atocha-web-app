@@ -27,7 +27,11 @@ function Main (props) {
   const [userBalance, setUserBalance] = useState(null);
   const [relationInfos, setRelationInfos] = useState(null);
   const [currentAccountId, setCurrentAccountId] = useState(null);
-  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+  const [atoPuzzleCreated, setAtoPuzzleCreated] = useState([]);
+  const [atoPuzzleSolved, setAtoPuzzleSolved] = useState([]);
+  const [atoPuzzleChallenged, setAtoPuzzleChallenged] = useState([]);
+  const [atoPuzzleSponsored, setAtoPuzzleSponsored] = useState([]);
   
   useEffect(async () => {
     if (currentAccount) {
@@ -39,6 +43,41 @@ function Main (props) {
 
   //console.log("UserHome.js|Main|useEffect|currentAccount", currentAccount)
   //console.log("UserHome.js|Main|useEffect|currentAccount.address", currentAccount.address);
+
+  function getDistinctPuzzleList(inputArr){
+    //alert("in="+inputArr.length);
+    var pl=new Array();
+    var i=0;            
+    for(i=0;i<inputArr.length;i++){
+      pl[i]=new Object();
+      pl[i]["puzzleInfoId"]=inputArr[i]["puzzleInfoId"];
+    }
+    pl.sort(function(a,b){
+     return b.puzzleInfoId>a.puzzleInfoId
+    });
+    //return pl;
+
+    var pll=new Array();
+    var ii=0;            
+    for(i=0;i<pl.length;i++){
+      if(i==0){
+        pll[ii]=new Object();
+        pll[ii]["puzzleInfoId"]=pl[i]["puzzleInfoId"];
+        ii++;
+      }
+      else{
+        if(pl[i]["puzzleInfoId"]==pl[i-1]["puzzleInfoId"]){
+        }
+        else{
+          pll[ii]=new Object();
+          pll[ii]["puzzleInfoId"]=pl[i]["puzzleInfoId"];
+          ii++;
+        }
+      }
+    }
+    //alert("out="+pll.length);
+    return pll;
+  }
 
   function fillCurrentAccountId(){
     if(account_id == 'self') {
@@ -189,7 +228,11 @@ function Main (props) {
           }
       `
     }).then(result => {
-      setRelationInfos(result.data.atochaUserStruct)
+      setRelationInfos(result.data.atochaUserStruct);
+      console.log("==========UserHome.js|main|loadReleationPuzzles|result.data.atochaUserStruct",result.data.atochaUserStruct);
+      //setAtoPuzzleSolved(getDistinctPuzzleList(result.data.atochaUserStruct.ref_answer_events.nodes));
+      setAtoPuzzleChallenged(getDistinctPuzzleList(result.data.atochaUserStruct.ref_challenge_depoist_events.nodes));
+      setAtoPuzzleSponsored(getDistinctPuzzleList(result.data.atochaUserStruct.ref_deposit_events.nodes));      
     });
   }
 
@@ -230,7 +273,7 @@ function Main (props) {
           <h2>>> Challenged</h2>
           {relationInfos?
           <ul>
-            {relationInfos.ref_challenge_depoist_events.nodes.map((data, idx)=><li key={idx}>
+            {atoPuzzleChallenged.map((data, idx)=><li key={idx}>
               {data?<ArweaveTitle  puzzle_hash={data.puzzleInfoId} /> : '*'}
             </li>)}
           </ul>
@@ -240,7 +283,7 @@ function Main (props) {
           <h2>>> Sponsored</h2>
           {relationInfos?
           <ul>
-            {relationInfos.ref_deposit_events.nodes.map((data, idx)=><li key={idx}>
+            {atoPuzzleSponsored.map((data, idx)=><li key={idx}>
               {data?<ArweaveTitle  puzzle_hash={data.puzzleInfoId} /> : '*'}
             </li>)}
           </ul>

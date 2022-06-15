@@ -5,6 +5,7 @@ import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import ArweaveTitle from "./ArweaveTitle";
 import {useAtoContext} from "./AtoContext";
 import {web3FromSource} from "@polkadot/extension-dapp";
+import config from '../config';
 
 import UserHomeLink from "./UserHomeLink";
 import AtoDeleteThousand from "./AtoDeleteThousand";
@@ -151,7 +152,7 @@ function Main (props) {
       <h1>My account</h1>
       <h3>Basic information</h3>
       <div>
-        <div className="ui basic label">Address</div>&nbsp;&nbsp;&nbsp;&nbsp;{currentAccountId}&nbsp;&nbsp;&nbsp;&nbsp;
+        <div className="ui basic label">Address</div>&nbsp;&nbsp;&nbsp;&nbsp;{currentAccountId}&nbsp;&nbsp;&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}#/accounts/${currentAccountId}`} target="_blank"><i class="external alternate icon"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="ui basic label">Balance</div>&nbsp;&nbsp;&nbsp;&nbsp;{userBalance?<AtoDeleteThousand withThousand={userBalance} />:'Loading...'}&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="ui basic label">Points</div>&nbsp;&nbsp;&nbsp;&nbsp;{userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}
       </div>

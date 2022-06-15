@@ -154,6 +154,7 @@ function Main() {
         <div class="ui text menu">
           <div class="header item">Atocha Puzzles</div>
           <a class="item" href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki">Doc & Wiki & Help</a>
+          <a class="item" href={`${config.OCT_EXPLORER}`} target="_blank">Chain explorer</a>
           <a class="item" href="https://atocha.io">Atocha Protocol</a>
           <a class="item" href="https://polkadot.js.org/extension/">Polkadot JS wallet</a>
           <a class="item" href="https://mainnet.oct.network/bridge/near/atocha">Octopus network bridge</a>

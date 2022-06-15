@@ -63,7 +63,7 @@ function Main (props) {
     <div>      
       <ul>
         {answerList.map((answerData, idx)=><li key={idx}>
-          Solver: <UserHomeLink user_address={answerData.whoId} /> submitted <strong>{answerData.answerContent}</strong>, <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={answerData.eventBn} /> ago.
+          Solver: <UserHomeLink user_address={answerData.whoId} /> submitted <span className="ato_answer">{answerData.answerContent}</span> <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={answerData.eventBn} /> ago.
         </li>)}
       </ul>
       {(puzzle_status=="UNSOLVED")?(<PuzzleAnswer puzzle_hash={puzzle_hash} answerList={answerList} />):(<p>Submission closed.</p>)}    

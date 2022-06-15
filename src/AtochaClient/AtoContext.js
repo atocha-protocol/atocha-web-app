@@ -299,7 +299,7 @@ const AtoContextProvider = props => {
             //console.log("RUN KAMI- ", result.data.puzzleCreatedEvents);
             console.log("==========AtoContext.js|loadPuzzleList|result.data.puzzleCreatedEvents",result.data.puzzleCreatedEvents);
             //setPubPuzzleList(result.data.puzzleCreatedEvents.nodes);
-            setPubPuzzleList(result.data.puzzleCreatedEvents.nodes);
+            //setPubPuzzleList(result.data.puzzleCreatedEvents.nodes);
             var pl=new Array();
             var i=0;            
             result.data.puzzleCreatedEvents.nodes.forEach(function (item) {
