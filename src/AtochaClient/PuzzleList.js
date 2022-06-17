@@ -81,10 +81,10 @@ function Main (props) {
           </Table.Row>
           {pubPuzzleRelist.map(puzzleObj=><Table.Row key={puzzleObj.puzzleHash}>
             <Table.Cell><ArweaveTitle puzzle_hash={puzzleObj.puzzleHash}/></Table.Cell>
-            <Table.Cell><UserHomeLink user_address={puzzleObj.whoId} /></Table.Cell>
+            <Table.Cell><UserHomeLink user_address={puzzleObj.whoId} /></Table.Cell>            
             <Table.Cell>
-              <a href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/explorer/query/${puzzleObj.eventHash}`} target="_blank">
-                Block {puzzleObj.eventBn}
+              <a title={puzzleObj.eventHash} href={`${config.OCT_EXPLORER}/blocks/${puzzleObj.eventBn}`} target="_blank">
+                Block {puzzleObj.eventBn} <i class="external alternate icon"></i>
               </a>
             </Table.Cell>
             <Table.Cell>{puzzleObj.dynTotalDeposit}</Table.Cell>

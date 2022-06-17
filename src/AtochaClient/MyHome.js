@@ -152,7 +152,7 @@ function Main (props) {
       <h1>My account</h1>
       <h3>Basic information</h3>
       <div>
-        <div className="ui basic label">Address</div>&nbsp;&nbsp;&nbsp;&nbsp;{currentAccountId}&nbsp;&nbsp;&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}#/accounts/${currentAccountId}`} target="_blank"><i class="external alternate icon"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <div className="ui basic label">Address</div>&nbsp;&nbsp;&nbsp;&nbsp;{currentAccountId}&nbsp;&nbsp;&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}/accounts/${currentAccountId}`} target="_blank"><i class="external alternate icon"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="ui basic label">Balance</div>&nbsp;&nbsp;&nbsp;&nbsp;{userBalance?<AtoDeleteThousand withThousand={userBalance} />:'Loading...'}&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="ui basic label">Points</div>&nbsp;&nbsp;&nbsp;&nbsp;{userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}
       </div>

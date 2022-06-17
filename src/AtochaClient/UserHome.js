@@ -172,13 +172,16 @@ function Main (props) {
   }
 
   function filterNotMatcha(nodes) {
+    //return nodes;
     const resultArr = []
     for(const idx in nodes) {
+      //console.log("XXXXXXXXX",nodes[idx].puzzleInfoId,nodes[idx].puzzleInfo.dynPuzzleStatus,nodes[idx].resultType);
       if(
-        nodes[idx].puzzleInfo.dynPuzzleStatus == 'PUZZLE_STATUS_IS_SOLVED' &&
+        //nodes[idx].puzzleInfo.dynPuzzleStatus == 'PUZZLE_STATUS_IS_SOLVED' &&
         nodes[idx].resultType == 'ANSWER_HASH_IS_MATCH'
       ) {
-        resultArr.push(nodes[idx])
+        resultArr.push(nodes[idx]);
+        //console.log("XXXXXXXXX",nodes[idx].puzzleInfoId,nodes[idx].puzzleInfo.dynPuzzleStatus,nodes[idx].resultType);
       }
     }
     return resultArr
