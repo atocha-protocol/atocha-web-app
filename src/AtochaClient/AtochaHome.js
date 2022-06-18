@@ -106,11 +106,13 @@ function Main (props) {
       
       <div className="ui message">
         <div className="header">
-          To play Atocha App, you need to...
+          To run Atocha Puzzles, you need to...
         </div>
         <ul className="list">
-          <li><a href="https://polkadot.js.org/extension/">Download Polkadot JS wallet browser extension</a></li>
-          <li><a href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki/puzzle-game-webapp-user-guide/bridge-ato-from-near-wallet-to-polkadot-js-wallet">Bridge ATO From Near Wallet to Polkadot JS Wallet</a></li>
+          <li>Download <a href="https://polkadot.js.org/extension/">Polkadot JS wallet browser extension</a> and add it to your browser. </li>
+          <li>Open the extension and add a new account.</li>
+          <li>Go to <a href="https://mainnet.oct.network/bridge/near/atocha">Octopus network bridge</a> and bridge ATO from your near wallet to the new created account on Polkadot JS wallet. <a href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki/puzzle-game-webapp-user-guide/bridge-ato-from-near-wallet-to-polkadot-js-wallet">How to do this?</a></li>
+          <li>Back to play.atocha.io, it is done! You can create, solve, sponsor and challenge puzzles using your ATO now.</li>
         </ul>
       </div>      
     </div>

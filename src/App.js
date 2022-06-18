@@ -124,7 +124,7 @@ function Main() {
       <br/><br/>
       <Container>
         <h1 className="ui header ReSeTs_h1">Atocha <i>Puzzles</i></h1>
-        <h3>Hello world! Finally, we meet. I am the first web-application of the decentralized Atocha Protocol.</h3>
+        <h3>Hello world! Finally, we meet. I am the first web-application of the decentralized <a href="https://atocha.io">Atocha Protocol</a>.</h3>
         <BrowserRouter>
         <div className="ui secondary pointing menu" style={{marginBottom:"2rem"}}>
           <Link className={menuItemCss.itemHome} to="/" onClick={()=>{menuClick("home")}}>Home</Link>                
@@ -154,9 +154,9 @@ function Main() {
         <div class="ui text menu">
           <div class="header item">Atocha Puzzles</div>
           <a class="item" href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki">Doc & Wiki & Help</a>
-          <a class="item" href={`${config.OCT_EXPLORER}`} target="_blank">Chain explorer</a>
-          <a class="item" href="https://atocha.io">Atocha Protocol</a>
-          <a class="item" href="https://polkadot.js.org/extension/">Polkadot JS wallet</a>
+          <a class="item" href="https://polkadot.js.org/extension/">Polkadot JS wallet</a>          
+          <a class="item" href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/explorer`} target="_blank">Polkadot JS chain explorer</a>
+          <a class="item" href={`${config.OCT_EXPLORER}`} target="_blank">Octopus chain explorer</a>
           <a class="item" href="https://mainnet.oct.network/bridge/near/atocha">Octopus network bridge</a>
         </div>
         <br/>
