@@ -107,25 +107,33 @@ function Main (props) {
   return (
     <div>
       <h1>Ranking & rewards</h1>  
-      <h2>Things you need to know:</h2>
-        <ul>
-          <li>Rewards per block: {atoConfigAtochaFinance?(parseFloat(hexToBigInt(atoConfigAtochaFinance.issuancePerBlock)/BigInt(10**14)).toString())/10000:"Loading..."}</li>
-          <li>Reward era length: {atoConfigAtochaFinance?atoConfigAtochaFinance.exchangeEraBlockLength:"Loading..."} blocks = {atoConfigAtochaFinance?<AtoBlock2Time bigBlock={atoConfigAtochaFinance.exchangeEraBlockLength} smallBlock="0.000001" />:""}</li>
-          <li>Rewards per era: {atoConfigAtochaFinance?(parseFloat(hexToBigInt(atoConfigAtochaFinance.issuancePerBlock)/BigInt(10**14)).toString())/10000*atoConfigAtochaFinance.exchangeEraBlockLength:"Loading..."}</li>
-          <li>Curret era started from : {atoAtochaFinanceExchangeRewardEraStartBn}</li>        
-          <li>Winners number: {atoConfigAtochaFinance?atoConfigAtochaFinance.exchangeMaxRewardListSize:"Loading..."}</li>
-        </ul>  
-      <h2>What will happen if you win?</h2>
-        <ul>
-          <li>You will receive your share of era rewards automatically at the end of current era.</li>
-          <li>Your points will be set to ZERO at the same time.</li>
-        </ul>
-      <h2>How to win?</h2>
-        <ul>
-          <li>Apply for era rewards during current era. Anyone with positive points can apply for it. Your current points: <AtoDeleteThousand withThousand={userPoints} />.</li>
-          <li>Stay in the top list at the end of current era.</li>
-        </ul>
-      <h2>Top players of current reward era ({currentExchangeRewardEra}) <small style={{fontSize:"60%"}}><AtoBlock2Time bigBlock={atoAtochaFinanceExchangeRewardEraStartBn+atoAtochaFinanceConfigExchangeEraBlockLength} smallBlock={pubBlockNumber} /> left</small></h2>
+      <div className="ui stackable three column grid">
+        <div className="column">
+          <h3>Things you need to know</h3>
+          <ul>
+            <li>Rewards per block: {atoConfigAtochaFinance?(parseFloat(hexToBigInt(atoConfigAtochaFinance.issuancePerBlock)/BigInt(10**14)).toString())/10000:"Loading..."}</li>
+            <li>Reward era length: {atoConfigAtochaFinance?atoConfigAtochaFinance.exchangeEraBlockLength:"Loading..."} blocks = {atoConfigAtochaFinance?<AtoBlock2Time bigBlock={atoConfigAtochaFinance.exchangeEraBlockLength} smallBlock="0.000001" />:""}</li>
+            <li>Rewards per era: {atoConfigAtochaFinance?(parseFloat(hexToBigInt(atoConfigAtochaFinance.issuancePerBlock)/BigInt(10**14)).toString())/10000*atoConfigAtochaFinance.exchangeEraBlockLength:"Loading..."}</li>
+            <li>Curret era started from : {atoAtochaFinanceExchangeRewardEraStartBn}</li>        
+            <li>Winners number: {atoConfigAtochaFinance?atoConfigAtochaFinance.exchangeMaxRewardListSize:"Loading..."}</li>
+          </ul>           
+        </div>
+        <div className="column">
+          <h3>What will happen if you win?</h3>
+          <ul>
+            <li>You will receive your share of era rewards automatically at the end of current era.</li>
+            <li>Your points will be set to ZERO at the same time.</li>
+          </ul>          
+        </div>
+        <div className="column">
+          <h3>How to win?</h3>
+          <ul>
+            <li>Apply for era rewards during current era. Anyone with positive points can apply for it. Your current points: <AtoDeleteThousand withThousand={userPoints} />.</li>
+            <li>Create or solve puzzles, earn points, stay in the top list at the end of current era.</li>
+          </ul>
+        </div>
+      </div>
+      <h3>Top players of current reward era ({currentExchangeRewardEra}) <small style={{fontSize:"60%"}}><AtoBlock2Time bigBlock={atoAtochaFinanceExchangeRewardEraStartBn+atoAtochaFinanceConfigExchangeEraBlockLength} smallBlock={pubBlockNumber} /> left</small></h3>
       {exchangeInfo.length>0?
       <Table className="ui very basic celled table" style={{width:"100%"}}>
         <Table.Body>
@@ -160,7 +168,7 @@ function Main (props) {
           <div style={{ overflowWrap: 'break-word' }}>{status}</div>
         </Form.Field>
       </Form>               
-      <h2>Top players of previous reward era ({previousExchangeRewardEra})</h2>
+      <h3>Top players of previous reward era ({previousExchangeRewardEra})</h3>
       {previousExchangeInfo.length>0?
       <Table className="ui very basic celled table" style={{width:"100%"}}>
         <Table.Body>
