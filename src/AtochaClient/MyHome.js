@@ -152,11 +152,20 @@ function Main (props) {
       <h1>My account</h1>
       <h3>Basic information</h3>
       <div>
-        <div className="ui basic label">Address</div>&nbsp;&nbsp;&nbsp;&nbsp;{currentAccountId}&nbsp;&nbsp;&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}/accounts/${currentAccountId}`} target="_blank"><i class="external alternate icon"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <div className="ui basic label">Address</div>&nbsp;&nbsp;&nbsp;&nbsp;{currentAccountId}&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="ui basic label">Balance</div>&nbsp;&nbsp;&nbsp;&nbsp;{userBalance?<AtoDeleteThousand withThousand={userBalance} />:'Loading...'}&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="ui basic label">Points</div>&nbsp;&nbsp;&nbsp;&nbsp;{userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}
       </div>
-      <h3>As a creator/solver/challenger, claim your tokens from the following puzzles:</h3>
+      <h3>Account management</h3>
+      <div>      
+        <ul>
+          <li>Browse your account for ATO balance and transactions: <a href={`${config.OCT_EXPLORER}/accounts/${currentAccountId}`} target="_blank">Octopus explorer <i class="external alternate icon"></i></a></li>
+          <li>Create new accounts: use your Polkadot JS wallet browser extension to add accounts.</li>
+          <li>Transfer ATO to other accounts:  <a href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/accounts`} target="_blank">Polkadot JS explorer <i class="external alternate icon"></i></a></li>
+          <li>Bridge ATO from your near accounts: <a href="https://mainnet.oct.network/bridge/near/atocha" target="_blank">Octopus network bridge <i class="external alternate icon"></i></a></li>
+        </ul>
+      </div>
+      <h3>As a creator/solver/challenger, claim your ATO from the following puzzles:</h3>
       {relationInfos?
         <Table className="ui very basic celled table" style={{width:"100%"}}>
           <Table.Body>

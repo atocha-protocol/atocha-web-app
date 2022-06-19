@@ -3,7 +3,7 @@
   "ARWEAVE_HTTP": "https://arweave.atocha.io/ar",
   "SUBQUERY_HTTP": "http://148.72.247.143:3060",
   "ARWEAVE_EXPLORE": "https://arweave.net",
-  "POLKADOT_EXPLORE": "https://polkadot.js.org/apps/",
+  "POLKADOT_EXPLORE": "https://polkadot.js.org/apps",
   "OCT_EXPLORER": "https://explorer.mainnet.oct.network/atocha",
   "API_ATOCHA_URL": "https://api.atocha.io"
 }

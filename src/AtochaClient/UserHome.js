@@ -244,7 +244,7 @@ function Main (props) {
       <h1>Player profile</h1>
       <div style={{textAlign:"center"}}>
         <img src="https://atocha.io/wp-content/uploads/2021/12/img_210318.png" style={{width:"100px"}} /><br/>
-        <h3 style={{lineHeight:"150%"}}>{currentAccountId?currentAccountId:'loading...'}<br/>Points: {userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}</h3>
+        <h3 style={{lineHeight:"150%"}}>{currentAccountId?(<span>{currentAccountId}&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}/accounts/${currentAccountId}`} target='_blank'><i class="external alternate icon"></i></a></span>):'loading...'}<br/>Points: {userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}</h3>
       </div>
       <br/>
       <div className="ui stackable four column grid">
