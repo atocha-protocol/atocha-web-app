@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {useSubstrate} from "../substrate-lib";
+import config from '../config';
 
 function Main (props) {
-  const {bigBlock,smallBlock}=props;
+  const {bigBlock,smallBlock,ifShowSmallBlock}=props;
   //alert(bigBlock);
   //alert(smallBlock);
   
-  function atoBlock2Time(bigBlock,smallBlock){
+  function atoBlock2Time(bigBlock,smallBlock,ifShowSmallBlock){
     if(typeof(bigBlock)=="undefined" || typeof(smallBlock)=="undefined"){
       return "@Error@";
     }
@@ -36,6 +37,6 @@ function Main (props) {
 }
 
 export default function AtoBlock2Time (props) {
-  const {bigBlock,smallBlock} = props;
+  const {bigBlock,smallBlock,ifShowSmallBlock} = props;
   return <Main {...props} />;
 }

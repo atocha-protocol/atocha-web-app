@@ -10,6 +10,7 @@ import ClientAtochaCreator from "./ClientAtochaCreator";
 import {useAtoContext, useAtoContextState} from "./AtoContext";
 import PointsRankList from "./PointsRankList";
 import UserHomeLink from "./UserHomeLink";
+import AtoBlockWithLink from "./AtoBlockWithLink";
 
 var atoPuzzleList=new Array();
 
@@ -83,9 +84,7 @@ function Main (props) {
             <Table.Cell><ArweaveTitle puzzle_hash={puzzleObj.puzzleHash}/></Table.Cell>
             <Table.Cell><UserHomeLink user_address={puzzleObj.whoId} /></Table.Cell>            
             <Table.Cell>
-              <a title={puzzleObj.eventHash} href={`${config.OCT_EXPLORER}/blocks/${puzzleObj.eventBn}`} target="_blank">
-                Block {puzzleObj.eventBn} <i class="external alternate icon"></i>
-              </a>
+              <AtoBlockWithLink blockNo={puzzleObj.eventBn} />
             </Table.Cell>
             <Table.Cell>{puzzleObj.dynTotalDeposit}</Table.Cell>
           </Table.Row>)}

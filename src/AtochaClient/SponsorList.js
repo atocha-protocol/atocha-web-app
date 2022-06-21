@@ -12,6 +12,7 @@ import {useAtoContext} from "./AtoContext";
 import UserHomeLink from "./UserHomeLink";
 import AtoBlock2Time from "./AtoBlock2Time";
 import AtoDeleteThousand from "./AtoDeleteThousand";
+import AtoBlockWithLink from "./AtoBlockWithLink";
 
 function Main (props) {
   const { api } = useSubstrateState();
@@ -62,7 +63,7 @@ function Main (props) {
     <div>
       <ul>
       {puzzleDepositList.map((sponsorDepositData, idx)=><li key={idx}>
-        <UserHomeLink user_address={sponsorDepositData.whoId} /> sponsored {sponsorDepositData.deposit/(10**18)}, <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={sponsorDepositData.eventBn} /> ago.
+        <UserHomeLink user_address={sponsorDepositData.whoId} /> sponsored {sponsorDepositData.deposit/(10**18)}, <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={sponsorDepositData.eventBn} /> ago on <AtoBlockWithLink blockNo={sponsorDepositData.eventBn} />.
         {(sponsorDepositData.tip=="" || sponsorDepositData.tip=="none") ? (
           <></>
         ):(

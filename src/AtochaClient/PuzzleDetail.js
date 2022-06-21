@@ -19,7 +19,7 @@ import {useAtoContext} from "./AtoContext";
 import {useSubstrateState} from "../substrate-lib";
 import UserHomeLink from "./UserHomeLink";
 import AtoBlock2Time from "./AtoBlock2Time";
-
+import AtoBlockWithLink from "./AtoBlockWithLink";
 
 function Main (props) {
   const {apollo_client, gql, puzzleSets: {pubRefresh} , chainData: {pubBlockNumber}, } = useAtoContext();
@@ -256,7 +256,7 @@ function Main (props) {
 
         <div>Puzzle hash: {puzzleInfo?.puzzleHash}</div>
         <div>Creator: <UserHomeLink user_address={puzzleInfo?.whoId} /></div>
-        <div>Created: <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={puzzleInfo?.eventBn} /> ago</div>
+        <div>Created: <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={puzzleInfo?.eventBn} /> ago on <AtoBlockWithLink blockNo={puzzleInfo?.eventBn}  /></div>
         <div>Total prize: <strong>{puzzleInfo?.dynTotalDeposit/(10**18)}</strong></div>
         <div title={`Points reward era length = ${financeConfig?financeConfig.pointRewardEpochBlockLength:"loading..."} blocks`}>Estimated points: {puzzleInfo?getEstimatedPoints(puzzleInfo, financeConfig?financeConfig.pointRewardEpochBlockLength:0):'Loading...'}</div>
         <div>Puzzle status:&nbsp;&nbsp;

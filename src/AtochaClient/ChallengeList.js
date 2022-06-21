@@ -11,6 +11,7 @@ import {useAtoContext} from "./AtoContext";
 import PuzzleChallengeRaising from "./PuzzleChallengeRaising";
 import UserHomeLink from "./UserHomeLink";
 import AtoBlock2Time from "./AtoBlock2Time";
+import AtoBlockWithLink from "./AtoBlockWithLink";
 
 function Main (props) {
   const { api } = useSubstrateState();
@@ -67,7 +68,7 @@ function Main (props) {
       <div>Total current={totalChallengeDeposit/(10**18)}</div>
       <ul>
         {challengeDepositList.map((challengeData, idx)=><li key={idx}>
-          <UserHomeLink user_address={challengeData.whoId} /> challenged with {challengeData.deposit/(10**18)}, <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={challengeData.eventBn} /> ago.
+          <UserHomeLink user_address={challengeData.whoId} /> challenged {challengeData.deposit/(10**18)}, <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={challengeData.eventBn} /> ago on <AtoBlockWithLink blockNo={challengeData.eventBn} />.
         </li>)}
       </ul>
       {(puzzle_status=="CHALLENGABLE")?((challengeDepositList.length<=0)?(<PuzzleCommitChallenge puzzle_hash={puzzle_hash} challengeDepositList={challengeDepositList} puzzle_challengeDeadline={puzzle_challengeDeadline1} minDeposit={puzzle_prize*0.05*atoConfigChallengeTarget/(10**9)} />):(<PuzzleChallengeRaising puzzle_hash={puzzle_hash} challengeDepositList={challengeDepositList} puzzle_challengeDeadline={puzzle_challengeDeadline2} />)):(<p>Submission not open or closed.</p>)}

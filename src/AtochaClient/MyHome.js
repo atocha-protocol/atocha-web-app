@@ -160,8 +160,8 @@ function Main (props) {
       <div>      
         <ul>
           <li>Browse your account for ATO balance and transactions: <a href={`${config.OCT_EXPLORER}/accounts/${currentAccountId}`} target="_blank">Octopus explorer <i class="external alternate icon"></i></a></li>
-          <li>Create new accounts: use your Polkadot JS wallet browser extension to add accounts.</li>
-          <li>Transfer ATO to other accounts:  <a href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/accounts`} target="_blank">Polkadot JS explorer <i class="external alternate icon"></i></a></li>
+          <li>Create new accounts, backup and restore existing accounts: use your PolkadotJS wallet browser extension.</li>
+          <li>Transfer ATO to other accounts:  <a href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/accounts`} target="_blank">PolkadotJS online wallet <i class="external alternate icon"></i></a></li>
           <li>Bridge ATO from your near accounts: <a href="https://mainnet.oct.network/bridge/near/atocha" target="_blank">Octopus network bridge <i class="external alternate icon"></i></a></li>
         </ul>
       </div>

@@ -153,9 +153,10 @@ function Main() {
         <div className="ui divider"></div>
         <div class="ui text menu">
           <div class="header item">Atocha Puzzles</div>
+          <a class="item" href="https://app.ref.finance/#wrap.near|atocha-token.near" target="_blank">Get ATO</a>
           <a class="item" href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki">Doc & Wiki & Help</a>
-          <a class="item" href="https://polkadot.js.org/extension/">Polkadot JS wallet</a>          
-          <a class="item" href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/explorer`} target="_blank">Polkadot JS chain explorer</a>
+          <a class="item" href="https://polkadot.js.org/extension/">PolkadotJS wallet browser extension</a>          
+          <a class="item" href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/explorer`} target="_blank">PolkadotJS online wallet</a>
           <a class="item" href={`${config.OCT_EXPLORER}`} target="_blank">Octopus chain explorer</a>
           <a class="item" href="https://mainnet.oct.network/bridge/near/atocha">Octopus network bridge</a>
         </div>
