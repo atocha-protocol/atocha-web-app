@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
 import {useSubstrate} from "../substrate-lib";
 import getShortText from "../units/GetShortText";
+import BindAddressToTwitter from "./BindAddressToTwitter";
 
 function Main (props) {
   const { user_address } = props;
@@ -26,7 +27,7 @@ function Main (props) {
 
   return (
     <>
-      <Link to={`/user_home/${user_address}`}>{user_address?getKeyringName(user_address):'*'}</Link>
+      <Link to={`/user_home/${user_address}`}><BindAddressToTwitter ato_address={user_address} displayMode="text_only" /></Link>
     </>
   );
 }

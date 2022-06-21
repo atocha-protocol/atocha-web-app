@@ -11,6 +11,7 @@ import {useAtoContext, useAtoContextState} from "./AtoContext";
 import PointsRankList from "./PointsRankList";
 import UserHomeLink from "./UserHomeLink";
 import AtoBlockWithLink from "./AtoBlockWithLink";
+import BindAddressToTwitter from "./BindAddressToTwitter";
 
 var atoPuzzleList=new Array();
 

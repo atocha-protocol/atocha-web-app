@@ -16,6 +16,7 @@ import {
 import PuzzleDetailLink from "./PuzzleDetailLink";
 import {web3FromSource} from "@polkadot/extension-dapp";
 import AtoDeleteThousand from "./AtoDeleteThousand";
+import BindAddressToTwitter from "./BindAddressToTwitter";
 
 function Main (props) {
   const { api, currentAccount } = useSubstrateState('');
@@ -243,8 +244,8 @@ function Main (props) {
     <div>
       <h1>Player profile</h1>
       <div style={{textAlign:"center"}}>
-        <img src="https://atocha.io/wp-content/uploads/2021/12/img_210318.png" style={{width:"100px"}} /><br/>
-        <h3 style={{lineHeight:"150%"}}>{currentAccountId?(<span>{currentAccountId}&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}/accounts/${currentAccountId}`} target='_blank'><i class="external alternate icon"></i></a></span>):'loading...'}<br/>Points: {userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}</h3>
+        {currentAccountId?<BindAddressToTwitter ato_address={currentAccountId} displayMode="icon_name" />:"Loading..."}
+        <h3 style={{lineHeight:"150%",marginTop:"6px"}}>{currentAccountId?(<span>{currentAccountId}&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}/accounts/${currentAccountId}`} target='_blank'><i class="external alternate icon"></i></a></span>):'loading...'}<br/>Points: {userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}</h3>
       </div>
       <br/>
       <div className="ui stackable four column grid">

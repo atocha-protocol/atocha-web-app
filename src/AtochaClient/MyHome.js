@@ -9,6 +9,7 @@ import config from '../config';
 
 import UserHomeLink from "./UserHomeLink";
 import AtoDeleteThousand from "./AtoDeleteThousand";
+import BindAddressToTwitter from "./BindAddressToTwitter";
 
 function Main (props) {
   const { api, currentAccount } = useSubstrateState('');
@@ -165,6 +166,8 @@ function Main (props) {
           <li>Bridge ATO from your near accounts: <a href="https://mainnet.oct.network/bridge/near/atocha" target="_blank">Octopus network bridge <i class="external alternate icon"></i></a></li>
         </ul>
       </div>
+      <h3>Social connection</h3>
+      <div>{currentAccountId?<BindAddressToTwitter ato_address={currentAccountId} displayMode="icon_name_button" />:"Loading..."}</div>
       <h3>As a creator/solver/challenger, claim your ATO from the following puzzles:</h3>
       {relationInfos?
         <Table className="ui very basic celled table" style={{width:"100%"}}>
