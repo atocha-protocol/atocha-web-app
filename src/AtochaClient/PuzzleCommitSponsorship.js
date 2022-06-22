@@ -28,7 +28,7 @@ function Main (props) {
   function handlerEvent(section, method, statusCallBack, data) {
     if(section == 'atochaFinance' &&  method == 'PuzzleDeposit') {
       if(data[4].toString()=="Sponsored"){
-        statusCallBack(1, "Thank you for your sponsorship.");
+        statusCallBack(1, "😉 Thank you for your sponsorship.");
       }
       else{
         statusCallBack(1, data[4].toString());
@@ -42,13 +42,13 @@ function Main (props) {
       const failedMsg = extractErrorMsg(failedData.index, failedData.error)
       if(failedMsg){
         if(failedMsg=="PuzzleMinBonusInsufficient"){
-          statusCallBack(2, "Amount too small.")
+          statusCallBack(2, "Amount too small.");
         }
         else{
-          statusCallBack(2, `${failedMsg}`)  
+          statusCallBack(2, `${failedMsg}`);
         }        
       }else{
-        statusCallBack(2, "Unknown Mistake")
+        statusCallBack(2, "Sorry, there was an unknown mistake.");
       }
     }
   }

@@ -81,7 +81,7 @@ function Main (props) {
             <Table.Cell><strong>Created</strong></Table.Cell>
             <Table.Cell><strong>Prize</strong></Table.Cell>
           </Table.Row>
-          {pubPuzzleRelist.map(puzzleObj=><Table.Row key={puzzleObj.puzzleHash}>
+          {pubPuzzleRelist.map(puzzleObj=><Table.Row key={puzzleObj.puzzleHash} style={atoBlackList4Puzzle[puzzleObj.puzzleHash]}>
             <Table.Cell><ArweaveTitle puzzle_hash={puzzleObj.puzzleHash}/></Table.Cell>
             <Table.Cell><UserHomeLink user_address={puzzleObj.whoId} /></Table.Cell>            
             <Table.Cell>

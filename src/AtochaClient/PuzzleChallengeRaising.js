@@ -34,7 +34,7 @@ function Main (props) {
       //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",data[3].toString());
       //statusCallBack(1, data[3].toString());
       if(data[3].toString()=="Crowdloan"){
-        statusCallBack(1, "Challenge has been made.");
+        statusCallBack(1, "😉 Total amount of challenge raised.");
       }
       else{
         statusCallBack(1, data[3].toString());
@@ -48,7 +48,7 @@ function Main (props) {
       if(failedMsg) {
         statusCallBack(2, `${failedMsg}`)
       }else{
-        statusCallBack(2, "Unknown Mistake")
+        statusCallBack(2, "Sorry, there was an unknown mistake.");
       }
     }
   }

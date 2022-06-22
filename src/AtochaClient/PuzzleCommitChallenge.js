@@ -65,7 +65,7 @@ function Main (props) {
       //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",data[3].toString());
       //statusCallBack(1, data[3].toString());
       if(data[3].toString()=="Issue"){
-        statusCallBack(1, "Challenge has been Launched.");
+        statusCallBack(1, "😉 Challenge has been Launched.");
       }
       else{
         statusCallBack(1, data[3].toString());
@@ -84,7 +84,7 @@ function Main (props) {
           statusCallBack(2, `${failedMsg}`)  
         }        
       }else{
-        statusCallBack(2, "Unknown Mistake")
+        statusCallBack(2, "Sorry, there was an unknown mistake.");
       }
     }
   }

@@ -42,13 +42,14 @@ function Main (props) {
     if(section == 'atochaModule' &&  method == 'AnswerCreated') {      
       //statusCallBack(1, data[4].toString());
       if(data[4].toString()=="ANSWER_HASH_IS_MATCH"){
-        statusCallBack(1,"Bingo! Your answer is right.");
+        statusCallBack(1,"😉 Bingo! Your answer is right.");
       }
       else if(data[4].toString()=="ANSWER_HASH_IS_MISMATCH"){
-        statusCallBack(1,"Sorry, Your answer is not right.");
+        statusCallBack(1,"Your answer is not right.");
       }    
       else{
-        statusCallBack(1, data[4].toString());
+        //statusCallBack(1, data[4].toString());
+        statusCallBack(1,"Your answer is not right (101).");
       }  
       setAnswerTxt("");
       setAnswerExplain("none");
@@ -58,9 +59,10 @@ function Main (props) {
       const failedData = data.toJSON()[0].module
       const failedMsg = extractErrorMsg(failedData.index, failedData.error)
       if(failedMsg) {
-        statusCallBack(2, `${failedMsg}`)
+        //statusCallBack(2, `${failedMsg}`);
+        statusCallBack(2, "Your answer is not right (102).");
       }else{
-        statusCallBack(2, "Unknown Mistake")
+        statusCallBack(2, "Sorry, there was an unknown mistake.");
       }
     }
   }

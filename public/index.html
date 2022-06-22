@@ -27,6 +27,7 @@
     />
     <link rel="stylesheet" href="%PUBLIC_URL%/assets/main.css" />
     <title>Atocha Puzzles</title>
+
   <style type="text/css">
     .ReSeTs_h1{
       font-size: 5rem !important;
@@ -78,140 +79,138 @@
       margin-bottom: 0.75rem !important;
     }
 
+    .ReSeTs_fixedFull{
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        min-width: 100%;
+        min-height: 100%; 
+        border: 0px;
+        z-index:991;
+        background: black;
+    }    
+    .ReSeTs_fixedRight{
+        position: fixed;
+        right: 0px;
+        top: 0px;
+        width: 30%;
+        height: 100%;
+        min-width: 30%;
+        min-height: 100%; 
+        z-index:992;
+        background:black;
+        color: white;    
+        padding-top: 5rem;
+        padding-bottom: 5rem;
+        padding-left: 3rem;
+        padding-right: 3rem;
+        opacity: 0.5;
+    }    
 
-    
-.ReSeTs_fixedFull{
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    height: 100%;
-    min-width: 100%;
-    min-height: 100%; 
-    border: 0px;
-    z-index:991;
-    background: black;
-}    
-.ReSeTs_fixedRight{
-    position: fixed;
-    right: 0px;
-    top: 0px;
-    width: 30%;
-    height: 100%;
-    min-width: 30%;
-    min-height: 100%; 
-    z-index:992;
-    background:black;
-    color: white;    
-    padding-top: 5rem;
-    padding-bottom: 5rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
-    opacity: 0.5;
-}    
+    .ato_div_slide45{
+      position: absolute;
+      top: -10%;
+      left: 80%;
+      width: 5rem;
+      height: 5rem;
+      b1ackground: red;
+      transform:rotate(45deg);
+    }
+    .ato_img_slide45{
+      position:relative;
+      border-radius: 0.5rem;
+      border: 0.25rem solid rgba(190,190,190,.1);
+      box-shadow: 0.125rem .125rem 1.25rem 0 rgba(0,0,0,.3);
+      transition: 2s;
+      transition-timing-function: cubic-bezier(0.77, 0, 0.18, 1);    
+    }
+    .ato_img_slide45a{
+      top: -300px;
+      left: -20px;
+      width: 500px;
+    }
+    .ato_img_slide45a:hover{
+      left: -120px;
+    }
+    .ato_img_slide45b{
+      top: -240px;
+      left: -320px;
+      width: 350px;
+    }
+    .ato_img_slide45b:hover{
+      top: -170px;
+    }
+    .ato_img_slide45c{
+      top: -610px;
+      left: 60px;
+      width: 150px;
+    }
+    .ato_img_slide45c:hover{
+      top: -480px;
+    }
+    .ato_img_slide45d{
+      top: -915px;
+      left: 240px;
+      width: 400px;
+    }
+    .ato_img_slide45d:hover{
+      top: -780px;
+    }
 
-  
+    .ato_hr_big{
+      margin: 2rem 0rem 2rem 0rem;
+    }
+    .ato_div_nav .btn{
+      font-size:75%;
+      text-transform: uppercase;
+      margin-bottom:6px;
+    }
+    .ato_img_player-icon{
+      width: 120px;
+      margin-bottom:12px;
+    }
+    .ato_img_twitter-icon{
+      width: 36px;
+    }
+    .ato_span_explain{
+      font-size:14px;
+      color:"gray";
+      font-weight:normal
+    }
+    .ato_div_sponsor-image{
+      margin-bottom:12px;
+      margin-top:12px
+    }
+    .ato_div_form-item{
+      margin-bottom: 12px;
+    }
+    .ato_answer{
+      color: gray !important;
+      background-color: gray !important;
+      text-decoration:underline !important;
+    }
 
-.ato_div_slide45{
-  position: absolute;
-  top: -10%;
-  left: 80%;
-  width: 5rem;
-  height: 5rem;
-  b1ackground: red;
-  transform:rotate(45deg);
-}
-.ato_img_slide45{
-  position:relative;
-  border-radius: 0.5rem;
-  border: 0.25rem solid rgba(190,190,190,.1);
-  box-shadow: 0.125rem .125rem 1.25rem 0 rgba(0,0,0,.3);
-  transition: 2s;
-  transition-timing-function: cubic-bezier(0.77, 0, 0.18, 1);    
-}
-.ato_img_slide45a{
-  top: -300px;
-  left: -20px;
-  width: 500px;
-}
-.ato_img_slide45a:hover{
-  left: -120px;
-}
-.ato_img_slide45b{
-  top: -240px;
-  left: -320px;
-  width: 350px;
-}
-.ato_img_slide45b:hover{
-  top: -170px;
-}
-.ato_img_slide45c{
-  top: -610px;
-  left: 60px;
-  width: 150px;
-}
-.ato_img_slide45c:hover{
-  top: -480px;
-}
-.ato_img_slide45d{
-  top: -915px;
-  left: 240px;
-  width: 400px;
-}
-.ato_img_slide45d:hover{
-  top: -780px;
-}
+    .ui.sticky .ui.top .menu img{
+      display:none !important;
+    }
 
-.ato_hr_big{
-  margin: 2rem 0rem 2rem 0rem;
-}
-.ato_div_nav .btn{
-  font-size:75%;
-  text-transform: uppercase;
-  margin-bottom:6px;
-}
-.ato_img_player-icon{
-  width: 120px;
-  margin-bottom:12px;
-}
-.ato_img_twitter-icon{
-  width: 36px;
-}
-.ato_span_explain{
-  font-size:14px;
-  color:"gray";
-  font-weight:normal
-}
-.ato_div_sponsor-image{
-  margin-bottom:12px;
-  margin-top:12px
-}
-.ato_div_form-item{
-  margin-bottom: 12px;
-}
-.ato_answer{
-  color: gray !important;
-  background-color: gray !important;
-  text-decoration:underline !important;
-}
-
-.ui.sticky .ui.top .menu img{
-  display:none !important;
-}
-
-.ui.sticky .ui.top .right.menu{
-  margin: 0px !important;
-}
+    .ui.sticky .ui.top .right.menu{
+      margin: 0px !important;
+    }
 
 
-.ReSeTs_full{
-  position:absolute;top: 0;left: 0;bottom: 0;right: 0;background:green;z-index:9999;
-}
+    .ReSeTs_full{
+      position:absolute;top: 0;left: 0;bottom: 0;right: 0;background:green;z-index:9999;
+    }
+  </style>        
 
-</style>        
-
-
-  <script src="https://atocha.io/wp-content/atocha-io/atocha-app-featured.js?r=220621"></script>  
+  <script src="https://atocha.io/wp-content/atocha-io/atocha-app-featured.js?r=220623"></script>
+  <script src="https://atocha.io/wp-content/atocha-io/atocha-app-black-list.js?r=220623"></script>
+  <script>
+    const atoBlackList4Puzzle=new Object(); 
+  </script>
   </head>
   <body>
 
