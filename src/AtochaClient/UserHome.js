@@ -26,6 +26,7 @@ function Main (props) {
 
   // Atocha user information.
   const [userBalance, setUserBalance] = useState(null);
+  const [playerPoints, setPlayerPoints] = useState(null);
   const [relationInfos, setRelationInfos] = useState(null);
   const [currentAccountId, setCurrentAccountId] = useState(null);
 
@@ -38,12 +39,26 @@ function Main (props) {
     if (currentAccount) {
       fillCurrentAccountId();
       loadAccountBalance();
+      getPlayerPoints();
       await loadReleationPuzzles();
     }
   }, [currentAccount, userBalance, pubBlockNumber]);
 
   //console.log("UserHome.js|Main|useEffect|currentAccount", currentAccount)
   //console.log("UserHome.js|Main|useEffect|currentAccount.address", currentAccount.address);
+
+  function getPlayerPoints() {
+        //alert("getPlayerPoints");
+        //alert(currentAccount);
+        //alert(currentAccountId);
+        currentAccount &&
+        api.query.atochaFinance
+          .atoPointLedger(currentAccountId, points =>{
+              //alert(currentAccountId+"|"+points);
+              setPlayerPoints(points.toHuman())
+          }) .then(unsub => {
+        }) .catch(console.error)
+  }
 
   function getDistinctPuzzleList(inputArr){
     //alert("in="+inputArr.length);
@@ -245,7 +260,7 @@ function Main (props) {
       <h1>Player profile</h1>
       <div style={{textAlign:"center"}}>
         {currentAccountId?<BindAddressToTwitter ato_address={currentAccountId} displayMode="icon_name" />:"Loading..."}
-        <h3 style={{lineHeight:"150%",marginTop:"6px"}}>{currentAccountId?(<span>{currentAccountId}&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}/accounts/${currentAccountId}`} target='_blank'><i class="external alternate icon"></i></a></span>):'loading...'}<br/>Points: {userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}</h3>
+        <h3 style={{lineHeight:"150%",marginTop:"6px"}}>{currentAccountId?(<span>{currentAccountId}&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}/accounts/${currentAccountId}`} target='_blank'><i class="external alternate icon"></i></a></span>):'loading...'}<br/>Points: {playerPoints?<AtoDeleteThousand withThousand={playerPoints} />:'Loading...'}</h3>
       </div>
       <br/>
       <div className="ui stackable four column grid">
