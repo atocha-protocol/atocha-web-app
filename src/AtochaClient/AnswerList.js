@@ -10,6 +10,7 @@ import {useAtoContext} from "./AtoContext";
 import UserHomeLink from "./UserHomeLink";
 import AtoBlock2Time from "./AtoBlock2Time";
 import AtoBlockWithLink from "./AtoBlockWithLink";
+import Web3 from "web3";
 
 function Main (props) {
   const { api } = useSubstrateState();
@@ -53,6 +54,13 @@ function Main (props) {
     });
   }
 
+  function kHexToString(str) {
+    if(str.substr(0, 2) == '0x') {
+      return Web3.utils.hexToString(str)
+    }
+    return str
+  }
+
 
   useEffect(() => {
 
@@ -64,7 +72,7 @@ function Main (props) {
     <div>      
       <ul>
         {answerList.map((answerData, idx)=><li key={idx}>
-          Solver: <UserHomeLink user_address={answerData.whoId} />, submitted <span className="ato_answer">{answerData.answerContent}</span> <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={answerData.eventBn} /> ago on <AtoBlockWithLink blockNo={answerData.eventBn} />.
+          Solver: <UserHomeLink user_address={answerData.whoId} />, submitted <span className="ato_answer">{kHexToString(answerData.answerContent)}</span> <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={answerData.eventBn} /> ago on <AtoBlockWithLink blockNo={answerData.eventBn} />.
         </li>)}
       </ul>
       {(puzzle_status=="UNSOLVED")?(<PuzzleAnswer puzzle_hash={puzzle_hash} answerList={answerList} />):(<p>Submission closed.</p>)}    
