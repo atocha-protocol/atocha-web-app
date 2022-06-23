@@ -97,7 +97,33 @@ function Main (props) {
             </div>
             <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[5]["hash"]}`}>{atoFeatured[5]["title"]}</Link></h3>
           </div>
-        </div>       
+        </div>
+        <div className="three column row">
+          <div className="column">
+            <div>
+              <Link to={`/puzzle_detail/${atoFeatured[6]["hash"]}`}>
+                <img style={{width:"90%"}} src={atoFeatured[6]["imageUrl"]} />
+              </Link>
+            </div>
+            <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[6]["hash"]}`}>{atoFeatured[6]["title"]}</Link></h3>
+          </div>
+          <div className="column">
+            <div>
+              <Link to={`/puzzle_detail/${atoFeatured[7]["hash"]}`}>
+                <img style={{width:"90%"}} src={atoFeatured[7]["imageUrl"]} />
+              </Link>  
+            </div>
+            <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[7]["hash"]}`}>{atoFeatured[7]["title"]}</Link></h3>
+          </div>
+          <div className="column">
+            <div>
+              <Link to={`/puzzle_detail/${atoFeatured[8]["hash"]}`}>
+                <img style={{width:"90%"}} src={atoFeatured[8]["imageUrl"]} />
+              </Link>  
+            </div>
+            <h3 style={{marginTop:"6px"}}><Link to={`/puzzle_detail/${atoFeatured[8]["hash"]}`}>{atoFeatured[8]["title"]}</Link></h3>
+          </div>
+        </div>             
       </div>
       :
       "Loading..."
