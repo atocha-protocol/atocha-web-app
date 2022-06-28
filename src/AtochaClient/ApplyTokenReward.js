@@ -111,7 +111,7 @@ function Main (props) {
 
   return (
     <div>
-      <h1>Weekly Reward & Atocha Points Leaderboard</h1><br/>
+      <h1>Weekly Reward & Atocha Points Leaderboard</h1>
       <div className="ui two column stackable grid">
         <div className="five wide column">
           <h3>Weekly Reward parameters</h3>

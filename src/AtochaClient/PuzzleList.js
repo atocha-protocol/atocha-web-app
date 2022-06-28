@@ -65,7 +65,7 @@ function Main (props) {
 
   return (
     <div>
-      <h1>Puzzle list</h1><br/>
+      <h1>Puzzle list</h1>
       <div style={{textAlign:"center"}}>
         <Button className="ui small yellow button ReSeTs_statusButton" onClick={()=>updatePuzzleList('UNSOLVED')}>UNSOLVED</Button>
         <Button className="ui small orange button ReSeTs_statusButton" onClick={()=>updatePuzzleList('CHALLENGABLE')}>CHALLENGABLE</Button>

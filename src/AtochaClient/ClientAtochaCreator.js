@@ -179,7 +179,7 @@ function Main (props) {
 
   return (
     <div>
-      <h1>Create a puzzle</h1><br/>
+      <h1>Create a puzzle</h1>
       <Form>
         <Form.Field>
           <Input
