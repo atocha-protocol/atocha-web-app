@@ -85,8 +85,9 @@ function Main (props) {
       setConfigAtochaFinance(caf.toJSON());
     }
 
-    setConfigAtochaModuleMinBonusOfPuzzle((parseFloat(hexToBigInt(configAtochaModule.minBonusOfPuzzle)/BigInt(10**14)).toString())/10000);
-
+    if(configAtochaModule){
+      setConfigAtochaModuleMinBonusOfPuzzle((parseFloat(hexToBigInt(configAtochaModule.minBonusOfPuzzle)/BigInt(10**14)).toString())/10000);
+    }
   }, [configAtochaModule, configAtochaFinance]);
 
   function statusChange (newStatus) {
@@ -178,44 +179,44 @@ function Main (props) {
 
   return (
     <div>
-      <h1>Create a puzzle</h1>
+      <h1>Create a puzzle</h1><br/>
       <Form>
         <Form.Field>
           <Input
             label='Puzzle title'
             type='text'
             onChange={(_, { value }) => setPuzzleTitle(value) }
-          />
+          /><div className='ato_form_div_explain'>States clearly in one phrase about the puzzle, eg: Guess a xxx, Name the xxx, Locate the xxx, etc</div>
         </Form.Field>
         <Form.Field>
           <Input
             type='file'
             id='file'
-            label='Upload png or jpeg'
-            accept='.png,.jpeg'
+            label='Image (optional)'
+            accept='.png,.jpeg,.jpg,.gif'
             onChange={e => handleFileChosen(e.target.files[0])}
-          />
+          /><div className='ato_form_div_explain'>Recommended file size: 5MB</div>
         </Form.Field>
         <Form.Field>
-          <div>Puzzle content:</div>
+          <div><strong>Puzzle content</strong></div>
           <TextArea
             onChange={(_, { value }) => handleContent(value) }
-          />
+          /><div className='ato_form_div_explain'>Text only, HTML will be ignored. Make sure it contains the question, the clue/tips (optional), the expected answer format (full caps, numerical, mix, etc).</div>
         </Form.Field>
         <Form.Field>
           <Input
             label='Puzzle answer'
             type='text'
             onChange={(_, { value }) => setPuzzleAnswer(value) }
-          />
+          /><div className='ato_form_div_explain'>Answer must be short and specific, recommended answer should be one to two combination.</div>
         </Form.Field>
         <Form.Field>
           <Input
-            label={`Prize sponsored by you (Minimum=${configAtochaModuleMinBonusOfPuzzle})`}
+            label={`Prize sponsored by yourself`}
             type='number'
             state='amount'
             onChange={(_, { value }) => countDeposit(value) }
-          />
+          /><div className='ato_form_div_explain'>Minimum amount: {configAtochaModuleMinBonusOfPuzzle}</div>
         </Form.Field>
         <Form.Field style={{ textAlign: 'left' }}>
           <TxButton
@@ -231,7 +232,7 @@ function Main (props) {
               inputParams: [storageHash, storageLength, maxFee],
               paramFields: [true, true, true]
             }}
-          />
+          /><div className='ato_form_div_explain'>You need to sign twice since your puzzle will be stored permanently on both Atocha blockchain and <a href="https://arweave.org">Arweave network</a>.</div>
         </Form.Field>
         <Form.Field>
           {status}

@@ -14,7 +14,7 @@ function Main (props) {
     else{
       bigBlock=Number(bigBlock);
       smallBlock=Number(smallBlock);
-      if(bigBlock>=smallBlock && smallBlock>0){
+      if(bigBlock>=smallBlock && smallBlock>=0){
         var s=(bigBlock-smallBlock)*6
         var day = Math.floor( s/ (24*3600) ); 
         var hour = Math.floor( (s - day*24*3600) / 3600); 

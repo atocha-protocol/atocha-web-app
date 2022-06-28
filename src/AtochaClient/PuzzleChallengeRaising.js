@@ -84,7 +84,7 @@ function Main (props) {
       </Form.Field>    
       <Form.Field>
         <Input
-          label='Amount(Minimum=1)'
+          label='Amount (Min:1)'
           type='number'
           state='amount'
           onChange={(_, { value }) => countDeposit(value) }

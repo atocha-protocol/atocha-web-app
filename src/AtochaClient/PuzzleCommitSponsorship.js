@@ -89,14 +89,14 @@ function Main (props) {
     <Form>
       <Form.Field>
         <Input
-          label='Amount(Minimum=10)'
+          label='Amount (Min:10)'
           type='number'
           state='amount'
           onChange={(_, { value }) => countDeposit(value) }
         />
       </Form.Field>
       <Form.Field>
-        <div>Short message (optional)</div>
+        <div>Short message (optional, text only)</div>
         <TextArea
           onChange={(_, { value }) => setSponsorshipExplain(value) }
         />

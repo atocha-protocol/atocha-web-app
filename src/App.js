@@ -132,7 +132,7 @@ function Main() {
           <Link className={menuItemCss.itemCreate} to="/create" onClick={()=>{menuClick("create")}}>Create a puzzle</Link>          
           <Link className={menuItemCss.itemMyProfile} to="/my_profile" onClick={()=>{menuClick("MyProfile")}}>My profile</Link>
           <Link className={menuItemCss.itemUser} to="/my_home" onClick={()=>{menuClick("user")}}>My account</Link>                
-          <Link className={menuItemCss.itemRanklist} to="/points_rank_list" onClick={()=>{menuClick("ranklist")}}>Ranking & rewards</Link>
+          <Link className={menuItemCss.itemRanklist} to="/points_rank_list" onClick={()=>{menuClick("ranklist")}}>Weekly reward</Link>
           {/*<Link className={menuItemCss.itemParm} to="/chain_status" onClick={()=>{menuClick("chain_status")}}>Chain parms</Link>*/}
         </div>
         <Routes>

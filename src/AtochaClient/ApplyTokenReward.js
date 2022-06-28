@@ -80,14 +80,19 @@ function Main (props) {
   function handlerEvent(section, method, statusCallBack, data) {
     if(section == 'atochaFinance' &&  method == 'ApplyPointReward') {
       console.log("ApplyTokenReward.js|handlerEvent|data",data);
-      statusCallBack(1,"Done.");
+      statusCallBack(1,"😉 Done.");
       updatePubRefresh();
     }else if(section == 'system' &&  method == 'ExtrinsicFailed') {
       // module: {index: 22, error: 0}
       const failedData = data.toJSON()[0].module
       const failedMsg = extractErrorMsg(failedData.index, failedData.error)
       if(failedMsg) {
-        statusCallBack(2, `${failedMsg}`)
+        if(failedMsg=="TooFewPoints"){
+          statusCallBack(2, "You do not have enough points.")
+        }
+        else{
+          statusCallBack(2, `${failedMsg}`)  
+        }        
       }else{
         statusCallBack(2, "Unknown Mistake")
       }
@@ -106,34 +111,34 @@ function Main (props) {
 
   return (
     <div>
-      <h1>Ranking & rewards</h1>  
-      <div className="ui stackable three column grid">
-        <div className="column">
-          <h3>Things you need to know</h3>
+      <h1>Weekly Reward & Atocha Points Leaderboard</h1><br/>
+      <div className="ui two column stackable grid">
+        <div className="five wide column">
+          <h3>Weekly Reward parameters</h3>
           <ul>
-            <li>Rewards per block: {atoConfigAtochaFinance?(parseFloat(hexToBigInt(atoConfigAtochaFinance.issuancePerBlock)/BigInt(10**14)).toString())/10000:"Loading..."}</li>
-            <li>Reward era length: {atoConfigAtochaFinance?atoConfigAtochaFinance.exchangeEraBlockLength:"Loading..."} blocks = {atoConfigAtochaFinance?<AtoBlock2Time bigBlock={atoConfigAtochaFinance.exchangeEraBlockLength} smallBlock="0.000001" />:""}</li>
-            <li>Rewards per era: {atoConfigAtochaFinance?(parseFloat(hexToBigInt(atoConfigAtochaFinance.issuancePerBlock)/BigInt(10**14)).toString())/10000*atoConfigAtochaFinance.exchangeEraBlockLength:"Loading..."}</li>
-            <li>Curret era started from : {atoAtochaFinanceExchangeRewardEraStartBn}</li>        
-            <li>Winners number: {atoConfigAtochaFinance?atoConfigAtochaFinance.exchangeMaxRewardListSize:"Loading..."}</li>
-          </ul>           
+            <li>ATO reward per block: <span style={{fontSize:"150%"}}>{atoConfigAtochaFinance?(parseFloat(hexToBigInt(atoConfigAtochaFinance.issuancePerBlock)/BigInt(10**14)).toString())/10000:"Loading..."}</span></li>
+            <li>Reward era length: <span style={{fontSize:"150%"}}>{atoConfigAtochaFinance?atoConfigAtochaFinance.exchangeEraBlockLength:"Loading..."}</span> blocks<br/>1 block = 6 seconds<br/>{atoConfigAtochaFinance?atoConfigAtochaFinance.exchangeEraBlockLength:"Loading..."} blocks = {atoConfigAtochaFinance?<AtoBlock2Time bigBlock={atoConfigAtochaFinance.exchangeEraBlockLength} smallBlock="0" />:""}</li>
+            <li>ATO reward per era: <span style={{fontSize:"150%"}}>{atoConfigAtochaFinance?Math.ceil((parseInt(hexToBigInt(atoConfigAtochaFinance.issuancePerBlock)/BigInt(10**14)).toString())/10000*atoConfigAtochaFinance.exchangeEraBlockLength):"Loading..."}</span></li>
+            <li>Total winners: <span style={{fontSize:"150%"}}>{atoConfigAtochaFinance?atoConfigAtochaFinance.exchangeMaxRewardListSize:"Loading..."}</span></li>
+            <li>Current reward era: week <span style={{fontSize:"150%"}}>{currentExchangeRewardEra}</span></li>
+            <li>Previous reward era: week <span style={{fontSize:"150%"}}>{previousExchangeRewardEra}</span></li>
+          </ul>        
         </div>
-        <div className="column">
-          <h3>What will happen if you win?</h3>
+        <div className="eleven wide column">
+          <h3>Weekly Reward guideline</h3>
           <ul>
-            <li>You will receive your share of era rewards automatically at the end of current era.</li>
-            <li>Your points will be set to ZERO at the same time.</li>
-          </ul>          
-        </div>
-        <div className="column">
-          <h3>How to win?</h3>
-          <ul>
-            <li>Apply for era rewards during current era. Anyone with positive points can apply for it. Your current points: <AtoDeleteThousand withThousand={userPoints} />.</li>
-            <li>Create or solve puzzles, earn points, stay in the top list at the end of current era.</li>
+          <li>The top 5 Atocha Points Leaderboard players who have already submitted their requests within the specific reward week will receive the weekly ATO reward automatically at the end of the reward week.</li>
+          <li>The reward distribution will be based on the total Atocha Points of the top 5 players and distributed in pro-rate. Once ATO reward is sent to the winner, the Atocha Points of the winner will be cleared to zero.</li>
+          <li>If you would like to win the ATO reward in the specific reward week, you will need to submit the request within the specific reward week.</li>
+          <li>Anyone with positive points can submit their requests. Your current points: <AtoDeleteThousand withThousand={userPoints} />.</li>
+          <li>You can request at any day of the reward week even you are not on the top 5 ranking yet. By end of the reward week, the protocol will distribute the reward automatically to you if you ended up at the top 5 leaderboard. </li>
+          <li>When you submitted request but dropped from top 5 leaderboard by the end of the reward week, you will not be receiving the ATO rewards.</li>
           </ul>
-        </div>
+        </div>        
       </div>
-      <h3>Top players of current reward era ({currentExchangeRewardEra}) <small style={{fontSize:"60%"}}><AtoBlock2Time bigBlock={atoAtochaFinanceExchangeRewardEraStartBn+atoAtochaFinanceConfigExchangeEraBlockLength} smallBlock={pubBlockNumber} /> left</small></h3>
+
+      <h3>Atocha Points Leaderboard of current reward era (week {currentExchangeRewardEra})</h3>
+      <p>Current reward week started from Block {atoAtochaFinanceExchangeRewardEraStartBn}, <AtoBlock2Time bigBlock={atoAtochaFinanceExchangeRewardEraStartBn+atoAtochaFinanceConfigExchangeEraBlockLength} smallBlock={pubBlockNumber} /> left</p>
       {exchangeInfo.length>0?
       <Table className="ui very basic celled table" style={{width:"100%"}}>
         <Table.Body>
@@ -147,11 +152,13 @@ function Main (props) {
           </Table.Row>)}
         </Table.Body>
       </Table>
-      :<p>No one applied for current era rewards.</p>}
+      :<p>Nothing found.</p>}
+      <div style={{textAlign:"left",marginBottom:"3rem"}}>
+      <div style={{margin:"auto"}}>
       <Form>
         <Form.Field style={{ textAlign: 'left' }}>
           <KButton
-            label={`Apply for rewards`}
+            label={`Submit your request`}
             type={`SIGNED-TX`}
             attrs={{
               palletRpc: 'atochaFinance',
@@ -167,8 +174,10 @@ function Main (props) {
         <Form.Field>
           <div style={{ overflowWrap: 'break-word' }}>{status}</div>
         </Form.Field>
-      </Form>               
-      <h3>Top players of previous reward era ({previousExchangeRewardEra})</h3>
+      </Form>
+      </div>
+      </div>
+      <h3>Atocha Points Leaderboard of previous reward era (week {previousExchangeRewardEra})</h3>
       {previousExchangeInfo.length>0?
       <Table className="ui very basic celled table" style={{width:"100%"}}>
         <Table.Body>
@@ -186,7 +195,7 @@ function Main (props) {
           </Table.Row>)}
         </Table.Body>
       </Table>
-      :<p>No one applied for previous era rewards.</p>}
+      :<p>Nothing found.</p>}
     </div>
   );
 }
