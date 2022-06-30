@@ -22,7 +22,7 @@ function Main (props) {
   const [atoCurrentPuzzleListStatusClass, setAtoCurrentPuzzleListStatusClass] = useState("ui tiny yellow label");
   const [atoCurrentPuzzleListStatusTitle, setAtoCurrentPuzzleListStatusTitle] = useState("UNSOLVED");
   const [atoCurrentPuzzleListStatusOrder, setAtoCurrentPuzzleListStatusOrder] = useState("ordered by prize");
-
+  
   function updatePuzzleList(type) {
     //alert("updatePuzzleList");
     if(type=="UNSOLVED"){
@@ -58,6 +58,10 @@ function Main (props) {
     setPubPuzzleListType(type);
   }
   
+  function handleNextPage(){
+    alert("handleNextPage");
+  }
+
   // Puzzle information.
   useEffect(() => {
     updatePuzzleList(atoCurrentPuzzleListStatusTitle);
@@ -90,7 +94,12 @@ function Main (props) {
             <Table.Cell>{puzzleObj.dynTotalDeposit}</Table.Cell>
           </Table.Row>)}
         </Table.Body>
-      </Table>
+      </Table><br/>
+      <div style={{textAlign:"right"}}>
+        <button className="ui icon button" onClick={()=>handleNextPage()}>
+          <i className="arrow right icon"></i>&nbsp;&nbsp;Next 50
+        </button>
+      </div>
     </div>
   );
 }

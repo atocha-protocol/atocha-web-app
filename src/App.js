@@ -24,13 +24,15 @@ import NodeInfo from './NodeInfo'
 import TemplateModule from './TemplateModule'
 import Transfer from './Transfer'
 import PuzzleList from "./AtochaClient/PuzzleList";
+import PuzzleList2 from "./AtochaClient/PuzzleList2";
 import StepCase from "./Step/StepCase";
 // import Upgrade from './Upgrade'
 
 import AtochaHome from "./AtochaClient/AtochaHome";
 import PuzzleDetail from "./AtochaClient/PuzzleDetail";
 import {AtoContextProvider} from "./AtochaClient/AtoContext";
-import PointsRankList from "./AtochaClient/PointsRankList";
+import PointsRankList from "./AtochaClient/WeeklyReward";
+import WeeklyReward from "./AtochaClient/PointsRankList";
 import UserHome from "./AtochaClient/UserHome";
 import ClientAtochaCreator from "./AtochaClient/ClientAtochaCreator";
 import MyHome from "./AtochaClient/MyHome";
@@ -137,11 +139,11 @@ function Main() {
         </div>
         <Routes>
           <Route path="/" element={<AtochaHome />} />
-          <Route path="/puzzle-list" element={<PuzzleList />} />          
+          <Route path="/puzzle-list" element={<PuzzleList2 />} />          
           <Route path="/create" element={<ClientAtochaCreator />} />
           <Route path="/my_profile" element={<MyProfile />} />
           <Route path="/my_home" element={<MyHome />} />          
-          <Route path="/points_rank_list" element={<PointsRankList />} />
+          <Route path="/points_rank_list" element={<WeeklyReward />} />
           <Route path="/chain_status" element={<ChainStatus />} />
           <Route path="/user_home/:account_id" element={<UserHome />} />
           <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail />} />
@@ -151,14 +153,14 @@ function Main() {
 
         <br/>
         <div className="ui divider"></div>
-        <div class="ui text menu">
-          <div class="header item">Atocha Puzzles</div>
-          <a class="item" href="https://app.ref.finance/#wrap.near|atocha-token.near" target="_blank">Get ATO</a>
-          <a class="item" href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki">Doc & Wiki & Help</a>
-          <a class="item" href="https://polkadot.js.org/extension/">PolkadotJS wallet browser extension</a>          
-          <a class="item" href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/explorer`} target="_blank">PolkadotJS online wallet</a>
-          <a class="item" href={`${config.OCT_EXPLORER}`} target="_blank">Octopus chain explorer</a>
-          <a class="item" href="https://mainnet.oct.network/bridge/near/atocha">Octopus network bridge</a>
+        <div className="ui text menu">
+          <div className="header item">Atocha Puzzles</div>
+          <a className="item" href="https://app.ref.finance/#wrap.near|atocha-token.near" target="_blank">Get ATO</a>
+          <a className="item" href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki">Doc & Wiki & Help</a>
+          <a className="item" href="https://polkadot.js.org/extension/">PolkadotJS wallet browser extension</a>          
+          <a className="item" href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/explorer`} target="_blank">PolkadotJS online wallet</a>
+          <a className="item" href={`${config.OCT_EXPLORER}`} target="_blank">Octopus chain explorer</a>
+          <a className="item" href="https://mainnet.oct.network/bridge/near/atocha">Octopus network bridge</a>
         </div>
         <br/>
       </Container>

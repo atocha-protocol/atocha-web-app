@@ -56,18 +56,18 @@ function Main (props) {
                   </td>  
                   <td>
                     Connected Twitter account<br/>
-                    <p><a target="_blank" href={`https://twitter.com/${twitterBind.data.twitter_screen_name}`}><h3>{twitterBind.data.twitter_screen_name} <i class="external alternate icon"></i></h3></a></p>            
+                    <p><a target="_blank" href={`https://twitter.com/${twitterBind.data.twitter_screen_name}`}><h3>{twitterBind.data.twitter_screen_name} <i className="external alternate icon"></i></h3></a></p>            
                   </td>
                 </tr>
               </table><br/>
-              <p><a className="ui twitter button" href={`${config.API_ATOCHA_URL}/unbind/${ato_address}/${btoa(window.location.href.split('?')[0])}`}><i class="twitter icon"></i> Disconnect</a></p>
+              <p><a className="ui twitter button" href={`${config.API_ATOCHA_URL}/unbind/${ato_address}/${btoa(window.location.href.split('?')[0])}`}><i className="twitter icon"></i> Disconnect</a></p>
             </div>
           :
             <>
               {displayMode=="icon_name"?
                 <div style={{textAlign:"center"}}>
                   <p><img className="ui top aligned small circular image" src={twitterBind.data.twitter_profile_image_url_https} /></p>
-                  <p><a target="_blank" href={`https://twitter.com/${twitterBind.data.twitter_screen_name}`}><h3>{twitterBind.data.twitter_screen_name} <i class="external alternate icon"></i></h3></a></p>            
+                  <p><a target="_blank" href={`https://twitter.com/${twitterBind.data.twitter_screen_name}`}><h3>{twitterBind.data.twitter_screen_name} <i className="external alternate icon"></i></h3></a></p>            
                 </div>
               :
                 <span>{twitterBind.data.twitter_screen_name}</span>
@@ -79,7 +79,7 @@ function Main (props) {
         <>
           {displayMode=="icon_name_button"?
             <div>
-              <a className="ui twitter button" href={`${config.API_ATOCHA_URL}/bind/${ato_address}/${btoa(window.location.href.split('?')[0])}`}><i class="twitter icon"></i> Connect to Twitter</a>
+              <a className="ui twitter button" href={`${config.API_ATOCHA_URL}/bind/${ato_address}/${btoa(window.location.href.split('?')[0])}`}><i className="twitter icon"></i> Connect to Twitter</a>
             </div>
           :
             <>

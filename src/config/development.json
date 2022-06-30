@@ -1,7 +1,7 @@
 {
   "PROVIDER_SOCKET": "wss://gateway.mainnet.octopus.network/atocha/jungxomf4hdcfocwcalgoiz64g9avjim",
   "ARWEAVE_HTTP": "https://arweave.atocha.io/ar",
-  "SUBQUERY_HTTP": "http://148.72.247.143:3060",
+  "SUBQUERY_HTTP": "https://subquery.atocha.io/",
   "ARWEAVE_EXPLORE": "https://arweave.net",
   "POLKADOT_EXPLORE": "https://polkadot.js.org/apps",
   "OCT_EXPLORER": "https://explorer.mainnet.oct.network/atocha",

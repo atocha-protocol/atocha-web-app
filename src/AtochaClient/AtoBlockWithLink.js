@@ -9,7 +9,7 @@ function Main (props) {
   }, []);
 
   return (
-    <span><a href={`${config.OCT_EXPLORER}/blocks/${blockNo}`} target='_blank'>Block {blockNo} <i class="external alternate icon"></i></a></span>
+    <span><a href={`${config.OCT_EXPLORER}/blocks/${blockNo}`} target='_blank'>Block {blockNo} <i className="external alternate icon"></i></a></span>
   );
 }
 
