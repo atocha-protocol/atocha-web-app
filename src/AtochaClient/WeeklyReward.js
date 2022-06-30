@@ -30,12 +30,13 @@ function Main (props) {
   const [atoAtochaFinanceExchangeRewardEraStartBn, setAtoAtochaFinanceExchangeRewardEraStartBn] = useState(-1);
   
   useEffect(() => {
+    console.log("WeeklyReward.js|main|useEffect");
     api.query.atochaFinance.pointExchangeInfo(currentExchangeRewardEra).then(res => {
-      console.log('exchangeInfo current = ', res.toHuman());
+      //console.log('exchangeInfo current = ', res.toHuman());
       setExchangeInfo(res.toHuman());
     });
     api.query.atochaFinance.pointExchangeInfo(previousExchangeRewardEra).then(res => {
-      console.log('exchangeInfo previous = ', res.toHuman());
+      //console.log('exchangeInfo previous = ', res.toHuman());
       setPreviousExchangeInfo(res.toHuman());
     });
     api.query.atochaFinance.currentExchangeRewardEra((era_opt) => {
@@ -46,8 +47,8 @@ function Main (props) {
     });
 
     api.query.atochaFinance.atoConfig2().then(res => {
-      console.log("------------------------------",res);
-      console.log("------------------------------",res.toJSON().exchangeEraBlockLength);
+      //console.log("------------------------------",res);
+      //console.log("------------------------------",res.toJSON().exchangeEraBlockLength);
       setAtoAtochaFinanceConfigExchangeEraBlockLength(res.toJSON().exchangeEraBlockLength);
       setAtoConfigAtochaFinance(res.toJSON());
     });
@@ -63,15 +64,15 @@ function Main (props) {
     api.query.atochaFinance
       .lastUpdateBlockInfoOfPointExchage(bn =>{
         setLastUpBn(bn.toHuman());
-        console.log("@@@@@ApplyTokenReward.js|main|loadLastUpdateBN|bn",bn);
-        console.log("@@@@@ApplyTokenReward.js|main|loadLastUpdateBN|bn.toHuman",bn.toHuman());
+        //console.log("@@@@@ApplyTokenReward.js|main|loadLastUpdateBN|bn",bn);
+        //console.log("@@@@@ApplyTokenReward.js|main|loadLastUpdateBN|bn.toHuman",bn.toHuman());
       }) .then(unsub => {
     }) .catch(console.error)
   }
 
   function statusChange (newStatus) {
     if (newStatus.isFinalized) {
-      console.log("Refresh list")
+      //console.log("Refresh list")
       updatePubRefresh()
     } else {
     }
@@ -79,7 +80,7 @@ function Main (props) {
 
   function handlerEvent(section, method, statusCallBack, data) {
     if(section == 'atochaFinance' &&  method == 'ApplyPointReward') {
-      console.log("ApplyTokenReward.js|handlerEvent|data",data);
+      //console.log("ApplyTokenReward.js|handlerEvent|data",data);
       statusCallBack(1,"😉 Done.");
       updatePubRefresh();
     }else if(section == 'system' &&  method == 'ExtrinsicFailed') {
