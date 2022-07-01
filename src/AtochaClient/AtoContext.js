@@ -88,7 +88,7 @@ const AtoContextProvider = props => {
     }
 
     function loadAccountPoints() {
-        console.log("==========AtoContext.js|main|loadAccountPoints");
+        //console.log("==========AtoContext.js|main|loadAccountPoints");
         currentAccount &&
         api.query.atochaFinance
           .atoPointLedger(currentAccount.address, points =>{
@@ -98,7 +98,7 @@ const AtoContextProvider = props => {
     }
 
     async function loadPuzlleList() {
-        console.log("==========AtoContext.js|main|loadPuzzleList");
+        //console.log("==========AtoContext.js|main|loadPuzzleList");
         //alert("==========AtoContext.js|main|loadPuzzleList");
         //console.log('pubPuzzleListType = ', pubPuzzleListType);
         const filter_UNSOLVED = `
@@ -298,7 +298,7 @@ const AtoContextProvider = props => {
             `
         }).then(result => {
             //console.log("RUN KAMI- ", result.data.puzzleCreatedEvents);
-            console.log("==========AtoContext.js|loadPuzzleList|result.data.puzzleCreatedEvents",result.data.puzzleCreatedEvents);
+            //console.log("==========AtoContext.js|loadPuzzleList|result.data.puzzleCreatedEvents",result.data.puzzleCreatedEvents);
             //setPubPuzzleList(result.data.puzzleCreatedEvents.nodes);
             //setPubPuzzleList(result.data.puzzleCreatedEvents.nodes);
 
@@ -329,7 +329,7 @@ const AtoContextProvider = props => {
             let unsubscribeAll = null
             api.derive.chain.bestNumber(number => {
                 setPubBlockNumber(number.toString().toLocaleString('en-US'));
-                console.log("==========AtoContext.js|main|useEffect|setPubBlockNumber");
+                //console.log("==========AtoContext.js|main|useEffect|setPubBlockNumber");
             }).then(unsub => {
                 unsubscribeAll = unsub
             }).catch(console.error)

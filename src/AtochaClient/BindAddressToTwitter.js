@@ -28,12 +28,12 @@ function Main (props) {
     });
     instance.get(`/twitter_bind/${ato_address}`).then(
       function (response) {
-        console.log(' --- ---- ', response.data)
+        //console.log(' --- ---- ', response.data)
         setTwitterBind(response.data)
       }
     ).catch(
       function (error) {
-        console.log('Bing request Error ================= ', error)
+        //console.log('Bing request Error ================= ', error)
       }
     )
   }

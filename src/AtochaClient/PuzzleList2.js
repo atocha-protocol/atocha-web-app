@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import {Form, Input, Grid, Card, Statistic, TextArea, Label, Button, Table, Tab} from 'semantic-ui-react';
+import React,{useEffect,useState} from 'react';
+import {Form,Input,Grid,Card,Statistic,TextArea,Label,Table,Container,Button} from 'semantic-ui-react';
+import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import {
     ApolloClient,
     InMemoryCache,
@@ -8,13 +9,16 @@ import {
     gql
 } from "@apollo/client";
 import config from '../config';
-import {useSubstrate, useSubstrateState} from '../substrate-lib';
+
 import ArweaveTitle from "./ArweaveTitle";
 import UserHomeLink from "./UserHomeLink";
 import AtoBlockWithLink from "./AtoBlockWithLink";
 import BindAddressToTwitter from "./BindAddressToTwitter";
 
+var atoReloadTimes=0;
+
 function Main (props) {
+  //console.log("PuzzleList2.js|main");
   const {api} = useSubstrateState();
   const apollo_client = new ApolloClient({
     uri: config.SUBQUERY_HTTP,
@@ -31,16 +35,14 @@ function Main (props) {
   const [atoCurrentPage, setAtoCurrentPage] = useState(1);
   const [atoCurrentPuzzleListArr, setAtoCurrentPuzzleListArr] = useState([]);
 
-  var ifFirst=1;
-
-  function getBlockNoLinked(){
+  function getBlockNoLinked(){    
     api.derive.chain.bestNumber(number => {
-      //alert("PuzzleList.js|main|getBlockNoLinked");
+      console.log("PuzzleList2.js|main|getBlockNoLinked|derive");
       var bn=number.toString().toLocaleString('en-US');
       setAtoBlockNo(bn);
-      if(ifFirst==1){        
+      if(atoReloadTimes==0){        
         setAtoSavedBlockNo(bn);
-        ifFirst=0;
+        atoReloadTimes=atoReloadTimes+1;        
       }
     }).then().catch(console.error);
   }
@@ -210,10 +212,10 @@ function Main (props) {
                 }
             `
         }).then(result => {
-            //alert("PuzzleList.js|main|queryPuzzleList|result");
-            console.log("**********PuzzleList.js|main|queryPuzzleList|result");
-            console.log(result);
-            //console.log("PuzzleList.js|main|queryPuzzleList|result.data.puzzleCreatedEvents",result.data.puzzleCreatedEvents);
+            //alert("PuzzleList2.js|main|queryPuzzleList|result");
+            //console.log("**********PuzzleList2.js|main|queryPuzzleList|result");
+            //console.log(result);
+            //console.log("PuzzleList2.js|main|queryPuzzleList|result.data.puzzleCreatedEvents",result.data.puzzleCreatedEvents);
             //setPubPuzzleList(result.data.puzzleCreatedEvents.nodes);
             //setPubPuzzleList(result.data.puzzleCreatedEvents.nodes);
 
@@ -289,7 +291,9 @@ function Main (props) {
   }
 
   useEffect(() => {
-    //alert("PuzzleList.js|main|useEffect");
+    //alert("PuzzleList2.js|main|useEffect");
+    console.log("PuzzleList2.js|main|useEffect");
+    atoReloadTimes=0;
     getBlockNoLinked();
     getPuzzleList();
   },[atoCurrentPuzzleListStatusTitle,atoCurrentPage]);
@@ -334,7 +338,7 @@ function Main (props) {
           <div><br/></div>
         </div>      
       }
-      <div style={{textAlign:"right",display:"none"}}><i>This page was generated at Block {atoSavedBlockNo}, current block number is {atoBlockNo}</i></div>      
+      <div style={{textAlign:"right"}}><i>This page was generated at Block {atoSavedBlockNo}, current block number is {atoBlockNo}</i></div>      
     </div>
   );
 }

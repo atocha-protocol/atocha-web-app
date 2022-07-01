@@ -16,7 +16,7 @@ function Main (props) {
   // load json data.
   function loadJsonData() {
     axios.get(request, {}).then(function (response) {
-      console.log(response.data);
+      //console.log(response.data);
       setPuzzleInfo(response.data);
     }).catch(function (error) {
       console.log(error);
