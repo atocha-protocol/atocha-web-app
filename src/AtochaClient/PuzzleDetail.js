@@ -45,13 +45,15 @@ function Main (props) {
   }
 
   async function loadMatchAnswerBn() {
+    //alert("PuzzleDetail.js|main|loadMatchAnswerBn");
+    //console.log("PuzzleDetail.js|main|loadMatchAnswerBn");
     if (!puzzle_hash){
       return;
     }
     apollo_client.query({
       query: gql`
           query{
-              answerCreatedEvents(filter:{
+              answerCreatedEvents(last:9999,filter:{
                   puzzleInfoId: {
                       equalTo: "${puzzle_hash}",
                   }
@@ -65,11 +67,14 @@ function Main (props) {
           }
       `
     }).then(result => {
+      //alert("PuzzleDetail.js|main|loadMatchAnswerBn|result|result.data.answerCreatedEvents.nodes.length="+result.data.answerCreatedEvents.nodes.length);
       if(result.data.answerCreatedEvents.nodes.length > 0) {
         for(const idx in result.data.answerCreatedEvents.nodes) {
           const answerData = result.data.answerCreatedEvents.nodes[idx]
           if(answerData.resultType == "ANSWER_HASH_IS_MATCH"){
-            setMatchAnswerBn(BigInt(answerData.eventBn))
+            setMatchAnswerBn(BigInt(answerData.eventBn));
+            //alert("PuzzleDetail.js|main|loadMatchAnswerBn|result|resultType="+answerData.resultType);
+            //console.log("PuzzleDetail.js|main|loadMatchAnswerBn|matchAnswerBn",matchAnswerBn);
           }
         }
       }
@@ -182,10 +187,6 @@ function Main (props) {
         return "Loading..."
       }
 
-      if(infoObj.dynPuzzleStatus == "PUZZLE_STATUS_IS_FINAL") {
-        return "Claimed"
-      }
-
       let finalPointBn = pubBlockNumber
       if(infoObj.dynHaveMatchedAnswer == true) {
         finalPointBn = matchAnswerBn
@@ -198,14 +199,20 @@ function Main (props) {
         // id: "454081-3"
         // whoId: "5Dth1UgcLMRYFyv6ykLTwmCpZC45uL1bmJ7S7uEvfLdu8y3f"
         const sponsorData = depositInfo[idx]
-        console.log("@@@@@@@@@@@@@@@@@@@@@PuzzleDetail.js|getEstimatedPoints|sponsorData",sponsorData);
+        //console.log("@@@@@@@@@@@@@@@@@@@@@PuzzleDetail.js|main|getEstimatedPoints|sponsorData",sponsorData);
         const diff = BigInt(finalPointBn) - BigInt(sponsorData.eventBn)
         const pointNum = diff * BigInt(1000) / BigInt(preBn) / BigInt(1000) * BigInt(sponsorData["deposit"]);
-        sumPoint+=pointNum
+        //console.log("@@@@@@@@@@@@@@@@@@@@@PuzzleDetail.js|main|getEstimatedPoints|sponsorData","deposit="+sponsorData["deposit"],"finalPointBn="+finalPointBn,"diff="+diff,"pointNum="+pointNum);
+        sumPoint+=pointNum;
       }
       sumPoint=sumPoint/BigInt(10**18);
-      console.log("sumPoint = ", sumPoint)
-      return sumPoint.toString()
+      //console.log("sumPoint = ", sumPoint)
+      if(infoObj.dynPuzzleStatus == "PUZZLE_STATUS_IS_FINAL") {
+        return sumPoint.toString()+" (claimed)";
+      }
+      else{
+        return sumPoint.toString();  
+      }      
   }
 
   var atoIfRemoteJsLoaded=false;
@@ -218,6 +225,8 @@ function Main (props) {
 
   // Puzzle information.
   useEffect(async () => {
+        //alert("3222e");
+        //console.log("PuzzleDetail.js|main|useEffect");
         if(arweaveInfo===null) {
             loadJsonData();
         }

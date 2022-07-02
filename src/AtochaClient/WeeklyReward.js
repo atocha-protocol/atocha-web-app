@@ -99,8 +99,18 @@ function Main (props) {
       atoReloadTimes=0;
     }else if(section == 'system' &&  method == 'ExtrinsicFailed') {
       // module: {index: 22, error: 0}
-      const failedData = data.toJSON()[0].module
-      const failedMsg = extractErrorMsg(failedData.index, failedData.error);
+
+      const failedData = data.toJSON()[0].module;
+      console.log("failedData.index="+failedData.index);
+      console.log("failedData.error="+failedData.error);   
+            
+      if(error_info(failedData.index) && error_info(failedData.index,failedData.error)){
+        const failedMsg = error_info(failedData.index, failedData.error);  
+      }
+      else{
+        const failedMsg = "unknown mistake"; 
+      }
+
       if(failedMsg) {
         if(failedMsg=="TooFewPoints"){
           statusCallBack(2, "You do not have enough points.");                    
@@ -109,8 +119,9 @@ function Main (props) {
           statusCallBack(2, `${failedMsg}`)  
         }        
       }else{
-        statusCallBack(2, "Unknown Mistake")
+        statusCallBack(2, "system error")
       }
+
     }
   }
 
