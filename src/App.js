@@ -35,6 +35,7 @@ import PointsRankList from "./AtochaClient/PointsRankList";
 import WeeklyReward from "./AtochaClient/WeeklyReward";
 import UserHome from "./AtochaClient/UserHome";
 import ClientAtochaCreator from "./AtochaClient/ClientAtochaCreator";
+import CreatePuzzle from "./AtochaClient/CreatePuzzle";
 import MyHome from "./AtochaClient/MyHome";
 import MyProfile from "./AtochaClient/MyProfile";
 import ChainStatus from "./AtochaClient/ChainStatus";
@@ -131,7 +132,7 @@ function Main() {
         <div className="ui secondary pointing menu" style={{marginBottom:"2rem"}}>
           <Link className={menuItemCss.itemHome} to="/" onClick={()=>{menuClick("home")}}>Home</Link>                
           <Link className={menuItemCss.itemPuzzleList} to="/puzzle-list" onClick={()=>{menuClick("puzzlelist")}}>Puzzle list</Link>
-          <Link className={menuItemCss.itemCreate} to="/create" onClick={()=>{menuClick("create")}}>Create a puzzle</Link>          
+          <Link className={menuItemCss.itemCreate} to="/create-puzzle" onClick={()=>{menuClick("create")}}>Create a puzzle</Link>          
           <Link className={menuItemCss.itemMyProfile} to="/my_profile" onClick={()=>{menuClick("MyProfile")}}>My profile</Link>
           <Link className={menuItemCss.itemUser} to="/my_home" onClick={()=>{menuClick("user")}}>My account</Link>                
           <Link className={menuItemCss.itemRanklist} to="/points_rank_list" onClick={()=>{menuClick("ranklist")}}>Weekly reward</Link>
@@ -141,6 +142,7 @@ function Main() {
           <Route path="/" element={<AtochaHome />} />
           <Route path="/puzzle-list" element={<PuzzleList2 />} />          
           <Route path="/create" element={<ClientAtochaCreator />} />
+          <Route path="/create-puzzle" element={<CreatePuzzle />} />
           <Route path="/my_profile" element={<MyProfile />} />
           <Route path="/my_home" element={<MyHome />} />          
           <Route path="/points_rank_list" element={<WeeklyReward />} />

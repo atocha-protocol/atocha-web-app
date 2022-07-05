@@ -30,15 +30,56 @@ function Main (props) {
   const [depositInfo, setDepositInfo] = useState([]);
   const [matchAnswerBn, setMatchAnswerBn] = useState(BigInt(0));
   const [financeConfig, setFinanceConfig] = useState(null);
-  const [atoIfShowFull, setAtoIfShowFull] = useState(0);
+  const [atoIfShowFull, setAtoIfShowFull] = useState(1);
+  
+  const [arPuzzleTitle, setArPuzzleTitle] = useState(null);
+  const [arPuzzleDetail, setArPuzzleDetail] = useState(null);
+  const [arPuzzleImage, setArPuzzleImage] = useState(null);
+  const [arPuzzleFullScreenUrl, setArPuzzleFullScreenUrl] = useState(null);
+
   //alert(pubBlockNumber);
 
 
   // load json data.
   function loadJsonData() {
     axios.get(request, {}).then(function (response) {
-      //console.log(response.data);
+      console.log("PuzzleDetail.js|main|loadJsonData|response.data",response.data);
       setArweaveInfo(response.data);
+      setArPuzzleTitle(response.data.puzzle_title);
+      for(var i in response.data.puzzle_content){
+        var item=response.data.puzzle_content[i];
+        if(item.fieldId){
+          if(item.fieldId=="fullScreen"){
+            var urlStr=item.data;
+            var urlArr=urlStr.split("/");
+            console.log("PuzzleDetail.js|main|loadJsonData|urlArr",urlArr);
+            var url2Arr=urlArr[2].split(".");
+            console.log("PuzzleDetail.js|main|loadJsonData|url2Arr",url2Arr);
+            if(urlArr[3]=="maps" && (url2Arr[0]=="google"|| url2Arr[1]=="google")){
+              setArPuzzleFullScreenUrl("https://google.com/maps/"+urlArr[4]);
+            }
+            else if(urlArr[3]=="embed" && (url2Arr[0]=="youtube" || url2Arr[1]=="youtube")){
+              setArPuzzleFullScreenUrl("https://youtube.com/embed/"+urlArr[4]);
+            }
+            else{
+
+            }
+          }
+          else{
+
+          }
+        }
+        else{
+          if(item.type=="file"){
+            setArPuzzleImage(item.data);
+          }
+          else if(item.type=="text"){
+            setArPuzzleDetail(item.data);
+          }
+          else{
+          }
+        }
+      }
     }).catch(function (error) {
       console.log(error);
     });
@@ -243,7 +284,6 @@ function Main (props) {
   //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",puzzleInfo);
 
   function atoShowIframe(){
-
   }
 
   function handleOpenFull(){
@@ -258,13 +298,11 @@ function Main (props) {
     <div>
     <div className="ui two column stackable grid">
       <div className="ten wide column">
-        <h1 className="1ReSeTs_puzzleDetail_h1">{arweaveInfo?arweaveInfo.puzzle_title:'Loading...'}</h1>
-
-        {arweaveInfo?arweaveInfo.puzzle_content.map((body, idx) => <div key={idx}>
-          {body.type?body.type === 'file'?<div><img src={body.data} style={{'max-width':'100%'}} /><br/><br/></div>:'':''}
-        </div>):'Loading...'}
+        <h1 className="1ReSeTs_puzzleDetail_h1">{arPuzzleTitle?arPuzzleTitle:'Loading...'}</h1>
+        {arPuzzleImage?<div><img src={arPuzzleImage} style={{'max-width':'100%'}} /><br/><br/></div>:''}
 
         <div>Puzzle hash: {puzzleInfo?.puzzleHash}</div>
+        <div>Permanent link on Arweave network: <a target="blank" href={`${config.ARWEAVE_EXPLORE}/${puzzleInfo?.puzzleHash}`}>{puzzleInfo?.puzzleHash} <i className="external alternate icon"></i></a></div>
         <div>Creator: <UserHomeLink user_address={puzzleInfo?.whoId} /></div>
         <div>Created: <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={puzzleInfo?.eventBn} /> ago on <AtoBlockWithLink blockNo={puzzleInfo?.eventBn}  /></div>
         <div>Total prize: <strong>{puzzleInfo?.dynTotalDeposit/(10**18)}</strong>&nbsp;&nbsp;<i style={{cursor:"pointer"}} className="question circle outline icon" title="Total prize is a sum of all sponsored tokens."></i></div>
@@ -279,34 +317,30 @@ function Main (props) {
           <div className="ui tiny label">UNKNOWN</div>
           ):""}
         </div>
-        <br/>
-
-        {arweaveInfo?arweaveInfo.puzzle_content.map((body, idx) => <div key={idx}>
-          {body.type?body.type === 'text'?<h3 style={{lineHeight:'150%'}}>{body.data}</h3>:'':''}
-        </div>):'Loading...'}<br/>
-
-        {atoIfRemoteJsLoaded?typeof(atoIframe[puzzle_hash])!="undefined"?
-        <a style={{cursor:"pointer"}} onClick={()=>handleOpenFull()}><i className="expand arrows alternate icon"></i> Enter full screen</a>
-        :
-        <></>
-        :
-        <></>
-        }
-
-        {atoIfShowFull==1?
-        <div>  
-          <iframe src={atoIframe[puzzle_hash]} className="ReSeTs_fixedFull" ></iframe>
-          <div className="ReSeTs_fixedRight">
-            <h1 className="1ReSeTs_puzzleDetail_h1">{arweaveInfo?arweaveInfo.puzzle_title:'Loading...'}</h1>
-            {arweaveInfo?arweaveInfo.puzzle_content.map((body, idx) => <div key={idx}>
-              {body.type?body.type === 'text'?<h3 style={{lineHeight:'150%'}}>{body.data}</h3>:'':''}
-            </div>):'Loading...'}
-            <AnswerList puzzle_hash={puzzle_hash} puzzle_status={puzzleInfo?getPuzzleStatus(puzzleInfo):'Loading...'} />
-            <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleCloseFull()}><i className="compress icon"></i> Exit full screen</a>
-          </div>          
-        </div>
-        :<></>}
         
+        <h3 style={{lineHeight:'150%'}}>{arPuzzleDetail?arPuzzleDetail:'Loading...'}</h3>
+
+        {arPuzzleFullScreenUrl?
+          <div>
+            <a style={{cursor:"pointer"}} onClick={()=>handleOpenFull()}><i className="expand arrows alternate icon"></i> Enter full screen</a><br/>
+            <span style={{fontSize:"75%"}}>Full screen media URL: {arPuzzleFullScreenUrl}</span>
+          </div>
+        :""}
+
+        {(arPuzzleFullScreenUrl && atoIfShowFull)?
+          <div>  
+            <iframe src={arPuzzleFullScreenUrl} className="ReSeTs_fixedFull" allow="autoplay" allowfullscreen="" allowfullscreen></iframe>
+            <div className="ReSeTs_fixedRight">
+              <h1 className="1ReSeTs_puzzleDetail_h1">{arPuzzleTitle?arPuzzleTitle:'Loading...'}</h1>
+              <h3 style={{lineHeight:'150%'}}>{arPuzzleDetail?arPuzzleDetail:'Loading...'}</h3>
+              <AnswerList puzzle_hash={puzzle_hash} puzzle_status={puzzleInfo?getPuzzleStatus(puzzleInfo):'Loading...'} />
+              <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleCloseFull()}><i className="compress icon"></i> Exit full screen</a>&nbsp;&nbsp;&nbsp;&nbsp;
+              <a href={arPuzzleFullScreenUrl} target="_blank"><i className="external alternate icon"></i> View media in a new window</a>
+            </div> 
+            <p>click</p>         
+          </div>          
+        :""}
+
         <br/><div className="ui divider"></div>
 
         <h1 className="1ReSeTs_puzzleDetail_h2">>> Solve it</h1>
