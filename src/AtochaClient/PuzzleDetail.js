@@ -31,16 +31,13 @@ function Main (props) {
   const [matchAnswerBn, setMatchAnswerBn] = useState(BigInt(0));
   const [financeConfig, setFinanceConfig] = useState(null);
   const [atoIfShowFull, setAtoIfShowFull] = useState(1);
+  const [atoIfMaxRight, setAtoIfMaxRight] = useState(1);
   
   const [arPuzzleTitle, setArPuzzleTitle] = useState(null);
   const [arPuzzleDetail, setArPuzzleDetail] = useState(null);
   const [arPuzzleImage, setArPuzzleImage] = useState(null);
   const [arPuzzleFullScreenUrl, setArPuzzleFullScreenUrl] = useState(null);
 
-  //alert(pubBlockNumber);
-
-
-  // load json data.
   function loadJsonData() {
     axios.get(request, {}).then(function (response) {
       console.log("PuzzleDetail.js|main|loadJsonData|response.data",response.data);
@@ -264,7 +261,6 @@ function Main (props) {
     atoIfRemoteJsLoaded=true;
   }
 
-  // Puzzle information.
   useEffect(async () => {
         //alert("3222e");
         //console.log("PuzzleDetail.js|main|useEffect");
@@ -281,11 +277,6 @@ function Main (props) {
         loadMatchAnswerBn()
   }, [setArweaveInfo, setPuzzleInfo, pubRefresh]);
 
-  //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",puzzleInfo);
-
-  function atoShowIframe(){
-  }
-
   function handleOpenFull(){
     setAtoIfShowFull(1);
   }
@@ -293,110 +284,124 @@ function Main (props) {
   function handleCloseFull(){
     setAtoIfShowFull(0);
   }
+
+  function handleMaxRight(){
+    setAtoIfMaxRight(1);
+  }  
+
+  function handleMinRight(){
+    setAtoIfMaxRight(0);
+  }
+  
   //alert(puzzle_hash.slice(-6));
   return (
     <div>
-    <div className="ui two column stackable grid">
-      <div className="ten wide column">
-        <h1 className="1ReSeTs_puzzleDetail_h1">{arPuzzleTitle?arPuzzleTitle:puzzleInfo?.puzzleHash}</h1>
-        {arPuzzleImage?<div><img src={arPuzzleImage} style={{'max-width':'100%'}} /><br/><br/></div>:''}
+      <div className="ui two column stackable grid">
+        <div className="ten wide column">
+          <h1 className="1ReSeTs_puzzleDetail_h1">{arPuzzleTitle?arPuzzleTitle:puzzleInfo?.puzzleHash}</h1>
+          {arPuzzleImage?<div><img src={arPuzzleImage} style={{'max-width':'100%'}} /><br/><br/></div>:''}
 
-        <div>Puzzle hash: {puzzleInfo?.puzzleHash}</div>
-        <div>Permanent link on Arweave network: <a target="blank" href={`${config.ARWEAVE_EXPLORE}/${puzzleInfo?.puzzleHash}`}>{puzzleInfo?.puzzleHash} <i className="external alternate icon"></i></a></div>
-        <div>Creator: <UserHomeLink user_address={puzzleInfo?.whoId} /></div>
-        <div>Created: <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={puzzleInfo?.eventBn} /> ago on <AtoBlockWithLink blockNo={puzzleInfo?.eventBn}  /></div>
-        <div>Total prize: <strong>{puzzleInfo?.dynTotalDeposit/(10**18)}</strong>&nbsp;&nbsp;<i style={{cursor:"pointer"}} className="question circle outline icon" title="Total prize is a sum of all sponsored tokens."></i></div>
-        <div title={`Points reward era length = ${financeConfig?financeConfig.pointRewardEpochBlockLength:"loading..."} blocks`}>Estimated points: <strong>{puzzleInfo?getEstimatedPoints(puzzleInfo, financeConfig?financeConfig.pointRewardEpochBlockLength:0):'Loading...'}</strong>&nbsp;&nbsp;<i style={{cursor:"pointer"}} className="question circle outline icon" title="1 ATO sponsored for 1 Day will contribute 1 POINT."></i></div>
-        <div>Puzzle status:&nbsp;&nbsp;
-        {puzzleInfo?(
-          (getPuzzleStatus(puzzleInfo)=="UNSOLVED")?<div className="ui tiny yellow label">UNSOLVED</div>:
-          (getPuzzleStatus(puzzleInfo)=="CHALLENGABLE")?<div className="ui tiny orange label">CHALLENGABLE</div>:
-          (getPuzzleStatus(puzzleInfo)=="SOLVED")?<div className="ui tiny violet label">SOLVED</div>:
-          (getPuzzleStatus(puzzleInfo)=="JUDGING")?<div className="ui tiny grey label">JUDGING</div>:
-          (getPuzzleStatus(puzzleInfo)=="INVALID")?<div className="ui tiny black label">INVALID</div>:
-          <div className="ui tiny label">UNKNOWN</div>
-          ):""}
-        </div>
-        
-        <h3 style={{lineHeight:'150%'}}>{arPuzzleDetail?arPuzzleDetail:''}</h3>
-
-        {arPuzzleFullScreenUrl?
-          <div>
-            <a style={{cursor:"pointer"}} onClick={()=>handleOpenFull()}><i className="expand arrows alternate icon"></i> Enter full screen</a><br/>
-            <span style={{fontSize:"75%"}}>Full screen media URL: {arPuzzleFullScreenUrl}</span>
+          <div>Puzzle hash: {puzzleInfo?.puzzleHash}</div>
+          <div>Permanent link on Arweave network: <a target="blank" href={`${config.ARWEAVE_EXPLORE}/${puzzleInfo?.puzzleHash}`}>{puzzleInfo?.puzzleHash} <i className="external alternate icon"></i></a></div>
+          <div>Creator: <UserHomeLink user_address={puzzleInfo?.whoId} /></div>
+          <div>Created: <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={puzzleInfo?.eventBn} /> ago on <AtoBlockWithLink blockNo={puzzleInfo?.eventBn}  /></div>
+          <div>Total prize: <strong>{puzzleInfo?.dynTotalDeposit/(10**18)}</strong>&nbsp;&nbsp;<i style={{cursor:"pointer"}} className="question circle outline icon" title="Total prize is a sum of all sponsored tokens."></i></div>
+          <div title={`Points reward era length = ${financeConfig?financeConfig.pointRewardEpochBlockLength:"loading..."} blocks`}>Estimated points: <strong>{puzzleInfo?getEstimatedPoints(puzzleInfo, financeConfig?financeConfig.pointRewardEpochBlockLength:0):'Loading...'}</strong>&nbsp;&nbsp;<i style={{cursor:"pointer"}} className="question circle outline icon" title="1 ATO sponsored for 1 Day will contribute 1 POINT."></i></div>
+          <div>Puzzle status:&nbsp;&nbsp;
+          {puzzleInfo?(
+            (getPuzzleStatus(puzzleInfo)=="UNSOLVED")?<div className="ui tiny yellow label">UNSOLVED</div>:
+            (getPuzzleStatus(puzzleInfo)=="CHALLENGABLE")?<div className="ui tiny orange label">CHALLENGABLE</div>:
+            (getPuzzleStatus(puzzleInfo)=="SOLVED")?<div className="ui tiny violet label">SOLVED</div>:
+            (getPuzzleStatus(puzzleInfo)=="JUDGING")?<div className="ui tiny grey label">JUDGING</div>:
+            (getPuzzleStatus(puzzleInfo)=="INVALID")?<div className="ui tiny black label">INVALID</div>:
+            <div className="ui tiny label">UNKNOWN</div>
+            ):""}
           </div>
-        :""}
+          
+          <h3 style={{lineHeight:'150%'}}>{arPuzzleDetail?arPuzzleDetail:''}</h3>
 
-        {(arPuzzleFullScreenUrl && atoIfShowFull)?
-          <div>  
-            <iframe src={arPuzzleFullScreenUrl} className="ReSeTs_fixedFull" allow="autoplay" allowfullscreen="" allowfullscreen></iframe>
-            <div className="ReSeTs_fixedRight">
-              <h1 className="1ReSeTs_puzzleDetail_h1">{arPuzzleTitle?arPuzzleTitle:'Loading...'}</h1>
-              <h3 style={{lineHeight:'150%'}}>{arPuzzleDetail?arPuzzleDetail:'Loading...'}</h3>
-              <AnswerList puzzle_hash={puzzle_hash} puzzle_status={puzzleInfo?getPuzzleStatus(puzzleInfo):'Loading...'} />
-              <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleCloseFull()}><i className="compress icon"></i> Exit full screen</a>&nbsp;&nbsp;&nbsp;&nbsp;
-              <a href={arPuzzleFullScreenUrl} target="_blank"><i className="external alternate icon"></i> View media in a new window</a>
-            </div> 
-            <p>click</p>         
-          </div>          
-        :""}
+          {arPuzzleFullScreenUrl?
+            <div>
+              <a style={{cursor:"pointer"}} onClick={()=>handleOpenFull()}><i className="expand arrows alternate icon"></i> Enter full screen</a><br/>
+            </div>
+          :""}
 
-        <br/><div className="ui divider"></div>
+          {(arPuzzleFullScreenUrl && atoIfShowFull)?
+            <div style={{background:"black"}} >  
+              <iframe style={{background:"black"}} src={arPuzzleFullScreenUrl} className="ReSeTs_fixedFull" allow="autoplay" allowfullscreen="" allowfullscreen></iframe>
+              <div className="ReSeTs_fixedRight" style={atoIfMaxRight==1?{height:"100%"}:{height:"5rem"}}>
+                <div className="animate__animated animate__fadeIn animate__delay-5s" style={{marginBottom:"1rem"}}>
+                  <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleCloseFull()}><i className="compress icon"></i> Exit full screen</a>&nbsp;&nbsp;
+                  <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleMaxRight()}><i className="angle double down icon"></i></a>&nbsp;&nbsp;
+                  <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleMinRight()}><i className="angle double up icon"></i></a>&nbsp;&nbsp;
+                  <a href={arPuzzleFullScreenUrl} target="_blank"><i className="external alternate icon"></i></a>
+                </div>
+                <div>
+                  <h1 className="1ReSeTs_puzzleDetail_h1 animate__animated animate__fadeIn animate__delay-3s">{arPuzzleTitle?arPuzzleTitle:puzzleInfo?.puzzleHash}</h1>
+                  <div className="animate__animated animate__fadeIn animate__delay-4s">
+                    <h3 style={{lineHeight:'150%'}}>{arPuzzleDetail?arPuzzleDetail:'Loading...'}</h3>
+                  </div>
+                </div>
+              </div> 
+            </div>          
+          :""}
 
-        <h1 className="1ReSeTs_puzzleDetail_h2">>> Solve it</h1>
-        <AnswerList puzzle_hash={puzzle_hash} puzzle_status={puzzleInfo?getPuzzleStatus(puzzleInfo):'Loading...'} />
-        <br/><div className="ui divider"></div>
-         
-        <h1 className="1ReSeTs_puzzleDetail_h2">>> Challenge it</h1>
-        <ChallengeList puzzle_hash={puzzle_hash} puzzle_status={puzzleInfo?getPuzzleStatus(puzzleInfo):'Loading...'} puzzle_prize={puzzleInfo?puzzleInfo.dynTotalDeposit:0} puzzle_challengeDeadline1={puzzleInfo?puzzleInfo.dynChallengeDeadline:0} puzzle_challengeDeadline2={puzzleInfo?puzzleInfo.dynRaiseDeadline:0}  atoConfigChallengeTarget={financeConfig?financeConfig.challengeThreshold:-1} />
+          <br/><div className="ui divider"></div>
+
+          <h1 className="1ReSeTs_puzzleDetail_h2">>> Solve it</h1>
+          <AnswerList puzzle_hash={puzzle_hash} puzzle_status={puzzleInfo?getPuzzleStatus(puzzleInfo):'Loading...'} />
+          <br/><div className="ui divider"></div>
+           
+          <h1 className="1ReSeTs_puzzleDetail_h2">>> Challenge it</h1>
+          <ChallengeList puzzle_hash={puzzle_hash} puzzle_status={puzzleInfo?getPuzzleStatus(puzzleInfo):'Loading...'} puzzle_prize={puzzleInfo?puzzleInfo.dynTotalDeposit:0} puzzle_challengeDeadline1={puzzleInfo?puzzleInfo.dynChallengeDeadline:0} puzzle_challengeDeadline2={puzzleInfo?puzzleInfo.dynRaiseDeadline:0}  atoConfigChallengeTarget={financeConfig?financeConfig.challengeThreshold:-1} />
+        </div>
+        <div className="six wide column">
+          <h1 className="1ReSeTs_puzzleDetail_h2">>> Sponsor it</h1>
+          <SponsorList puzzle_hash={puzzle_hash} puzzle_status={puzzleInfo?getPuzzleStatus(puzzleInfo):'Loading...'} />
+        </div>
       </div>
-      <div className="six wide column">
-        <h1 className="1ReSeTs_puzzleDetail_h2">>> Sponsor it</h1>
-        <SponsorList puzzle_hash={puzzle_hash} puzzle_status={puzzleInfo?getPuzzleStatus(puzzleInfo):'Loading...'} />
+      <br/><div className="ui divider"></div>
+      <h1 className="1ReSeTs_puzzleDetail_h2" style={{textAlign:"center"}}>FAQ of How to Earn?</h1><br/>
+      <div className="ui four column stackable grid">
+        <div className="four wide column">
+          <h3>How to earn as a Creator?</h3>
+          <ul>
+          <li>Create a valid puzzle with sufficient sophistication to be unsolved for 24 hours.</li>
+          <li>Earn Atocha Points generated by the puzzle after 24 hours and received Atocha Points once puzzle solved.</li>
+          <li>Use Atocha Points to apply and win the weekly ATO rewards.</li>
+          </ul>
+        </div>
+        <div className="four wide column">
+          <h3>How to earn as a Solver?</h3>
+          <ul>
+          <li>Solve a puzzle and win the ATO and Atocha Points within the puzzle.</li>
+          <li>Use Atocha Points to apply and win the weekly ATO rewards.</li>
+          </ul>
+          <h3>Can I solve a puzzle I created?</h3>
+          Yes, you can. The main consideration that such behavior is allowed is as follow:
+          <ul>
+          <li>People want to know the answer of a puzzle, especially a good one.</li>
+          <li>Creator intends to close the puzzle and pursue the next puzzle creation, by solving the puzzle created, the Creator can unlock the ATO and proceed to use for the next puzzle creation.</li>
+          </ul>
+        </div>
+        <div className="four wide column">
+          <h3>How to earn as a Challenger?</h3>
+          <ul>
+          <li>Always on the look out for non-qualifying answers (as suggested by the guidelines) or non-related answers for the Challengable Puzzles.</li>
+          <li>Deposit sufficient ATO to challenge the in dispute puzzle.</li>
+          <li>Once judging stated that the challenged puzzle is INVALID, the Challenger will receive the puzzle's ATO.</li>
+          </ul>
+        </div>
+        <div className="four wide column">
+          <h3>What can I get as a Sponsor?</h3>
+          By sponsoring the puzzle, you can:
+          <ul>
+          <li>Increase the total prize of the puzzle.</li>
+          <li>Leave a short message from you to other players.</li>
+          <li>Publish image/video with link that drives traffic to you for brand awareness, lead generation, potential conversion and sales.(Coming soon...)</li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <br/><div className="ui divider"></div>
-    <h1 className="1ReSeTs_puzzleDetail_h2" style={{textAlign:"center"}}>FAQ of How to Earn?</h1><br/>
-    <div className="ui two column stackable grid">
-      <div className="four wide column">
-<h3>How to earn as a Creator?</h3>
-<ul>
-<li>Create a valid puzzle with sufficient sophistication to be unsolved for 24 hours.</li>
-<li>Earn Atocha Points generated by the puzzle after 24 hours and received Atocha Points once puzzle solved.</li>
-<li>Use Atocha Points to apply and win the weekly ATO rewards.</li>
-</ul>
-      </div>
-      <div className="four wide column">
-<h3>How to earn as a Solver?</h3>
-<ul>
-<li>Solve a puzzle and win the ATO and Atocha Points within the puzzle.</li>
-<li>Use Atocha Points to apply and win the weekly ATO rewards.</li>
-</ul>
-<h3>Can I solve a puzzle I created?</h3>
-Yes, you can. The main consideration that such behavior is allowed is as follow:
-<ul>
-<li>People want to know the answer of a puzzle, especially a good one.</li>
-<li>Creator intends to close the puzzle and pursue the next puzzle creation, by solving the puzzle created, the Creator can unlock the ATO and proceed to use for the next puzzle creation.</li>
-</ul>
-      </div>
-      <div className="four wide column">
-<h3>How to earn as a Challenger?</h3>
-<ul>
-<li>Always on the look out for non-qualifying answers (as suggested by the guidelines) or non-related answers for the Challengable Puzzles.</li>
-<li>Deposit sufficient ATO to challenge the in dispute puzzle.</li>
-<li>Once judging stated that the challenged puzzle is INVALID, the Challenger will receive the puzzle's ATO.</li>
-</ul>
-      </div>
-      <div className="four wide column">
-<h3>What can I get as a Sponsor?</h3>
-By sponsoring the puzzle, you can:
-<ul>
-<li>Increase the total prize of the puzzle.</li>
-<li>Leave a short message from you to other players.</li>
-<li>Publish image/video with link that drives traffic to you for brand awareness, lead generation, potential conversion and sales.(Coming soon...)</li>
-</ul>
-      </div>
-    </div>
     </div>
   );
 }

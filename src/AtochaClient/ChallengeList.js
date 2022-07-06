@@ -64,8 +64,7 @@ function Main (props) {
 
   return (
     <div>
-      <div>Requirement=Total price*{atoConfigChallengeTarget/(10**7)}%={puzzle_prize*atoConfigChallengeTarget/(10**27)}</div>
-      <div>Total current={totalChallengeDeposit/(10**18)}</div>
+      <div>Requirement=Total price*{atoConfigChallengeTarget/(10**7)}%={puzzle_prize*atoConfigChallengeTarget/(10**27)}, Total current={totalChallengeDeposit/(10**18)}</div>
       <ul>
         {challengeDepositList.map((challengeData, idx)=><li key={idx}>
           <UserHomeLink user_address={challengeData.whoId} /> challenged {challengeData.deposit/(10**18)}, <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={challengeData.eventBn} /> ago on <AtoBlockWithLink blockNo={challengeData.eventBn} />.

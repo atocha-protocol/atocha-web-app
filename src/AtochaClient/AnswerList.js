@@ -72,7 +72,7 @@ function Main (props) {
     <div>      
       <ul>
         {answerList.map((answerData, idx)=><li key={idx}>
-          Solver: <UserHomeLink user_address={answerData.whoId} />, submitted <span className="ato_answer">{kHexToString(answerData.answerContent)}</span> <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={answerData.eventBn} /> ago on <AtoBlockWithLink blockNo={answerData.eventBn} />.
+          Solver: <UserHomeLink user_address={answerData.whoId} />, submitted <div className="ui label animate__animated animate__jello animate__infinite" style={{color:"#e8e8e8"}}>{kHexToString(answerData.answerContent)}</div> <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={answerData.eventBn} /> ago on <AtoBlockWithLink blockNo={answerData.eventBn} />.
         </li>)}
       </ul>
       {(puzzle_status=="UNSOLVED")?(<PuzzleAnswer puzzle_hash={puzzle_hash} answerList={answerList} />):(<p>Submission closed.</p>)}    
