@@ -31,7 +31,16 @@ function Main (props) {
   }, [setPuzzleInfo]);
 
   return (
-      <Link to={`/puzzle_detail/${puzzle_hash}`}>{puzzleInfo?getShortText(puzzleInfo.puzzle_title):getShortText(puzzle_hash)}</Link>
+      <Link to={`/puzzle_detail/${puzzle_hash}`}>
+      {puzzleInfo?
+        puzzleInfo.puzzle_title?
+          getShortText(puzzleInfo.puzzle_title)
+        :
+          getShortText(puzzle_hash)
+      :
+        puzzle_hash
+      }
+      </Link>
   );
 }
 

@@ -225,7 +225,7 @@ function Main (props) {
               <p>
                 <h4>1. Google.com/maps</h4>
                 <p><img src="https://atocha.io/wp-content/uploads/2022/07/atocha-fullscreen-help_001.png" /></p>
-                <p>Google.com/maps->Share of embed image->Embed a map->src of iframe<br/>eg: https://www.google.com/maps/embed?pb=!4v1656957228244!6m8!1m7!1sCAoSLEFGMVFpcE1vT0NScV9PbEp2MW1aRjRZOUQ5aVF4eDdpSHJacXRST1dZODZD!2m2!1d51.4865869576732!2d-0.09280428544605002!3f40!4f10!5f0.7820865974627469</p>
+                <p>Google.com/maps->Share or embed image->Embed a map->src of iframe<br/>eg: https://www.google.com/maps/embed?pb=!4v1656957228244!6m8!1m7!1sCAoSLEFGMVFpcE1vT0NScV9PbEp2MW1aRjRZOUQ5aVF4eDdpSHJacXRST1dZODZD!2m2!1d51.4865869576732!2d-0.09280428544605002!3f40!4f10!5f0.7820865974627469</p>
                 <h4>2. Youtube.com</h4>
                 <p><img src="https://atocha.io/wp-content/uploads/2022/07/atocha-fullscreen-help_002.png" /></p>
                 <p>Youtube.com->Share->Embed->Embed video->src of iframe<br/>eg: https://www.youtube.com/embed/LFIEjmnvFm8</p>

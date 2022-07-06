@@ -298,7 +298,7 @@ function Main (props) {
     <div>
     <div className="ui two column stackable grid">
       <div className="ten wide column">
-        <h1 className="1ReSeTs_puzzleDetail_h1">{arPuzzleTitle?arPuzzleTitle:'Loading...'}</h1>
+        <h1 className="1ReSeTs_puzzleDetail_h1">{arPuzzleTitle?arPuzzleTitle:puzzleInfo?.puzzleHash}</h1>
         {arPuzzleImage?<div><img src={arPuzzleImage} style={{'max-width':'100%'}} /><br/><br/></div>:''}
 
         <div>Puzzle hash: {puzzleInfo?.puzzleHash}</div>
@@ -318,7 +318,7 @@ function Main (props) {
           ):""}
         </div>
         
-        <h3 style={{lineHeight:'150%'}}>{arPuzzleDetail?arPuzzleDetail:'Loading...'}</h3>
+        <h3 style={{lineHeight:'150%'}}>{arPuzzleDetail?arPuzzleDetail:''}</h3>
 
         {arPuzzleFullScreenUrl?
           <div>
