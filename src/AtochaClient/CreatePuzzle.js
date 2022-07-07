@@ -1,4 +1,5 @@
 import React,{useEffect,useState} from 'react';
+import {Routes,Route,Link,BrowserRouter} from "react-router-dom";
 import {Form,Input,Grid,Card,Statistic,TextArea,Label,Table,Container,Button} from 'semantic-ui-react';
 import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import sha256 from 'sha256';
@@ -220,7 +221,11 @@ function Main (props) {
             onChange={(_, { value }) => handleFullScreen(value) }
           />
           <div className='ato_form_div_explain'>
-            <p>Google map with street view and Youtube video can be used as auto-play full screen media for a puzzle. <a style={{cursor:"pointer"}} onClick={()=>setAtoIfShowFullScreenHelp(1)}><i className="angle down icon"></i>How to get the URL?</a></p>
+            <p>
+              Google map with street view and Youtube video can be used as full screen media for a puzzle.&nbsp;&nbsp;&nbsp;&nbsp;
+              <Link to="/puzzle_detail/1rf1szPK4wEBh9ytHtLx5D9PfnhOwAhXtGlRH9uGRM0"><i className="angle right icon"></i>See a demo</Link>&nbsp;&nbsp;
+              <a style={{cursor:"pointer"}} onClick={()=>setAtoIfShowFullScreenHelp(1)}><i className="angle down icon"></i>How to get the URL?</a>
+            </p>
             {atoIfShowFullScreenHelp?
               <p>
                 <h4>1. Google.com/maps</h4>

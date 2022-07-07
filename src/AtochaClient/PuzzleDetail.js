@@ -331,9 +331,9 @@ function Main (props) {
               <iframe style={{background:"black"}} src={arPuzzleFullScreenUrl} className="ReSeTs_fixedFull" allow="autoplay" allowfullscreen="" allowfullscreen></iframe>
               <div className="ReSeTs_fixedRight" style={atoIfMaxRight==1?{height:"100%"}:{height:"5rem"}}>
                 <div className="animate__animated animate__fadeIn animate__delay-5s" style={{marginBottom:"1rem"}}>
-                  <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleCloseFull()}><i className="compress icon"></i> Exit full screen</a>&nbsp;&nbsp;
-                  <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleMaxRight()}><i className="angle double down icon"></i></a>&nbsp;&nbsp;
-                  <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleMinRight()}><i className="angle double up icon"></i></a>&nbsp;&nbsp;
+                  <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleCloseFull()}><i className="compress icon"></i>Exit full screen</a>&nbsp;
+                  <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleMaxRight()}><i className="angle double down icon"></i></a>
+                  <a style={{color:"white",cursor:"pointer"}} onClick={()=>handleMinRight()}><i className="angle double up icon"></i></a>
                   <a href={arPuzzleFullScreenUrl} target="_blank"><i className="external alternate icon"></i></a>
                 </div>
                 <div>
