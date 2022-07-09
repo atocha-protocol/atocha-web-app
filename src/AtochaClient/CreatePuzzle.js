@@ -10,6 +10,7 @@ import {TxButton} from '../substrate-lib/components';
 import MakeAnswerSha256WithSimple from '../units/MakeAnswerSha256';
 import {web3FromSource} from '@polkadot/extension-dapp';
 import {hexToBigInt,hexToString} from "@polkadot/util";
+import TextType from "../units/TextType";
 
 function Main (props) {
   const {api, currentAccount} = useSubstrateState();
@@ -29,6 +30,91 @@ function Main (props) {
     }
     return fromAcct;
   };
+
+  function getAnswerFormat(inAnswer){
+    var a="";
+    if(TextType.isType(inAnswer,TextType.TEXT_TYPE.FULL_ASCII)){
+      if(TextType.isType(inAnswer,TextType.TEXT_TYPE.FULL_LOWERCASE_WITH_NUMBER_SPACE)){
+        if(/^[0-9 ]+$/.test(inAnswer)){          
+          if(/^[ ]+$/.test(inAnswer)){
+            a="all spaces";
+          }
+          else{
+            a="all numbers (0-9)";  
+          }
+        }
+        else{
+          a="all lowercase english letters (a-z)";  
+        }
+      }
+      else if(TextType.isType(inAnswer,TextType.TEXT_TYPE.FULL_UPPERCASE_WITH_NUMBER_SPACE)){
+        a="all uppercase english letters (A-Z)";
+      }
+      else{
+        a="all english letters (a-z A-Z)";
+      }
+    }
+    else{
+      a="contains symbol/punctuation/non-english characters";
+    }
+
+    var b="";
+    if(/\d/.test(inAnswer)){
+      b="contains numbers (0-9)";
+    }
+    else{
+      b="not contain numbers (0-9)"; 
+    }
+
+    var c="";
+    if(TextType.isType(inAnswer,TextType.TEXT_TYPE.HAS_SPACE) && !TextType.isType(inAnswer,TextType.TEXT_TYPE.NO_SPACE)){
+      //c="contains spaces";
+    }
+    else if(!TextType.isType(inAnswer,TextType.TEXT_TYPE.HAS_SPACE) && TextType.isType(inAnswer,TextType.TEXT_TYPE.NO_SPACE)){
+      //c="not contain spaces";
+    }
+    else{
+      //return false;
+    }
+    if(/\s/.test(inAnswer)){
+      b="contains spaces";
+    }
+    else{
+      b="not contain spaces"; 
+    }
+
+
+    var d="";
+    if(a=="all numbers (0-9)"){
+      d=a+", "+c;    
+    }
+    else{
+      d=a+", "+b+", "+c;
+    }    
+    return d;
+  }
+
+  function getAnswerFormat2(inAnswer){
+    const patternM=new RegExp(/^[a-zA-Z0-9 ]+$/);
+    const patternL=new RegExp(/^[a-z]+$/);
+    const patternU=new RegExp(/^[A-Z]+$/);
+
+    if(patternM.test(inAnswer)){
+      if(patternL.test(inAnswer)){
+        return("Lower");
+      }
+      else if(patternU.test(inAnswer)){
+        return("Upper");
+      }
+      else{
+        return("Mixed");  
+      }      
+      
+    }
+    else{
+      return("Other");
+    }
+  }
 
   function getAnswerFormat3(inAnswer){
     if(inAnswer==""){
