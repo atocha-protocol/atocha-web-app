@@ -30,6 +30,101 @@ function Main (props) {
     return fromAcct;
   };
 
+  function getAnswerFormat3(inAnswer){
+    if(inAnswer==""){
+      return("blank");
+    }
+    else if(/^[0-9 ]+$/.test(inAnswer)){      
+      if(/^[0-9]+$/.test(inAnswer)){
+        return("all numbers");
+      }
+      else{
+        if(/^[ ]+$/.test(inAnswer)){
+          return("all spaces");
+        }
+        else{
+          return("all numbers and spaces");
+        }
+      }
+    }
+    else{
+      if(/^[a-zA-Z0-9 ]+$/.test(inAnswer)){
+        if(/^[a-z0-9 ]+$/.test(inAnswer)){
+          if(/\d/.test(inAnswer)){
+            if(/\s/.test(inAnswer)){
+              return("all lowercase english letters, contains numbers, contains spaces");     
+            }
+            else{
+              return("all lowercase english letters, contains numbers, not contain spaces");
+            }
+          }
+          else{
+            if(/\s/.test(inAnswer)){
+              return("all lowercase english letters, not contain numbers, contains spaces");     
+            }
+            else{
+              return("all lowercase english letters, not contain numbers, not contain spaces");
+            }
+          }
+        }
+        else if(/^[A-Z0-9 ]+$/.test(inAnswer)){
+          if(/\d/.test(inAnswer)){
+            if(/\s/.test(inAnswer)){
+              return("all uppercase english letters, contains numbers, contains spaces");     
+            }
+            else{
+              return("all uppercase english letters, contains numbers, not contains spaces");
+            }
+          }
+          else{
+            if(/\s/.test(inAnswer)){
+              return("all uppercase english letters, not contain numbers, contains spaces");     
+            }
+            else{
+              return("all uppercase english letters, not contain numbers, not contain spaces");
+            }
+          }
+        } 
+        else{
+          if(/\d/.test(inAnswer)){
+            if(/\s/.test(inAnswer)){
+              return("all english letters, contains numbers, contains spaces");     
+            }
+            else{
+              return("all english letters, contains numbers, not contains spaces");
+            }
+          }
+          else{
+            if(/\s/.test(inAnswer)){
+              return("all english letters, not contain numbers, contains spaces");     
+            }
+            else{
+              return("all english letters, not contain numbers, not contain spaces");
+            }
+          }
+        }       
+      }
+      else{
+        if(/\d/.test(inAnswer)){
+          if(/\s/.test(inAnswer)){
+            return("contains symbol/punctuation/non-english characters, contains numbers, contains spaces");     
+          }
+          else{
+            return("contains symbol/punctuation/non-english characters, contains numbers, not contain spaces");
+          }
+        }
+        else{
+          if(/\s/.test(inAnswer)){
+            return("contains symbol/punctuation/non-english characters, not contain numbers, contains spaces");     
+          }
+          else{
+            return("contains symbol/punctuation/non-english characters, not contain numbers, not contain spaces");
+          }
+        }
+      }      
+    }
+  }
+
   const [storageJson, setStorageJson] = useState({});
   const [storageLength, setStorageLength] = useState('');
   const [storageHash, setStorageHash] = useState('');
@@ -44,6 +139,7 @@ function Main (props) {
   const [puzzleFullScrrenContent, setPuzzleFullScreenContent] = useState({});
   const [puzzleAnswer, setPuzzleAnswer] = useState('');
   const [puzzleAnswerHash, setPuzzleAnswerHash] = useState('');
+  const [puzzleAnswerFormatContent, setPuzzleAnswerFormatContent] = useState('');
   const [puzzleDeposit, setPuzzleDeposit] = useState(0);
   const [puzzleStatus, setPuzzleStatus] = useState(0);
 
@@ -61,7 +157,8 @@ function Main (props) {
       puzzle_content: [
         puzzleTextContent,
         puzzleFileContent,
-        puzzleFullScrrenContent
+        puzzleFullScrrenContent,
+        puzzleAnswerFormatContent
       ]
     };
     const decimals = api.registry.chainDecimals;
@@ -79,7 +176,7 @@ function Main (props) {
     //console.log('CreatePuzzle.js|main|useEffect|storageLength', storageLength);
     //console.log('CreatePuzzle.js|main|useEffect|storageHash', storageHash);
     //console.log('debug=', sha256(encodeURIComponent('加油加油，中文')));
-  }, [api.query.atochaFinance, puzzleTitle, puzzleTextContent, puzzleFileContent, puzzleFullScrrenContent]);
+  }, [api.query.atochaFinance, puzzleTitle, puzzleTextContent, puzzleFileContent, puzzleFullScrrenContent,puzzleAnswerFormatContent]);
   
   useEffect(async () => {
     if(configAtochaModule == null) {
@@ -125,6 +222,18 @@ function Main (props) {
       data: content,
       fieldId: 'fullScreen'
     });
+  }  
+
+
+
+  function handleAnswer (inContent) {
+    setPuzzleAnswer(inContent);
+    setPuzzleAnswerFormatContent({
+      type: 'text',
+      data: getAnswerFormat3(inContent),
+      fieldId: 'answerFormat'
+    });
+    console.log("CreatePuzzle.js|main|handleAnswer|puzzleAnswerFormatContent",puzzleAnswerFormatContent);
   }  
 
   function handleDeposit (num) {
@@ -243,9 +352,16 @@ function Main (props) {
           <Input
             label='Puzzle answer'
             type='text'
-            onChange={(_, { value }) => setPuzzleAnswer(value) }
+            onChange={(_, { value }) => handleAnswer(value) }
           /><div className='ato_form_div_explain'>Answer must be short and specific, recommended answer should be one to two combination.</div>
         </Form.Field>
+        <Form.Field>
+          <Input
+            label='Answer format'
+            type='text'
+            value={puzzleAnswerFormatContent.data}
+          /><div className='ato_form_div_explain'>Answer format is auto-generated from your input answer and it is non-editable. It will be stored and published with the puzzle.</div>
+        </Form.Field>        
         <Form.Field>
           <Input
             label={`Prize sponsored by yourself`}

@@ -39,6 +39,7 @@ import CreatePuzzle from "./AtochaClient/CreatePuzzle";
 import MyHome from "./AtochaClient/MyHome";
 import MyProfile from "./AtochaClient/MyProfile";
 import ChainStatus from "./AtochaClient/ChainStatus";
+import DevTest from "./AtochaClient/DevTest";
 
 function Main() {
   const { apiState, apiError, keyringState} = useSubstrateState();
@@ -149,6 +150,7 @@ function Main() {
           <Route path="/chain_status" element={<ChainStatus />} />
           <Route path="/user_home/:account_id" element={<UserHome />} />
           <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail />} />
+          <Route path="/dev-test" element={<DevTest />} />
         </Routes>
         </BrowserRouter>
         <DeveloperConsole />
