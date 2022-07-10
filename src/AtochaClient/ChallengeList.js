@@ -70,7 +70,7 @@ function Main (props) {
           <UserHomeLink user_address={challengeData.whoId} /> challenged {challengeData.deposit/(10**18)}, <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={challengeData.eventBn} /> ago on <AtoBlockWithLink blockNo={challengeData.eventBn} />.
         </li>)}
       </ul>
-      {(puzzle_status=="CHALLENGABLE")?((challengeDepositList.length<=0)?(<PuzzleCommitChallenge puzzle_hash={puzzle_hash} challengeDepositList={challengeDepositList} puzzle_challengeDeadline={puzzle_challengeDeadline1} minDeposit={puzzle_prize*0.05*atoConfigChallengeTarget/(10**9)} />):(<PuzzleChallengeRaising puzzle_hash={puzzle_hash} challengeDepositList={challengeDepositList} puzzle_challengeDeadline={puzzle_challengeDeadline2} />)):(<p>Submission not open or closed.</p>)}
+      {(puzzle_status=="CHALLENGABLE")?((challengeDepositList.length<=0)?(<PuzzleCommitChallenge puzzle_hash={puzzle_hash} challengeDepositList={challengeDepositList} puzzle_challengeDeadline={puzzle_challengeDeadline1} minDeposit={puzzle_prize*0.05*atoConfigChallengeTarget/(10**9)} />):(<PuzzleChallengeRaising puzzle_hash={puzzle_hash} challengeDepositList={challengeDepositList} puzzle_challengeDeadline={puzzle_challengeDeadline2} />)):(<p>Challenge submission not open or closed.</p>)}
     </div>
   );
 }

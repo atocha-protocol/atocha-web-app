@@ -71,7 +71,7 @@ function Main (props) {
         )} 
         </li>)}
       </ul>
-      {(puzzle_status=="UNSOLVED")?(<PuzzleCommitSponsorship puzzle_hash={puzzle_hash} puzzleDepositList={puzzleDepositList} />):(<p>Submission closed.</p>)}
+      {(puzzle_status=="UNSOLVED")?(<PuzzleCommitSponsorship puzzle_hash={puzzle_hash} puzzleDepositList={puzzleDepositList} />):(<p>Sponsor submission closed.</p>)}
     </div>
   );
 }

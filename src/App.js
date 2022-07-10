@@ -158,9 +158,9 @@ function Main() {
         <br/>
         <div className="ui divider"></div>
         <div className="ui text menu">
-          <div className="header item">Atocha Puzzles</div>
+          <div className="header item">Atocha Puzzles v220711a</div>
           <a className="item" href="https://app.ref.finance/#wrap.near|atocha-token.near" target="_blank">Get ATO</a>
-          <a className="item" href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki">Doc & Wiki & Help</a>
+          <a className="item" href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki">Doc/Wiki/Help</a>
           <a className="item" href="https://polkadot.js.org/extension/">PolkadotJS wallet browser extension</a>          
           <a className="item" href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/explorer`} target="_blank">PolkadotJS online wallet</a>
           <a className="item" href={`${config.OCT_EXPLORER}`} target="_blank">Octopus chain explorer</a>
