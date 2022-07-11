@@ -30,6 +30,7 @@ import StepCase from "./Step/StepCase";
 
 import AtochaHome from "./AtochaClient/AtochaHome";
 import PuzzleDetail from "./AtochaClient/PuzzleDetail";
+import PuzzleDetail2 from "./AtochaClient/PuzzleDetail2";
 import {AtoContextProvider} from "./AtochaClient/AtoContext";
 import PointsRankList from "./AtochaClient/PointsRankList";
 import WeeklyReward from "./AtochaClient/WeeklyReward";
@@ -40,6 +41,7 @@ import MyHome from "./AtochaClient/MyHome";
 import MyProfile from "./AtochaClient/MyProfile";
 import ChainStatus from "./AtochaClient/ChainStatus";
 import DevTest from "./AtochaClient/DevTest";
+import DevTaskReward from "./AtochaClient/DevTaskReward";
 
 function Main() {
   const { apiState, apiError, keyringState} = useSubstrateState();
@@ -150,7 +152,9 @@ function Main() {
           <Route path="/chain_status" element={<ChainStatus />} />
           <Route path="/user_home/:account_id" element={<UserHome />} />
           <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail />} />
+          <Route path="/puzzle_detail2/:puzzle_hash" element={<PuzzleDetail2 />} />
           <Route path="/dev-test" element={<DevTest />} />
+          <Route path="/dev-task-reward" element={<DevTaskReward />} />
         </Routes>
         </BrowserRouter>
         <DeveloperConsole />
@@ -158,7 +162,7 @@ function Main() {
         <br/>
         <div className="ui divider"></div>
         <div className="ui text menu">
-          <div className="header item">Atocha Puzzles v220711a</div>
+          <div className="header item">Atocha Puzzles v220712a</div>
           <a className="item" href="https://app.ref.finance/#wrap.near|atocha-token.near" target="_blank">Get ATO</a>
           <a className="item" href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki">Doc/Wiki/Help</a>
           <a className="item" href="https://polkadot.js.org/extension/">PolkadotJS wallet browser extension</a>          

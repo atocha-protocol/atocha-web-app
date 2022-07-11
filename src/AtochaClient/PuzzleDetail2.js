@@ -59,15 +59,6 @@ function Main (props) {
             else if(urlArr[3]=="embed" && (url2Arr[0]=="youtube" || url2Arr[1]=="youtube")){
               setArPuzzleFullScreenUrl("https://youtube.com/embed/"+urlArr[4]);
             }
-            else if(url2Arr[1]=="github" && url2Arr[2]=="io"){
-              setArPuzzleFullScreenUrl(item.data); 
-            }
-            else if(url2Arr[0]=="threejs" && url2Arr[1]=="org"){
-              setArPuzzleFullScreenUrl(item.data); 
-            }
-            else if(url2Arr[1]=="threejs" && url2Arr[2]=="org"){
-              setArPuzzleFullScreenUrl(item.data); 
-            }                        
             else{
 
             }
@@ -315,8 +306,8 @@ function Main (props) {
 
           {arPuzzleImage?<div><img src={arPuzzleImage} style={{'max-width':'100%'}} /><br/><br/></div>:''}
 
-          <div>Puzzle hash: <strong>{puzzleInfo?.puzzleHash}</strong></div>
-          <div>Permanent link on Arweave network: <a target="blank" href={`${config.ARWEAVE_EXPLORE}/${puzzleInfo?.puzzleHash}`}><i className="external alternate icon"></i></a></div>
+          <div>Puzzle hash: {puzzleInfo?.puzzleHash}</div>         
+          <div>Permanent link on Arweave network: <a target="blank" href={`${config.ARWEAVE_EXPLORE}/${puzzleInfo?.puzzleHash}`}>{puzzleInfo?.puzzleHash} <i className="external alternate icon"></i></a></div>
           <div>Creator: <UserHomeLink user_address={puzzleInfo?.whoId} /></div>
           <div>Created: <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={puzzleInfo?.eventBn} /> ago on <AtoBlockWithLink blockNo={puzzleInfo?.eventBn}  /></div>
           <div>Total prize <i style={{cursor:"pointer"}} className="question circle outline icon" title="Total prize is a sum of all sponsored ATO."></i>: <strong>{puzzleInfo?.dynTotalDeposit/(10**18)}</strong></div>
@@ -356,6 +347,8 @@ function Main (props) {
               </div> 
             </div>          
           :""}
+
+          {1==1?<div>123</div>:""}
 
           <div style={{marginBottom:"1rem"}}>
             <a className="ui tiny button" target="_blank" href={`https://twitter.com/intent/tweet?url=${config.APP_ATOCHA_URL}/puzzle_detail/${puzzleInfo?.puzzleHash}&text=[Puzzle]${arPuzzleTitle?arPuzzleTitle:puzzleInfo?.puzzleHash}`}>Share to&nbsp;&nbsp;&nbsp;&nbsp;<i className="twitter icon"></i></a>

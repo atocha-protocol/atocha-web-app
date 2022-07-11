@@ -401,7 +401,7 @@ function Main (props) {
             label='Image (optional)'
             accept='.png,.jpeg,.jpg,.gif'
             onChange={e => handleFileChosen(e.target.files[0])}
-          /><div className='ato_form_div_explain'>Recommended file size: 5MB</div>
+          /><div className='ato_form_div_explain'>Recommended file size: 500k</div>
         </Form.Field>
         <Form.Field>
           <div><strong>Puzzle content</strong></div>
