@@ -1,10 +1,10 @@
 {
-  "PROVIDER_SOCKET": "wss://gateway.mainnet.octopus.network/atocha/jungxomf4hdcfocwcalgoiz64g9avjim",
-  "ARWEAVE_HTTP": "https://arweave.atocha.io/ar",
-  "SUBQUERY_HTTP": "https://subquery.atocha.io/",
+  "PROVIDER_SOCKET": "ws://148.72.247.143:8844",
+  "ARWEAVE_HTTP": "http://148.72.247.143:8001/ar",
+  "SUBQUERY_HTTP": "http://148.72.247.143:3060",
   "ARWEAVE_EXPLORE": "https://arweave.net",
-  "POLKADOT_EXPLORE": "https://polkadot.js.org/apps",
+  "POLKADOT_EXPLORE": "http://148.72.247.143:4000",
   "OCT_EXPLORER": "https://explorer.mainnet.oct.network/atocha",
-  "API_ATOCHA_URL": "https://api.atocha.io",
-  "APP_ATOCHA_URL": "https://play.atocha.io"
+  "API_ATOCHA_URL": "http://localhost:8088",
+  "APP_ATOCHA_URL": "http://localhost:8080"
 }
