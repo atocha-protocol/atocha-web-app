@@ -1,0 +1,10 @@
+{
+  "PROVIDER_SOCKET": "wss://gateway.mainnet.octopus.network/atocha/jungxomf4hdcfocwcalgoiz64g9avjim",
+  "ARWEAVE_HTTP": "https://arweave.atocha.io/ar",
+  "SUBQUERY_HTTP": "https://subquery.atocha.io/",
+  "ARWEAVE_EXPLORE": "https://arweave.net",
+  "POLKADOT_EXPLORE": "https://polkadot.js.org/apps",
+  "OCT_EXPLORER": "https://explorer.mainnet.oct.network/atocha",
+  "API_ATOCHA_URL": "https://api.atocha.io",
+  "APP_ATOCHA_URL": "https://play.atocha.io"
+}

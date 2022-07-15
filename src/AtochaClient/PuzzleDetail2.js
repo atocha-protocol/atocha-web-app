@@ -32,11 +32,13 @@ function Main (props) {
   const [financeConfig, setFinanceConfig] = useState(null);
   const [atoIfShowFull, setAtoIfShowFull] = useState(1);
   const [atoIfMaxRight, setAtoIfMaxRight] = useState(1);
+  const [atoIfShowPPT, setAtoIfShowPPT] = useState(1);
   
   const [arPuzzleTitle, setArPuzzleTitle] = useState(null);
   const [arPuzzleDetail, setArPuzzleDetail] = useState(null);
   const [arPuzzleImage, setArPuzzleImage] = useState(null);
   const [arPuzzleFullScreenUrl, setArPuzzleFullScreenUrl] = useState(null);
+  const [arPuzzlePPTFirst, setArPuzzlePPTFirst] = useState(null);
   const [arPuzzleAnswerFormat, setArPuzzleAnswerFormat] = useState(null);
 
   function loadJsonData() {
@@ -51,21 +53,37 @@ function Main (props) {
             var urlStr=item.data;
             var urlArr=urlStr.split("/");
             console.log("PuzzleDetail.js|main|loadJsonData|urlArr",urlArr);
-            var url2Arr=urlArr[2].split(".");
-            console.log("PuzzleDetail.js|main|loadJsonData|url2Arr",url2Arr);
-            if(urlArr[3]=="maps" && (url2Arr[0]=="google"|| url2Arr[1]=="google")){
-              setArPuzzleFullScreenUrl("https://google.com/maps/"+urlArr[4]);
-            }
-            else if(urlArr[3]=="embed" && (url2Arr[0]=="youtube" || url2Arr[1]=="youtube")){
-              setArPuzzleFullScreenUrl("https://youtube.com/embed/"+urlArr[4]);
-            }
-            else{
+            if(urlArr.length>=3){
+              var url2Arr=urlArr[2].split(".");
+              console.log("PuzzleDetail.js|main|loadJsonData|url2Arr",url2Arr);
+              if(url2Arr.length>=2){
+                if(urlArr[3]=="maps" && (url2Arr[0]=="google"|| url2Arr[1]=="google")){
+                  setArPuzzleFullScreenUrl("https://google.com/maps/"+urlArr[4]);
+                }
+                else if(urlArr[3]=="embed" && (url2Arr[0]=="youtube" || url2Arr[1]=="youtube")){
+                  setArPuzzleFullScreenUrl("https://youtube.com/embed/"+urlArr[4]);
+                }
+                else if(url2Arr[1]=="github" && url2Arr[2]=="io" && url2Arr.length==3){
+                  setArPuzzleFullScreenUrl(item.data); 
+                }
+                else if(url2Arr[0]=="threejs" && url2Arr[1]=="org" && url2Arr.length==2){
+                  setArPuzzleFullScreenUrl(item.data); 
+                }
+                else if(url2Arr[1]=="threejs" && url2Arr[2]=="org" && url2Arr.length==3){
+                  setArPuzzleFullScreenUrl(item.data); 
+                }                        
+                else{
 
+                }
+              }
             }
           }
           else if(item.fieldId=="answerFormat"){
             setArPuzzleAnswerFormat(item.data);
-          }
+          }        
+          else if(item.fieldId=="ifPPT"){
+            setArPuzzlePPTFirst(item.data);
+          }                 
           else{
 
           }
@@ -81,6 +99,7 @@ function Main (props) {
           }
         }
       }
+      console.log("PuzzleDetail.js|main|loadJsonData|arPuzzleFullScreenUrl",arPuzzleFullScreenUrl);
     }).catch(function (error) {
       console.log(error);
     });
@@ -289,6 +308,14 @@ function Main (props) {
     setAtoIfShowFull(0);
   }
 
+  function handleOpenPPT(){
+    setAtoIfShowPPT(1);
+  }  
+
+  function handleClosePPT(){
+    setAtoIfShowPPT(0);
+  }  
+
   function handleMaxRight(){
     setAtoIfMaxRight(1);
   }  
@@ -297,7 +324,8 @@ function Main (props) {
     setAtoIfMaxRight(0);
   }
   
-  //alert(puzzle_hash.slice(-6));
+  //alert(arPuzzleDetail.length);
+
   return (
     <div>
       <div className="ui two column stackable grid">
@@ -306,8 +334,8 @@ function Main (props) {
 
           {arPuzzleImage?<div><img src={arPuzzleImage} style={{'max-width':'100%'}} /><br/><br/></div>:''}
 
-          <div>Puzzle hash: {puzzleInfo?.puzzleHash}</div>         
-          <div>Permanent link on Arweave network: <a target="blank" href={`${config.ARWEAVE_EXPLORE}/${puzzleInfo?.puzzleHash}`}>{puzzleInfo?.puzzleHash} <i className="external alternate icon"></i></a></div>
+          <div>Puzzle hash: <strong>{puzzleInfo?.puzzleHash}</strong></div>
+          <div>Permanent link on Arweave network: <a target="blank" href={`${config.ARWEAVE_EXPLORE}/${puzzleInfo?.puzzleHash}`}><i className="external alternate icon"></i></a></div>
           <div>Creator: <UserHomeLink user_address={puzzleInfo?.whoId} /></div>
           <div>Created: <AtoBlock2Time bigBlock={pubBlockNumber} smallBlock={puzzleInfo?.eventBn} /> ago on <AtoBlockWithLink blockNo={puzzleInfo?.eventBn}  /></div>
           <div>Total prize <i style={{cursor:"pointer"}} className="question circle outline icon" title="Total prize is a sum of all sponsored ATO."></i>: <strong>{puzzleInfo?.dynTotalDeposit/(10**18)}</strong></div>
@@ -323,7 +351,9 @@ function Main (props) {
             ):""}
           </div>
 
-          <h3 style={{lineHeight:'150%'}}>{arPuzzleDetail?arPuzzleDetail:''}</h3>
+          {arPuzzleDetail?
+            <h3 dangerouslySetInnerHTML={{ __html: arPuzzleDetail.replace(/\n/g,"<br/>") }} style={{lineHeight:'150%'}}></h3>
+          :""}                
 
           {arPuzzleAnswerFormat?<div style={{marginBottom:"1rem"}}><strong>Auto-generated answer format&nbsp;&nbsp;<i style={{cursor:"pointer"}} className="question circle outline icon" title="Auto-generated by App, the creator can not edit it."></i>: {arPuzzleAnswerFormat}</strong></div>:""}
 
@@ -340,21 +370,58 @@ function Main (props) {
                 <div>
                   <h1 className="1ReSeTs_puzzleDetail_h1 animate__animated animate__fadeIn animate__delay-3s">{arPuzzleTitle?arPuzzleTitle:puzzleInfo?.puzzleHash}</h1>
                   <div className="animate__animated animate__fadeIn animate__delay-4s">
-                    <h3 style={{lineHeight:'150%'}}>{arPuzzleDetail?arPuzzleDetail:'Loading...'}</h3>
-                    {arPuzzleAnswerFormat?<div style={{marginBottom:"1rem"}}><strong>Auto-generated answer format&nbsp;&nbsp;<i style={{cursor:"pointer"}} className="question circle outline icon" title="Auto-generated by App, the creator can not edit it."></i>: {arPuzzleAnswerFormat}</strong></div>:""}
+                    {arPuzzleDetail?
+                      <div style={{maxHeight:"600px",overflowY:"auto",marginBottom:"12px"}}><h4 dangerouslySetInnerHTML={{ __html: arPuzzleDetail.replace(/\n/g,"<br/>") }} style={{lineHeight:'150%'}}></h4></div>
+                    :""}
+                    {arPuzzleAnswerFormat?<div style={{marginBottom:"1rem"}}><strong>Auto-generated answer format&nbsp;&nbsp;<i style={{cursor:"pointer"}} className="question circle outline icon" title="Auto-generated by App, the creator can not edit it."></i><br/>{arPuzzleAnswerFormat}</strong></div>:""}
                   </div>
                 </div>
               </div> 
             </div>          
           :""}
 
-          {1==1?<div>123</div>:""}
+          {(arPuzzlePPTFirst && arPuzzleFullScreenUrl==null && atoIfShowPPT)?
+            <div className="ReSeTs_fixedPPT" style={{color:"white",textAlign:"center",paddingTop:"48px",paddingBottom:"48px"}}>
+              <div className="animate__animated animate__bounceInLeft" style={{marginBottom:"24px"}}>
+                <h1 style={{f1ontSize:"300%"}}>{arPuzzleTitle?arPuzzleTitle:puzzleInfo?.puzzleHash}</h1>
+              </div>
+              <div className="animate__animated animate__zoomIn" style={{marginBottom:"48px"}}>
+                {arPuzzleImage?
+                  <img src={arPuzzleImage} style={{maxHeight:"300px"}} />
+                :
+                <i className="puzzle piece icon" style={{fontSize:"300px",lineHeight:"300px"}}></i>
+                }
+              </div>
+              <div className="animate__animated animate__shakeX" style={{width:"50%",margin:"auto",marginBottom:"24px"}}>
+                <h4 className="ui horizontal divider header" style={{color:"white"}}><i className="tag icon"></i>Puzzle Description</h4>
+              </div>
+              {arPuzzleDetail?
+                <div className="animate__animated animate__lightSpeedInRight" style={{width:"50%",maxHeight:"140px",overflowY:"auto",marginLeft:"auto",marginRight:"auto",marginBottom:"24px"}}>
+                  <h3 dangerouslySetInnerHTML={{ __html: arPuzzleDetail.replace(/\n/g,"<br/>") }} style={{lineHeight:"150%"}} style={{lineHeight:"150%"}}></h3>
+                </div>
+              :""}
+              {arPuzzleAnswerFormat?
+                <div className="animate__animated animate__bounceIn" style={{marginBottom:"24px"}}>
+                  Auto-generated answer format&nbsp;&nbsp;<i style={{cursor:"pointer"}} className="question circle outline icon" title="Auto-generated by App, the creator can not edit it."></i><br/>
+                  {arPuzzleAnswerFormat}
+                </div>
+              :""}
+              <div className="animate__animated animate__jello">
+                <button className="ui button" onClick={()=>handleClosePPT()}>
+                  <i className="compress icon"></i>Exit presentation mode
+                </button>
+              </div>
+            </div>
+          :""}
 
-          <div style={{marginBottom:"1rem"}}>
-            <a className="ui tiny button" target="_blank" href={`https://twitter.com/intent/tweet?url=${config.APP_ATOCHA_URL}/puzzle_detail/${puzzleInfo?.puzzleHash}&text=[Puzzle]${arPuzzleTitle?arPuzzleTitle:puzzleInfo?.puzzleHash}`}>Share to&nbsp;&nbsp;&nbsp;&nbsp;<i className="twitter icon"></i></a>
+          <div style={{marginBottom:"3rem"}}>
+            <a className="ui tiny twitter button" target="_blank" href={`https://twitter.com/intent/tweet?url=${config.APP_ATOCHA_URL}/puzzle_detail/${puzzleInfo?.puzzleHash}&text=[Puzzle]${arPuzzleTitle?arPuzzleTitle:puzzleInfo?.puzzleHash}`}>Share this puzzle on&nbsp;&nbsp;&nbsp;&nbsp;<i className="twitter icon"></i></a>
             {arPuzzleFullScreenUrl?
-              <a className="ui tiny button" style={{cursor:"pointer"}} onClick={()=>handleOpenFull()}><i className="expand arrows alternate icon"></i> Full screen</a>
+              <a className="ui tiny button" style={{cursor:"pointer"}} onClick={()=>handleOpenFull()}><i className="expand arrows alternate icon"></i> Full screen mode</a>
             :""}
+            {(arPuzzlePPTFirst && arPuzzleFullScreenUrl==null)?
+              <a className="ui tiny button" style={{cursor:"pointer"}} onClick={()=>handleOpenPPT()}><i className="expand arrows alternate icon"></i> Presentation mode</a>
+            :""}            
           </div>
 
           <div className="ui divider"></div>
@@ -417,7 +484,7 @@ function Main (props) {
   );
 }
 
-export default function PuzzleDetail (props) {
+export default function PuzzleDetail2 (props) {
     const { api } = useSubstrateState();
     const { apollo_client, gql } = useAtoContext()
     return api.query && apollo_client && gql

@@ -1,6 +1,6 @@
 import React,{useEffect,useState} from 'react';
 import {Routes,Route,Link,BrowserRouter} from "react-router-dom";
-import {Form,Input,Grid,Card,Statistic,TextArea,Label,Table,Container,Button} from 'semantic-ui-react';
+import {Form,Input,Checkbox,Grid,Card,Statistic,TextArea,Label,Table,Container,Button} from 'semantic-ui-react';
 import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import sha256 from 'sha256';
 import axios from 'axios';
@@ -222,29 +222,35 @@ function Main (props) {
   const [puzzleTitle, setPuzzleTitle] = useState('');
   const [puzzleFileContent, setPuzzleFileContent] = useState({});
   const [puzzleTextContent, setPuzzleTextContent] = useState({});
-  const [puzzleFullScrrenContent, setPuzzleFullScreenContent] = useState({});
+  const [puzzleFullScreenContent, setPuzzleFullScreenContent] = useState({});
+  const [atoIfShowFullScreenHelp, setAtoIfShowFullScreenHelp] = useState(0);
+  const [atoIfPPTChecked, setAtoIfPPTChecked] = useState(false);
   const [puzzleAnswer, setPuzzleAnswer] = useState('');
   const [puzzleAnswerHash, setPuzzleAnswerHash] = useState('');
   const [puzzleAnswerFormatContent, setPuzzleAnswerFormatContent] = useState('');
   const [puzzleDeposit, setPuzzleDeposit] = useState(0);
   const [puzzleStatus, setPuzzleStatus] = useState(0);
-
   const [puzzleHash, setPuzzleHash] = useState('');
-
-  const [atoIfShowFullScreenHelp, setAtoIfShowFullScreenHelp] = useState(0);
 
   const [configAtochaModule, setConfigAtochaModule] = useState(null);
   const [configAtochaFinance, setConfigAtochaFinance] = useState(null);
   const [configAtochaModuleMinBonusOfPuzzle, setConfigAtochaModuleMinBonusOfPuzzle] = useState(0);
 
   useEffect(() => { 
+    const puzzleIfPPTContent={
+      type: 'text',
+      data: atoIfPPTChecked,
+      fieldId: 'ifPPT'
+    };
+
     const storageJson = {
       puzzle_title: puzzleTitle,
       puzzle_content: [
         puzzleTextContent,
         puzzleFileContent,
-        puzzleFullScrrenContent,
-        puzzleAnswerFormatContent
+        puzzleFullScreenContent,
+        puzzleAnswerFormatContent,
+        puzzleIfPPTContent
       ]
     };
     const decimals = api.registry.chainDecimals;
@@ -256,13 +262,14 @@ function Main (props) {
     setStorageLength(jsonStr.length);
     setStorageHash(jsonHash);
 
-    console.log('CreatePuzzle.js|main|useEffect|currentAccount/storageJson/storageLength/storageHash',currentAccount,storageJson,storageLength,storageHash);
+    console.log('CreatePuzzle.js|main|useEffect|storageJson',storageJson);
+    //console.log('CreatePuzzle.js|main|useEffect|currentAccount/storageJson/storageLength/storageHash',currentAccount,storageJson,storageLength,storageHash);
     //console.log('CreatePuzzle.js|main|useEffect|currentAccount', currentAccount);
     //console.log('CreatePuzzle.js|main|useEffect|storageJson', storageJson);
     //console.log('CreatePuzzle.js|main|useEffect|storageLength', storageLength);
     //console.log('CreatePuzzle.js|main|useEffect|storageHash', storageHash);
     //console.log('debug=', sha256(encodeURIComponent('加油加油，中文')));
-  }, [api.query.atochaFinance, puzzleTitle, puzzleTextContent, puzzleFileContent, puzzleFullScrrenContent,puzzleAnswerFormatContent]);
+  }, [api.query.atochaFinance, puzzleTitle, puzzleTextContent, puzzleFileContent, puzzleFullScreenContent,puzzleAnswerFormatContent,atoIfPPTChecked]);
   
   useEffect(async () => {
     if(configAtochaModule == null) {
@@ -310,7 +317,10 @@ function Main (props) {
     });
   }  
 
+  function handleIfPPT (content) {
+    setAtoIfPPTChecked(!atoIfPPTChecked);
 
+  }  
 
   function handleAnswer (inContent) {
     setPuzzleAnswer(inContent);
@@ -389,7 +399,7 @@ function Main (props) {
       <Form>
         <Form.Field>
           <Input
-            label='Puzzle title'
+            label='1. Puzzle title'
             type='text'
             onChange={(_, { value }) => setPuzzleTitle(value) }
           /><div className='ato_form_div_explain'>States clearly in one phrase about the puzzle, eg: Guess a xxx, Name the xxx, Locate the xxx, etc</div>
@@ -398,26 +408,27 @@ function Main (props) {
           <Input
             type='file'
             id='file'
-            label='Image (optional)'
+            label='2. Image (optional)'
             accept='.png,.jpeg,.jpg,.gif'
             onChange={e => handleFileChosen(e.target.files[0])}
           /><div className='ato_form_div_explain'>Recommended file size: 500k</div>
         </Form.Field>
         <Form.Field>
-          <div><strong>Puzzle content</strong></div>
+          <div className="ui large label"><strong>3. Puzzle content</strong></div>
           <TextArea
             onChange={(_, { value }) => handleContent(value) }
-          /><div className='ato_form_div_explain'>Text only, HTML will be ignored. Make sure it contains the question, the clue/tips (optional), the expected answer format (full caps, numerical, mix, etc).</div>
+          />
+          <div className='ato_form_div_explain'>Text only, HTML will be ignored. Make sure it contains the question, the clue/tips (optional), the expected answer format (full caps, numerical, mix, etc).</div>
         </Form.Field>
         <Form.Field>
           <Input
-            label='Full screen media URL (optional)'
+            label='4. Full screen media URL (optional)'
             type='text'
             onChange={(_, { value }) => handleFullScreen(value) }
           />
           <div className='ato_form_div_explain'>
             <p>
-              Google map with street view and Youtube video can be used as full screen media for a puzzle.&nbsp;&nbsp;&nbsp;&nbsp;
+              Google map with street view and Youtube video can be used as full screen media for a puzzle.&nbsp;&nbsp;
               <Link to="/puzzle_detail/1rf1szPK4wEBh9ytHtLx5D9PfnhOwAhXtGlRH9uGRM0"><i className="angle right icon"></i>See a demo</Link>&nbsp;&nbsp;
               <a style={{cursor:"pointer"}} onClick={()=>setAtoIfShowFullScreenHelp(1)}><i className="angle down icon"></i>How to get the URL?</a>
             </p>
@@ -425,7 +436,7 @@ function Main (props) {
               <p>
                 <h4>1. Google.com/maps</h4>
                 <p><img src="https://atocha.io/wp-content/uploads/2022/07/atocha-fullscreen-help_001.png" /></p>
-                <p>Google.com/maps->Share or embed image->Embed a map->src of iframe<br/>eg: https://www.google.com/maps/embed?pb=!4v1656957228244!6m8!1m7!1sCAoSLEFGMVFpcE1vT0NScV9PbEp2MW1aRjRZOUQ5aVF4eDdpSHJacXRST1dZODZD!2m2!1d51.4865869576732!2d-0.09280428544605002!3f40!4f10!5f0.7820865974627469</p>
+                <p>Goog2le.com/maps->Share or embed image->Embed a map->src of iframe<br/>eg: https://www.google.com/maps/embed?pb=!4v1656957228244!6m8!1m7!1sCAoSLEFGMVFpcE1vT0NScV9PbEp2MW1aRjRZOUQ5aVF4eDdpSHJacXRST1dZODZD!2m2!1d51.4865869576732!2d-0.09280428544605002!3f40!4f10!5f0.7820865974627469</p>
                 <h4>2. Youtube.com</h4>
                 <p><img src="https://atocha.io/wp-content/uploads/2022/07/atocha-fullscreen-help_002.png" /></p>
                 <p>Youtube.com->Share->Embed->Embed video->src of iframe<br/>eg: https://www.youtube.com/embed/LFIEjmnvFm8</p>
@@ -434,9 +445,28 @@ function Main (props) {
             :""}
           </div>
         </Form.Field>        
+
+
+
+
+
+        <Form.Field>
+          <div className="ui large label">5. Presentation mode (optional)</div>&nbsp;&nbsp;
+          <Checkbox
+            checked={atoIfPPTChecked}
+            label="Enabled"
+            onChange={() => setAtoIfPPTChecked(!atoIfPPTChecked)}
+            style={{verticalAlign:"middle"}}
+          />
+          <div className='ato_form_div_explain'>Puzzles without full screen media can be shown in presentation mode. <Link to="/puzzle_detail/k9pDQBBuHUbWheaLTKS_ldxwmhp_hktGMrm633g0NPY"><i className="angle right icon"></i>See a demo</Link></div>  
+        </Form.Field>
+
+
+
+
         <Form.Field>
           <Input
-            label='Puzzle answer'
+            label='6. Puzzle answer'
             type='text'
             onChange={(_, { value }) => handleAnswer(value) }
           /><div className='ato_form_div_explain'>Answer must be short and specific, recommended answer should be one to two combination.</div>
@@ -450,7 +480,7 @@ function Main (props) {
         </Form.Field>        
         <Form.Field>
           <Input
-            label={`Prize sponsored by yourself`}
+            label={`7. Prize sponsored by yourself`}
             type='number'
             state='amount'
             onChange={(_, { value }) => handleDeposit(value) }
