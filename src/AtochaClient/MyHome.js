@@ -127,7 +127,11 @@ function Main (props) {
                           puzzleHash
                       }
                   },
-                  ref_answer_events(first: 0, last: 10000){
+                  ref_answer_events(first: 0, last: 10000,filter:{
+                      resultType:{
+                          equalTo:"ANSWER_HASH_IS_MATCH"
+                      }
+                  }){
                       nodes{
                           puzzleInfoId,
                           resultType,
