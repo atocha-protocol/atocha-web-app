@@ -338,7 +338,12 @@ function Main (props) {
           <div><br/></div>
         </div>      
       }
-      <div style={{textAlign:"right"}}><i>This page was generated at Block {atoSavedBlockNo}, current block number is {atoBlockNo}</i></div>      
+      {atoCurrentPuzzleListStatusTitle=="JUDGING"?
+        <div style={{textAlign:"center",marginBottom:"1rem"}}>Join our <a target="_blank" href="https://discord.com/channels/893699922581418044/993537799422750721"> <i class="discord icon"></i> puzzle-judging channel</a> where we gather all disputable Puzzles to be discussed and voted on by the community.</div>
+      :
+        ""
+      }
+      <div style={{textAlign:"center"}}><i>This page was generated at Block {atoSavedBlockNo}, current block number is {atoBlockNo}</i></div>      
     </div>
   );
 }

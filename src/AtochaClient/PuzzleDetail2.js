@@ -432,7 +432,7 @@ function Main (props) {
             (getPuzzleStatus(puzzleInfo)=="UNSOLVED")?<div className="ui tiny yellow label">UNSOLVED</div>:
             (getPuzzleStatus(puzzleInfo)=="CHALLENGABLE")?<div className="ui tiny orange label">CHALLENGABLE</div>:
             (getPuzzleStatus(puzzleInfo)=="SOLVED")?<div className="ui tiny violet label">SOLVED</div>:
-            (getPuzzleStatus(puzzleInfo)=="JUDGING")?<div className="ui tiny grey label">JUDGING</div>:
+            (getPuzzleStatus(puzzleInfo)=="JUDGING")?<div style={{display:"inline-block"}}><div className="ui tiny grey label">JUDGING</div>&nbsp;&nbsp;&nbsp;&nbsp;Discuss and vote this puzzle on our <a target="_blank" href="https://discord.com/channels/893699922581418044/993537799422750721">Discord channel <i class="external alternate icon"></i></a></div>:
             (getPuzzleStatus(puzzleInfo)=="INVALID")?<div className="ui tiny black label">INVALID</div>:
             <div className="ui tiny label">UNKNOWN</div>
             ):""}
