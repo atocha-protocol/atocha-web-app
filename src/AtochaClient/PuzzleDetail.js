@@ -57,8 +57,14 @@ function Main (props) {
               setArPuzzleFullScreenUrl("https://google.com/maps/"+urlArr[4]);
             }
             else if(urlArr[3]=="embed" && (url2Arr[0]=="youtube" || url2Arr[1]=="youtube")){
+              //https://www.youtube.com/embed/LFIEjmnvFm8
               setArPuzzleFullScreenUrl("https://youtube.com/embed/"+urlArr[4]);
             }
+            else if(url2Arr[0]=="youtube" || url2Arr[1]=="youtube"){
+              //https://www.youtube.com/watch?v=1xMaY6JYb1c
+              var url3Arr=urlArr[3].split("=");
+              setArPuzzleFullScreenUrl("https://youtube.com/embed/"+url3Arr[1]);
+            }            
             else if(url2Arr[1]=="github" && url2Arr[2]=="io"){
               setArPuzzleFullScreenUrl(item.data); 
             }
