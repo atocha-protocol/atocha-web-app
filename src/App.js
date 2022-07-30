@@ -31,12 +31,14 @@ import StepCase from "./Step/StepCase";
 import AtochaHome from "./AtochaClient/AtochaHome";
 import PuzzleDetail from "./AtochaClient/PuzzleDetail";
 import PuzzleDetail2 from "./AtochaClient/PuzzleDetail2";
+import PuzzleDetail3 from "./AtochaClient/PuzzleDetail3";
 import {AtoContextProvider} from "./AtochaClient/AtoContext";
 import PointsRankList from "./AtochaClient/PointsRankList";
 import WeeklyReward from "./AtochaClient/WeeklyReward";
 import UserHome from "./AtochaClient/UserHome";
 import ClientAtochaCreator from "./AtochaClient/ClientAtochaCreator";
 import CreatePuzzle from "./AtochaClient/CreatePuzzle";
+import CreatePuzzle3 from "./AtochaClient/CreatePuzzle3";
 import MyHome from "./AtochaClient/MyHome";
 import MyProfile from "./AtochaClient/MyProfile";
 import ChainStatus from "./AtochaClient/ChainStatus";
@@ -146,13 +148,14 @@ function Main() {
           <Route path="/puzzle-list" element={<PuzzleList2 />} />          
           <Route path="/create" element={<ClientAtochaCreator />} />
           <Route path="/create-puzzle" element={<CreatePuzzle />} />
+          <Route path="/create-puzzle3" element={<CreatePuzzle3 />} />
           <Route path="/my_profile" element={<MyProfile />} />
           <Route path="/my_home" element={<MyHome />} />          
           <Route path="/points_rank_list" element={<WeeklyReward />} />
           <Route path="/chain_status" element={<ChainStatus />} />
           <Route path="/user_home/:account_id" element={<UserHome />} />
           <Route path="/puzzle_detail/:puzzle_hash" element={<PuzzleDetail2 />} />
-          <Route path="/puzzle_detail2/:puzzle_hash" element={<PuzzleDetail2 />} />
+          <Route path="/puzzle_detail3/:puzzle_hash" element={<PuzzleDetail3 />} />
           <Route path="/dev-test" element={<DevTest />} />
           <Route path="/dev-task-reward" element={<DevTaskReward />} />
         </Routes>
@@ -162,7 +165,7 @@ function Main() {
         <br/>
         <div className="ui divider"></div>
         <div className="ui text menu">
-          <div className="header item">Atocha Puzzles v220728b</div>
+          <div className="header item">Atocha Puzzles v220730a</div>
           <a className="item" href="https://app.ref.finance/#wrap.near|atocha-token.near" target="_blank">Get ATO</a>
           <a className="item" href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki">Doc/Wiki/Help</a>
           <a className="item" href="https://polkadot.js.org/extension/">PolkadotJS wallet browser extension</a>          
