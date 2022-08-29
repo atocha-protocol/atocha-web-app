@@ -1,5 +1,5 @@
 {
-  "22":{
+  "21":{
     "0": "AnswerAlreadyExist",
     "1": "BeingChallenged",
     "2": "ChallengeCrowdloanPeriodNotEnd",
@@ -19,7 +19,7 @@
     "16": "PuzzleNotSolvedChallengeFailed",
     "17": "WrongAnswer"
   },
-  "23":{
+  "22":{
     "0": "BeneficiaryListNotEmpty",
     "1": "ChallengeAlreadyExists",
     "2": "ChallengeNotExists",
