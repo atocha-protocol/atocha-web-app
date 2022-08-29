@@ -358,7 +358,7 @@ function Main (props) {
         }
       }, err => {
         //console.log('Request err:', err);
-        setStatus("Something went wrong. Error code: TSC102");
+        setStatus("Something went wrong. Error code: TSC102-1");
       }).catch((err) => {
         //console.log('Catch err:', err);
         setStatus("Something went wrong. Error code: TSC103");
@@ -460,10 +460,7 @@ function Main (props) {
           />
           <div className='ato_form_div_explain'>Puzzles without full screen media can be shown in presentation mode. <Link to="/puzzle_detail/k9pDQBBuHUbWheaLTKS_ldxwmhp_hktGMrm633g0NPY"><i className="angle right icon"></i>See a demo</Link></div>  
         </Form.Field>
-
-
-
-
+        {/*This is real create page*/}
         <Form.Field>
           <Input
             label='6. Puzzle answer'

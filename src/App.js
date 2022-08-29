@@ -44,6 +44,8 @@ import MyProfile from "./AtochaClient/MyProfile";
 import ChainStatus from "./AtochaClient/ChainStatus";
 import DevTest from "./AtochaClient/DevTest";
 import DevTaskReward from "./AtochaClient/DevTaskReward";
+import SmoothLogin from "./AtochaClient/SmoothLogin";
+import SmoothRegister from "./AtochaClient/SmoothRegister";
 
 function Main() {
   const { apiState, apiError, keyringState} = useSubstrateState();
@@ -158,6 +160,8 @@ function Main() {
           <Route path="/puzzle_detail3/:puzzle_hash" element={<PuzzleDetail3 />} />
           <Route path="/dev-test" element={<DevTest />} />
           <Route path="/dev-task-reward" element={<DevTaskReward />} />
+          <Route path="/login" element={<SmoothLogin />} />
+          <Route path="/register" element={<SmoothRegister />} />
         </Routes>
         </BrowserRouter>
         <DeveloperConsole />

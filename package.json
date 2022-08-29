@@ -46,6 +46,7 @@
     "semantic-ui-react": "^2.1.1",
     "sha256": "^0.2.0",
     "stream-browserify": "^3.0.0",
+    "twitter-api-sdk": "^1.1.0",
     "web3": "^1.7.4"
   },
   "devDependencies": {

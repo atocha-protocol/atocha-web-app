@@ -358,7 +358,7 @@ function Main (props) {
         }
       }, err => {
         //console.log('Request err:', err);
-        setStatus("Something went wrong. Error code: TSC102");
+        setStatus("Something went wrong. Error code: TSC102-2");
       }).catch((err) => {
         //console.log('Catch err:', err);
         setStatus("Something went wrong. Error code: TSC103");
