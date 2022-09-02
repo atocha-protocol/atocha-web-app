@@ -46,6 +46,7 @@ function Main(props) {
   }, [currentAccount, setCurrentAccount, keyring, initialAddress])
 
   const onChange = addr => {
+    console.log("AccountSelect = keyring.isLocked = ", keyring.getPair(addr).isLocked)
     setCurrentAccount(keyring.getPair(addr))
   }
 

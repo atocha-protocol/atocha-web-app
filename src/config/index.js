@@ -13,6 +13,7 @@ const envVarNames = [
   'REACT_APP_OCT_EXPLORER',
   'REACT_APP_API_ATOCHA_URL',
   'REACT_APP_APP_ATOCHA_URL',
+  'REACT_APP_API2_ATOCHA_URL',
 ]
 const envVars = envVarNames.reduce((mem, n) => {
   // Remove the `REACT_APP_` prefix
