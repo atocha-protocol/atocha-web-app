@@ -11,4 +11,4 @@ build
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
-.env
+.env.old
