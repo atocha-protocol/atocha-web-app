@@ -16,15 +16,18 @@ import AtoDeleteThousand from "./AtoDeleteThousand";
 import {hexToBigInt, hexToString} from "@polkadot/util";
 import AtoBlock2Time from "./AtoBlock2Time";
 import error_info from "../config/error.json";
+import {useAtoContext} from "./AtoContext";
 
 var atoReloadTimes=0;
 
 function Main (props) {
   const {api} = useSubstrateState();
-  const apollo_client = new ApolloClient({
-    uri: config.SUBQUERY_HTTP,
-    cache: new InMemoryCache(),
-  });  
+  const { apollo_client, gql, puzzleSets:{isOpenSmooth} } = useAtoContext()
+
+  // const apollo_client = new ApolloClient({
+  //   uri: config.SUBQUERY_HTTP,
+  //   cache: new InMemoryCache(),
+  // });
 
   const [atoConfigAtochaFinance, setAtoConfigAtochaFinance] = useState(null);
   const [exchangeInfo, setExchangeInfo] = useState([]);
@@ -193,6 +196,7 @@ function Main (props) {
             buttonKey={'atochaFinance_applyPointReward_onClick'}
             preCheckCall= {preCheckCall}
             handlerEvent= {handlerEvent}
+            isOpenSmooth= {isOpenSmooth}
           />            
         </Form.Field>
         <Form.Field>

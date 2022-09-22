@@ -6,7 +6,7 @@ import axios from "axios";
 import config from "../config";
 import getShortText from "../units/GetShortText";
 import {web3FromSource} from "@polkadot/extension-dapp";
-import {useSubstrateState} from "../substrate-lib";
+import {useSubstrateState, utils} from "../substrate-lib";
 import {signatureVerify} from "@polkadot/util-crypto";
 // import { keyring } from '@polkadot/ui-keyring';
 
@@ -37,31 +37,33 @@ function Main (props) {
 
 
   function getBindTwitter() {
-    const instance = axios.create({
-      baseURL: config.API2_ATOCHA_URL,
-      timeout: 20000,
-      responseType: 'json',
-      responseEncoding: 'utf8',
-    });
+    // const instance = axios.create({
+    //   baseURL: config.API2_ATOCHA_URL,
+    //   timeout: 20000,
+    //   responseType: 'json',
+    //   responseEncoding: 'utf8',
+    // });
+    const instance = utils.atoApiRequestInstance()
     instance.get(`/twitter/bind_info?addr=${ato_address}`).then(
       function (response) {
-        console.log(' --- ---- User is already bound', response.data)
-        if(response.data?.status.toLowerCase() == `success` && response.data?.data.screen_name){
-          console.log(' --- --- Try to get twitter user infos.')
+        // console.log(' --- ----222 User is already bound', response.data)
+        if(!response.data){
+          setTwitterBind(null)
+        } else if(response.data?.status.toLowerCase() == `success` && response.data?.data?.screen_name){
+          // console.log(' --- --- Try to get twitter user infos.')
           // Try to get twitter infos
           instance.get(`/twitter/show_user?screen_name=${response.data?.data.screen_name}`).then(twitter_user_info=>{
             response.data.data.detail = twitter_user_info
-            console.log(' --- ---- B ', response.data)
+            // console.log(' --- ---- B ', response.data)
             setTwitterBind(response.data)
           })
         }else{
           setTwitterBind(null)
         }
-
       }
     ).catch(
       function (error) {
-        //console.log('Bing request Error ================= ', error)
+        console.log('Bing request Error ================= ', error)
       }
     )
   }

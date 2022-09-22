@@ -22,7 +22,7 @@ function Main (props) {
   const { api, currentAccount } = useSubstrateState('');
   const { puzzle_hash } = props;
   const { account_id } = useParams();
-  const { apollo_client, gql,  chainData: {pubBlockNumber, updatePubRefresh, userPoints} } = useAtoContext()
+  const { apollo_client, gql, puzzleSets:{isOpenSmooth}, chainData: {pubBlockNumber, updatePubRefresh, userPoints} } = useAtoContext()
 
   // Atocha user information.
   const [userBalance, setUserBalance] = useState(null);
@@ -37,7 +37,7 @@ function Main (props) {
   
   useEffect(async () => {
     if (currentAccount) {
-      fillCurrentAccountId();
+      await fillCurrentAccountId();
       loadAccountBalance();
       getPlayerPoints();
       await loadReleationPuzzles();
@@ -96,15 +96,24 @@ function Main (props) {
   }
 
   function fillCurrentAccountId(){
-    if(account_id == 'self') {
-      setCurrentAccountId(currentAccount.address);
-    }
-    else if(account_id=='' || account_id==null || typeof(account_id)=="undefined"){
-      setCurrentAccountId(currentAccount.address);
-    }
-    else{
-      setCurrentAccountId(account_id);
-    }
+    return new Promise((resolve, reject)=>{
+      if(isOpenSmooth){
+        // TODO:: Read account with smooth
+        console.log("TODO:: set currentid with smooth.")
+      }else{
+        if(account_id == 'self') {
+          setCurrentAccountId(currentAccount.address);
+        }
+        else if(account_id=='' || account_id==null || typeof(account_id)=="undefined"){
+          setCurrentAccountId(currentAccount.address);
+        }
+        else{
+          setCurrentAccountId(account_id);
+        }
+        resolve(true)
+      }
+    })
+
     //console.log("UserHome.js|Main|fillCurrentAccountId","account_id="+account_id+"|currentAccountId="+currentAccountId);
   }
 

@@ -19,11 +19,12 @@ import {useAtoContext} from "./AtoContext";
 import {useSubstrateState} from "../substrate-lib";
 import {web3FromSource} from "@polkadot/extension-dapp";
 import utils from "../substrate-lib/utils";
+import {func} from "prop-types";
 
 function Main (props) {
   const {label, type, attrs, handlerEvent, buttonKey, preCheckCall} = props
   const { api, currentAccount } = useSubstrateState();
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck} } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, setBindModalOpen, setAuthPwdModalOpen, setRecoverPwdModalOpen, checkUserLoggedIn, checkUserSmoothIn, isOpenSmooth} } = useAtoContext()
   // 0 == nothing, 1 = ok , 2= failed, 3=loading
   const [callStatus, setCallStatus] = useState(0)
   const [callMessage, setCallMessage] = useState("")
@@ -107,15 +108,44 @@ function Main (props) {
     }, [])
   }
 
+  async function preCheckSmooth() {
+    if (!await checkUserLoggedIn()) {
+      setBindModalOpen(true)
+      return false
+    } else {
+      const smoothData = await checkUserSmoothIn()
+      if (smoothData && smoothData.hasLogin && smoothData.hasPwd && smoothData.hasAtoAcc) {
+        return true
+      }else {
+        if(smoothData.hasLogin && !smoothData.hasPwd && !smoothData.hasAtoAcc){
+          setAuthPwdModalOpen(true)
+          return false
+        }else if(smoothData.hasLogin && !smoothData.hasPwd && smoothData.hasAtoAcc){
+          setRecoverPwdModalOpen(true)
+          return false
+        } else{
+          // impossible
+          console.log('warn! impossible hear')
+          setBindModalOpen(true)
+          return false
+        }
+      }
+    }
+    return false
+  }
+
   async function doClick() {
 
-    if(false == preCheckCall(buttonKey, callStatus, statusCallBack)) {
+    if(isOpenSmooth && false == await preCheckSmooth()) {
       return ;
     }
+
+    if(false == await preCheckCall(buttonKey, callStatus, statusCallBack)) {
+      return ;
+    }
+
     const fromAcct = await getFromAcct();
-
     const {palletRpc, callable, inputParams, paramFields} = attrs
-
     const transformed = transformParams(paramFields, inputParams, {
       emptyAsNull: false,
     })

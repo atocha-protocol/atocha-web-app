@@ -12,7 +12,7 @@ import KButton from "./KButton";
 function Main (props) {
   const { api, currentAccount } = useSubstrateState();
   const { puzzle_hash, answerList } = props;
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck}, extractErrorMsg} = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, setBindModalOpen, setAuthPwdModalOpen, setRecoverPwdModalOpen, checkUserLoggedIn, checkUserSmoothIn, isOpenSmooth}, extractErrorMsg} = useAtoContext()
 
   // Puzzle information.
   const [answerTxt, setAnswerTxt] = useState('');
@@ -39,18 +39,18 @@ function Main (props) {
   };
 
   function handlerEvent(section, method, statusCallBack, data) {
-    if(section == 'atochaModule' &&  method == 'AnswerCreated') {      
+    if(section == 'atochaModule' &&  method == 'AnswerCreated') {
       //statusCallBack(1, data[4].toString());
       if(data[4].toString()=="ANSWER_HASH_IS_MATCH"){
         statusCallBack(1,"😉 Bingo! Your answer is right.");
       }
       else if(data[4].toString()=="ANSWER_HASH_IS_MISMATCH"){
         statusCallBack(1,"Your answer is not right.");
-      }    
+      }
       else{
         //statusCallBack(1, data[4].toString());
         statusCallBack(1,"Your answer is not right (101).");
-      }  
+      }
       setAnswerTxt("");
       setAnswerExplain("none");
       freshList(); // update list
@@ -59,7 +59,6 @@ function Main (props) {
       const failedData = data.toJSON()[0].module
       const failedMsg = extractErrorMsg(failedData.index, failedData.error)
       if(failedMsg) {
-        //statusCallBack(2, `${failedMsg}`);
         statusCallBack(2, "Your answer is not right (102).");
       }else{
         statusCallBack(2, "Sorry, there was an unknown mistake.");
@@ -67,21 +66,17 @@ function Main (props) {
     }
   }
 
-  function preCheckCall(buttonKey, currentStatus, statusCallBack) {
-    if(answerTxt==""){
+  async function preCheckCall(buttonKey, currentStatus, statusCallBack) {
+    if (answerTxt == "") {
       alert('Answer can not be empty.');
       return false;
     }
-    if(answerExplain==""){
-      answerExplain="none";
-    }    
-    //console.log("currentStatus=", currentStatus);
-    if(currentStatus == 3) {
+    if (currentStatus == 3) {
       alert('Wait for pending process.');
       return false;
     }
     statusCallBack(0, "Submitting...");
-    return true;
+    return true
   }
 
   async function freshList() {
@@ -101,58 +96,6 @@ function Main (props) {
     tryToPollCheck(query_str, updatePubRefresh, ()=>{}, answerList.length);
   }
 
-  // async function doAnswerPuzzle() {
-  //   const fromAcct = await getFromAcct();
-  //   api.tx.atochaModule
-  //     .answerPuzzle(puzzle_hash, answerTxt, answerExplain)
-  //     .signAndSend(fromAcct, {}, ({events = [], status}) => {
-  //       console.log('Transaction status:', status.type);
-  //
-  //       if (status.isInBlock) {
-  //         console.log('Included at block hash', status.asInBlock.toHex());
-  //         console.log('Events:');
-  //
-  //         events.forEach(({event: {data, method, section}, phase}) => {
-  //           console.log('get events \t', phase.toString(), `: ${section}.${method}`, data.toString());
-  //           // atochaModule.AnswerCreated
-  //           if (`${section}.${method}` == 'system.ExtrinsicFailed') {
-  //             setStatusTxt(`${section}.${method} = ${data.toString()}`)
-  //           }
-  //         });
-  //       } else if (status.isFinalized) {
-  //         // setStatusTxt(`${statusTxt}\nFinalized`)
-  //         const query_str = `
-  //            query{
-  //             answerCreatedEvents(filter: {
-  //               puzzleHash:{
-  //                 equalTo: "${puzzle_hash}"
-  //               }
-  //             }){
-  //               totalCount
-  //             }
-  //           } `;
-  //         tryToPollCheck(query_str, updatePubRefresh, ()=>{}, answerList.length);
-  //       }
-  //     });
-  // }
-
-  // function statusChange (newStatus) {
-  //   if (newStatus.isFinalized) {
-  //     const query_str = `
-  //        query{
-  //         answerCreatedEvents(filter: {
-  //           puzzleHash:{
-  //             equalTo: "${puzzle_hash}"
-  //           }
-  //         }){
-  //           totalCount
-  //         }
-  //       } `;
-  //     tryToPollCheck(query_str, updatePubRefresh, ()=>{}, answerList.length);
-  //   }else{
-  //   }
-  // }
-
   return (
     <Form>
       <Form.Field>
@@ -169,19 +112,6 @@ function Main (props) {
           />
       </Form.Field>
       <Form.Field style={{ textAlign: 'left' }}>
-          {/*<TxButton*/}
-          {/*    label='Solve'*/}
-          {/*    type='SIGNED-TX'*/}
-          {/*    setStatus={setStatus}*/}
-          {/*    refStatus={statusChange}*/}
-          {/*    attrs={{*/}
-          {/*      palletRpc: 'atochaModule',*/}
-          {/*      callable: 'answerPuzzle',*/}
-          {/*      inputParams: [puzzle_hash, answerTxt, answerExplain],*/}
-          {/*      paramFields: [true, true, true]*/}
-          {/*    }}*/}
-          {/*/>*/}
-          {/*<Button onClick={()=>doAnswerPuzzle()}>Submit</Button>*/}
           <KButton
             label={`Submit your answer`}
             type={`SIGNED-TX`}
@@ -195,6 +125,7 @@ function Main (props) {
             buttonKey={'puzzle_answer_on_click'}
             preCheckCall= {preCheckCall}
             handlerEvent= {handlerEvent}
+            isOpenSmooth= {isOpenSmooth}
           />
       </Form.Field>
       <Form.Field>

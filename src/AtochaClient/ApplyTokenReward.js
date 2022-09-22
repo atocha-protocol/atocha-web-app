@@ -13,7 +13,7 @@ import AtoBlock2Time from "./AtoBlock2Time";
 
 function Main (props) {
   const { api } = useSubstrateState();
-  const { chainData: {userPoints,pubBlockNumber},puzzleSets: {pubRefresh, updatePubRefresh}, extractErrorMsg} = useAtoContext()
+  const { chainData: {userPoints,pubBlockNumber},puzzleSets: {pubRefresh, updatePubRefresh, isOpenSmooth}, extractErrorMsg} = useAtoContext()
   // Puzzle information.
   const [exchangeInfo, setExchangeInfo] = useState([]);
   const [previousExchangeInfo, setPreviousExchangeInfo] = useState([]);
@@ -169,6 +169,7 @@ function Main (props) {
             buttonKey={'atochaFinance_applyPointReward_onClick'}
             preCheckCall= {preCheckCall}
             handlerEvent= {handlerEvent}
+            isOpenSmooth= {isOpenSmooth}
           />            
         </Form.Field>
         <Form.Field>

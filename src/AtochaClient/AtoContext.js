@@ -12,6 +12,12 @@ import config from "../config";
 import error_info from "../config/error.json";
 
 import {useSubstrateState} from "../substrate-lib";
+import {Button, Form, Header, Image, Input, Modal} from "semantic-ui-react";
+import utils from "../substrate-lib/utils";
+import md5 from "md5";
+
+const isOpenSmooth = config.APP_IS_OPEN_SMOOTH == 1 ? true : false
+console.log('config.IS_OPEN_SMOOTH  === ', config.APP_IS_OPEN_SMOOTH )
 
 const AtoContext = createContext(null)
 
@@ -25,7 +31,16 @@ const AtoContextProvider = props => {
     const [rewardRankList, setRewardRankList] = useState([])
     const [pubRefresh, setPubRefresh] = useState(0)
     const [userPoints, setUserPoints] = useState(null);
-    const [pubPuzzleRelist, setPubPuzzleRelist] = useState([]);
+    const [pubPuzzleRelist, setPubPuzzleRelist] = useState([])
+    const [bindModalOpen, setBindModalOpen] = React.useState(false)
+    const [authPwdModalOpen, setAuthPwdModalOpen] = React.useState(false)
+    const [recoverPwdModalOpen, setRecoverPwdModalOpen] = React.useState(false)
+
+    const [authPassword, setAuthPassword] = React.useState('')
+    const [confirmPassword, setConfirmPassword] = React.useState('')
+    const [authPwdModalTipMsg, setAuthPwdModalTipMsg] = React.useState('')
+
+
 
     const apollo_client = new ApolloClient({
         uri: config.SUBQUERY_HTTP,
@@ -34,6 +49,63 @@ const AtoContextProvider = props => {
 
     function updatePubRefresh() {
         setPubRefresh(pubRefresh+1)
+    }
+
+    function checkUserLoggedIn() {
+        return new Promise((resolve, reject)=>{
+            const instance = utils.atoApiRequestInstance()
+            instance.get(`/twitter/has_login`).then(response=>{
+                console.log(' --- ---- User is already bound', response.data.data.isLogin)
+                if(response.data.data.isLogin == true) {
+                    resolve(true)
+                }else{
+                    resolve(false)
+                }
+            }).catch(err=>{
+                reject(err)
+            })
+        })
+    }
+
+    function getLoginInfos() {
+        return new Promise((resolve, rejects)=>{
+            const instance = utils.atoApiRequestInstance()
+            instance.get(`/twitter/login_infos`).then(
+              function (response) {
+                  console.log("response.data", response.data)
+                  if(response.data && response.data.status.toLowerCase() == 'success'){
+                      resolve(response.data.data)
+                  } else {
+                      rejects('Can not find response.data.')
+                  }
+              }
+            ).catch(
+              function (error) {
+                  console.log('/twitter/login_infos had an error.', error)
+                  rejects('/twitter/login_infos had an error.')
+              }
+            )
+        })
+    }
+
+    function checkUserSmoothIn() {
+        return new Promise((resolve, reject)=>{
+            const instance = utils.atoApiRequestInstance()
+            instance.get(`/twitter/has_to_sign`).then(response=>{
+                console.log(' --- ---- has_to_sign', response.data.data)
+                // if(response.data.data.hasLogin == true) {
+                //     resolve(true)
+                // }else{
+                //     resolve(false)
+                // }
+                if(response.data.data){
+                    resolve(response.data.data)
+                }
+                resolve(null)
+            }).catch(err=>{
+                reject(err)
+            })
+        })
     }
 
     function extractErrorMsg(index, error) {
@@ -98,9 +170,6 @@ const AtoContextProvider = props => {
     }
 
     async function loadPuzlleList() {
-        //console.log("==========AtoContext.js|main|loadPuzzleList");
-        //alert("==========AtoContext.js|main|loadPuzzleList");
-        //console.log('pubPuzzleListType = ', pubPuzzleListType);
         const filter_UNSOLVED = `
         filter: {
             dynHaveMatchedAnswer:{
@@ -223,42 +292,6 @@ const AtoContextProvider = props => {
                 break;
         }
 
-        // const qqq = `query{
-        //             puzzleCreatedEvents(last:1000,orderBy:EVENT_BN_DESC, ${filter_result}){
-        //                 nodes{
-        //                     whoId,
-        //                     puzzleHash,
-        //                     createBn,
-        //                     eventBn,
-        //                     eventHash,
-        //                     dynRaiseDeadline,
-        //                     dynChallengeDeadline,
-        //                     dynPuzzleStatus,
-        //                     dynHaveMatchedAnswer,
-        //                     dynChallengeStatus,
-        //                     dynTotalDeposit,
-        //                     ref_challenge_infos{
-        //                         totalCount
-        //                     },
-        //                     ref_challenge_status(orderBy:EVENT_BN_DESC){
-        //                         totalCount,
-        //                         nodes{
-        //                             challengeStatus
-        //                         }
-        //                     },
-        //                     ref_answer_infos(orderBy:EVENT_BN_DESC){
-        //                         totalCount,
-        //                         nodes{
-        //                             answerContent,
-        //                             eventBn,
-        //                             resultType
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }`
-        // console.log("qqq2 = ", qqq)
-
         apollo_client.query({
             query: gql`
                 query{
@@ -297,10 +330,6 @@ const AtoContextProvider = props => {
                 }
             `
         }).then(result => {
-            //console.log("RUN KAMI- ", result.data.puzzleCreatedEvents);
-            //console.log("==========AtoContext.js|loadPuzzleList|result.data.puzzleCreatedEvents",result.data.puzzleCreatedEvents);
-            //setPubPuzzleList(result.data.puzzleCreatedEvents.nodes);
-            //setPubPuzzleList(result.data.puzzleCreatedEvents.nodes);
 
             var pl=new Array();
             var i=0;            
@@ -323,13 +352,10 @@ const AtoContextProvider = props => {
     }
 
     useEffect(() => {
-        //console.log("==========AtoContext.js|main|useEffect");
-        //alert("AtoContext.js|main|useEffect");
         if (apiState === 'READY' ) {
             let unsubscribeAll = null
             api.derive.chain.bestNumber(number => {
                 setPubBlockNumber(number.toString().toLocaleString('en-US'));
-                //console.log("==========AtoContext.js|main|useEffect|setPubBlockNumber");
             }).then(unsub => {
                 unsubscribeAll = unsub
             }).catch(console.error)
@@ -342,9 +368,249 @@ const AtoContextProvider = props => {
         <>
             <AtoContext.Provider value={{ helloWorld, apollo_client, gql,
                 chainData: {pubBlockNumber, userPoints},
-                puzzleSets: {pubPuzzleList, setPubPuzzleList, pubPuzzleRelist, setPubPuzzleListType, pubRefresh, updatePubRefresh, tryToPollCheck},
+                puzzleSets: {
+                    pubPuzzleList,
+                    setPubPuzzleList,
+                    pubPuzzleRelist,
+                    setPubPuzzleListType,
+                    pubRefresh,
+                    updatePubRefresh,
+                    tryToPollCheck,
+                    checkUserLoggedIn,
+                    checkUserSmoothIn,
+                    getLoginInfos,
+                    setBindModalOpen,
+                    setAuthPwdModalOpen,
+                    setRecoverPwdModalOpen,
+                    isOpenSmooth
+                },
                 extractErrorMsg
             }}>
+                <Modal
+                  onClose={() => setBindModalOpen(false)}
+                  onOpen={() => setBindModalOpen(true)}
+                  open={bindModalOpen}
+                  // trigger={<Button>Show Modal222</Button>}
+                >
+                    <Modal.Header>Operation requires login</Modal.Header>
+                    <Modal.Content image>
+                        <Modal.Description>
+                            <Header>Registration via twitter</Header>
+                            <p>
+                                You may be able to login Atocha with twitter authorization!
+                            </p>
+                        </Modal.Description>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button color='black' onClick={() => setBindModalOpen(false)}>
+                            Nope
+                        </Button>
+                        <Button
+                          content="Yep, Go to authorization"
+                          labelPosition='right'
+                          icon='checkmark'
+                          onClick={() => window.location=`${config.API2_ATOCHA_URL}/twitter/authorization?ref=${btoa(window.location.href.split('?')[0])}&uptime=${new Date().getTime()}`}
+                          positive
+                        />
+                    </Modal.Actions>
+                </Modal>
+                <Modal
+                  onClose={() => setAuthPwdModalOpen(false)}
+                  onOpen={() => setAuthPwdModalOpen(true)}
+                  open={authPwdModalOpen}
+                >
+                    <Modal.Header>Need input password</Modal.Header>
+                    <Modal.Content image>
+                        <Modal.Description>
+                            <Header>Input password to create wallet</Header>
+                            <p>
+                                An account password is required to authorize the management of the fund account.
+                            </p>
+                            <p>
+                                After this step, you will get an initial ATO airdrop and then you can play the puzzle game!
+                            </p>
+                            <Form>
+                                <Form.Field>
+                                    <Input
+                                      label='Password'
+                                      type='password'
+                                      onChange={(_, { value }) => {
+                                          setAuthPwdModalTipMsg('')
+                                          setAuthPassword(value)
+                                      }  }
+                                    />
+                                </Form.Field>
+                                <Form.Field>
+                                    <Input
+                                      label='Confirm'
+                                      type='password'
+                                      onChange={(_, { value }) => {
+                                          setAuthPwdModalTipMsg('')
+                                          setConfirmPassword(value)
+                                      } }
+                                    />
+                                </Form.Field>
+                            </Form>
+                            {authPwdModalTipMsg?<p>{authPwdModalTipMsg}</p>:''}
+                        </Modal.Description>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button color='black' onClick={() => {
+                            setAuthPwdModalOpen(false)
+                        } }>
+                            Nope
+                        </Button>
+                        <Button
+                          content="Yep"
+                          labelPosition='right'
+                          icon='checkmark'
+                          onClick={() => {
+                              if(confirmPassword=='' || confirmPassword.length < 6){
+                                  setAuthPwdModalTipMsg('Password length cannot be less than 6 characters')
+                              }else if(confirmPassword != authPassword) {
+                                  setAuthPwdModalTipMsg('Password must be the same')
+                              }else{
+                                  // Go to gen wallet
+                                  const instance = utils.atoApiRequestInstance()
+                                  instance.post(`${config.API2_ATOCHA_URL}/twitter/control_wallet`, {operation: 'create', pwd: md5(confirmPassword)}).then( res => {
+                                      console.log('/twitter/create_wallet', res)
+                                      if(res.data.status.toLowerCase() == 'success') {
+
+                                      }else{
+                                          setAuthPwdModalTipMsg(`Error code ${res.data.code}, ${res.data.msg}`)
+                                      }
+                                  })
+                              }
+                          } }
+                          positive
+                        />
+                    </Modal.Actions>
+                </Modal>
+                <Modal
+                  onClose={() => setAuthPwdModalOpen(false)}
+                  onOpen={() => setAuthPwdModalOpen(true)}
+                  open={authPwdModalOpen}
+                >
+                    <Modal.Header>Need input password</Modal.Header>
+                    <Modal.Content image>
+                        <Modal.Description>
+                            <Header>Input password to create wallet</Header>
+                            <p>
+                                An account password is required to authorize the management of the fund account.
+                            </p>
+                            <p>
+                                After this step, you will get an initial ATO airdrop and then you can play the puzzle game!
+                            </p>
+                            <Form>
+                                <Form.Field>
+                                    <Input
+                                      label='Password'
+                                      type='password'
+                                      onChange={(_, { value }) => {
+                                          setAuthPwdModalTipMsg('')
+                                          setAuthPassword(value)
+                                      }  }
+                                    />
+                                </Form.Field>
+                                <Form.Field>
+                                    <Input
+                                      label='Confirm'
+                                      type='password'
+                                      onChange={(_, { value }) => {
+                                          setAuthPwdModalTipMsg('')
+                                          setConfirmPassword(value)
+                                      } }
+                                    />
+                                </Form.Field>
+                            </Form>
+                            {authPwdModalTipMsg?<p>{authPwdModalTipMsg}</p>:''}
+                        </Modal.Description>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button color='black' onClick={() => {
+                            setAuthPwdModalOpen(false)
+                        } }>
+                            Nope
+                        </Button>
+                        <Button
+                          content="Yep"
+                          labelPosition='right'
+                          icon='checkmark'
+                          onClick={() => {
+                              if(confirmPassword=='' || confirmPassword.length < 6){
+                                  setAuthPwdModalTipMsg('Password length cannot be less than 6 characters')
+                              }else if(confirmPassword != authPassword) {
+                                  setAuthPwdModalTipMsg('Password must be the same')
+                              }else{
+                                  // Go to gen wallet
+                                  const instance = utils.atoApiRequestInstance()
+                                  instance.post(`${config.API2_ATOCHA_URL}/twitter/control_wallet`, {operation: 'create', pwd: md5(confirmPassword)}).then( res => {
+                                      console.log('/twitter/create_wallet', res)
+                                      if(res.data.status.toLowerCase() == 'success') {
+                                          setAuthPwdModalOpen(false)
+                                      }else{
+                                          setAuthPwdModalTipMsg(`Error code ${res.data.code}, ${res.data.msg}`)
+                                      }
+                                  })
+                              }
+                          } }
+                          positive
+                        />
+                    </Modal.Actions>
+                </Modal>
+
+                {/*---*/}
+                <Modal
+                  onClose={() => setRecoverPwdModalOpen(false)}
+                  onOpen={() => setRecoverPwdModalOpen(true)}
+                  open={recoverPwdModalOpen}
+                >
+                    <Modal.Header>Need input password</Modal.Header>
+                    <Modal.Content image>
+                        <Modal.Description>
+                            <Header>Input password to unlock wallet</Header>
+                            <Form>
+                                <Form.Field>
+                                    <Input
+                                      label='Password'
+                                      type='password'
+                                      onChange={(_, { value }) => {
+                                          setAuthPwdModalTipMsg('')
+                                          setAuthPassword(value)
+                                      }  }
+                                    />
+                                </Form.Field>
+                            </Form>
+                            {authPwdModalTipMsg?<p>{authPwdModalTipMsg}</p>:''}
+                        </Modal.Description>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button color='black' onClick={() => {
+                            setRecoverPwdModalOpen(false)
+                        } }>
+                            Nope
+                        </Button>
+                        <Button
+                          content="Yep"
+                          labelPosition='right'
+                          icon='checkmark'
+                          onClick={() => {
+                              // Go to gen wallet
+                              const instance = utils.atoApiRequestInstance()
+                              instance.post(`${config.API2_ATOCHA_URL}/twitter/control_wallet`, {operation: 'recover', pwd: md5(authPassword)}).then( res => {
+                                  console.log('/twitter/create_wallet', res)
+                                  if(res.data.status.toLowerCase() == 'success') {
+                                      setRecoverPwdModalOpen(false)
+                                  }else{
+                                      setAuthPwdModalTipMsg(`Error code ${res.data.code}, ${res.data.msg}`)
+                                  }
+                              })
+                          } }
+                          positive
+                        />
+                    </Modal.Actions>
+                </Modal>
+
                 {props.children}
             </AtoContext.Provider>
         </>

@@ -14,25 +14,56 @@ import BindAddressToTwitter from "./BindAddressToTwitter";
 function Main (props) {
   const { api, currentAccount } = useSubstrateState('');
   const { puzzle_hash } = props;
-  const { apollo_client, gql,  chainData: {pubBlockNumber, updatePubRefresh, userPoints} } = useAtoContext()
+  const { apollo_client, gql,  chainData: {pubBlockNumber, userPoints}, puzzleSets: {
+    pubPuzzleList,
+    setPubPuzzleList,
+    pubPuzzleRelist,
+    setPubPuzzleListType,
+    pubRefresh,
+    updatePubRefresh,
+    tryToPollCheck,
+    checkUserLoggedIn,
+    getLoginInfos,
+    checkUserSmoothIn,
+    setBindModalOpen,
+    setAuthPwdModalOpen,
+    setRecoverPwdModalOpen,
+    isOpenSmooth
+  }, } = useAtoContext()
 
   // Atocha user information.
   const [userBalance, setUserBalance] = useState(null);
   const [relationInfos, setRelationInfos] = useState(null);
   const [currentAccountId, setCurrentAccountId] = useState(null);
-  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
   
   useEffect(async () => {
-    console.log("currentAccount = ", currentAccount)
-    if (currentAccount) {
-      fillCurrentAccountId();
-      loadAccountBalance();
-      await loadReleationPuzzles();
+    console.log('isOpenSmooth ==== ', isOpenSmooth)
+    if(isOpenSmooth){
+      await fillCurrentAccountIdWithSmooth()
+    }else{
+      if (currentAccount) {
+        fillCurrentAccountId();
+        loadAccountBalance();
+        await loadReleationPuzzles();
+      }
     }
   }, [currentAccount, userBalance, pubBlockNumber]);
 
   function fillCurrentAccountId(){
     setCurrentAccountId(currentAccount.address);
+  }
+
+  async function fillCurrentAccountIdWithSmooth() {
+    const loginInfo = await getLoginInfos();
+    console.log('loginInfo === ', loginInfo)
+    if (!loginInfo.userId) {
+      setBindModalOpen(true)
+    } else if(!loginInfo.atoAddress) {
+      setAuthPwdModalOpen(true)
+    }else{
+      // if(loginInfo.has)
+      setCurrentAccountId(loginInfo.ato_address);
+    }
   }
 
   function loadAccountBalance() {

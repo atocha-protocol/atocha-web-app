@@ -444,12 +444,7 @@ function Main (props) {
               </p>                
             :""}
           </div>
-        </Form.Field>        
-
-
-
-
-
+        </Form.Field>
         <Form.Field>
           <div className="ui large label">5. Presentation mode (optional)</div>&nbsp;&nbsp;
           <Checkbox

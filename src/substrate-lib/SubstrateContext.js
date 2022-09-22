@@ -11,6 +11,7 @@ import config from '../config'
 
 const parsedQuery = new URLSearchParams(window.location.search)
 const connectedSocket = parsedQuery.get('rpc') || config.PROVIDER_SOCKET
+
 ///
 // Initial state for `useReducer`
 

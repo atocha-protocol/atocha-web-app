@@ -1,3 +1,6 @@
+import axios from "axios";
+import config from "../config";
+
 const utils = {
   paramConversion: {
     num: [
@@ -15,6 +18,15 @@ const utils = {
       'i128',
     ],
   },
+  atoApiRequestInstance(){
+    return axios.create({
+      baseURL: config.API2_ATOCHA_URL,
+      timeout: 20000,
+      responseType: 'json',
+      responseEncoding: 'utf8',
+      withCredentials: true,
+    })
+  }
 }
 
 export default utils
