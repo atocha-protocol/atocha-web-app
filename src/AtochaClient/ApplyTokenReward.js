@@ -12,8 +12,8 @@ import AtoBlock2Time from "./AtoBlock2Time";
 
 
 function Main (props) {
-  const { api } = useSubstrateState();
-  const { chainData: {userPoints,pubBlockNumber},puzzleSets: {pubRefresh, updatePubRefresh, isOpenSmooth}, extractErrorMsg} = useAtoContext()
+  const { api, currentAccount } = useSubstrateState('');
+  const { chainData: {userPoints,pubBlockNumber},puzzleSets: {pubRefresh, updatePubRefresh, isOpenSmooth, loadAccountPoints, fillCurrentAccountIdWithSmooth}, extractErrorMsg} = useAtoContext()
   // Puzzle information.
   const [exchangeInfo, setExchangeInfo] = useState([]);
   const [previousExchangeInfo, setPreviousExchangeInfo] = useState([]);
@@ -29,7 +29,7 @@ function Main (props) {
 
   const [atoAtochaFinanceExchangeRewardEraStartBn, setAtoAtochaFinanceExchangeRewardEraStartBn] = useState(-1);
   
-  useEffect(() => {
+  useEffect(async () => {
     api.query.atochaFinance.pointExchangeInfo(currentExchangeRewardEra).then(res => {
       console.log('exchangeInfo current = ', res.toHuman());
       setExchangeInfo(res.toHuman());
@@ -41,13 +41,13 @@ function Main (props) {
     api.query.atochaFinance.currentExchangeRewardEra((era_opt) => {
       if (era_opt.isSome) {
         setCurrentExchangeRewardEra(era_opt.value.toNumber());
-        setPreviousExchangeRewardEra(era_opt.value.toNumber()-1)
+        setPreviousExchangeRewardEra(era_opt.value.toNumber() - 1)
       }
     });
 
     api.query.atochaFinance.atoConfig2().then(res => {
-      console.log("------------------------------",res);
-      console.log("------------------------------",res.toJSON().exchangeEraBlockLength);
+      console.log("------------------------------", res);
+      console.log("------------------------------", res.toJSON().exchangeEraBlockLength);
       setAtoAtochaFinanceConfigExchangeEraBlockLength(res.toJSON().exchangeEraBlockLength);
       setAtoConfigAtochaFinance(res.toJSON());
     });
@@ -57,6 +57,14 @@ function Main (props) {
     });
 
     loadLastUpdateBN();
+
+    if(isOpenSmooth){
+      const _accountAddr = await fillCurrentAccountIdWithSmooth()
+      await loadAccountPoints(_accountAddr)
+    }else if(currentAccount){
+      await loadAccountPoints(currentAccount.address)
+    }
+
   }, [api.query.atochaModule, api.query.atochaFinance.lastUpdateBlockInfoOfPointExchage, api.query.atochaFinance.pointExchangeInfo, currentExchangeRewardEra, previousExchangeRewardEra, pubRefresh]);
 
   function loadLastUpdateBN() {

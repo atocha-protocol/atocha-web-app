@@ -21,8 +21,8 @@ import {useAtoContext} from "./AtoContext";
 var atoReloadTimes=0;
 
 function Main (props) {
-  const {api} = useSubstrateState();
-  const { apollo_client, gql, puzzleSets:{isOpenSmooth} } = useAtoContext()
+  const {api, currentAccount} = useSubstrateState();
+  const { apollo_client, gql, puzzleSets:{isOpenSmooth, fillCurrentAccountIdWithSmooth, loadAccountPoints} } = useAtoContext()
 
   // const apollo_client = new ApolloClient({
   //   uri: config.SUBQUERY_HTTP,
@@ -61,16 +61,17 @@ function Main (props) {
     return null;
   }
 
-  useEffect(() => {
-    console.log("WeeklyReward.js|main|useEffect");    
+  useEffect(async () => {
+    console.log("WeeklyReward.js|main|useEffect");
     //alert("WeeklyReward.js|main|useEffect");
-    getBlockNoLinked();
+    // getBlockNoLinked();
+
     api.query.atochaFinance.atoConfig2().then(res => {
       //console.log("------------------------------",res);
-      //console.log("------------------------------",res.toJSON().exchangeEraBlockLength);
+      console.log("------------------------------", res);
       setAtoAtochaFinanceConfigExchangeEraBlockLength(res.toJSON().exchangeEraBlockLength);
       setAtoConfigAtochaFinance(res.toJSON());
-    });    
+    });
     api.query.atochaFinance.pointExchangeInfo(currentExchangeRewardEra).then(res => {
       //console.log('exchangeInfo current = ', res.toHuman());
       //alert("pointExchangeInfo...current...done");
@@ -87,12 +88,21 @@ function Main (props) {
     api.query.atochaFinance.currentExchangeRewardEra((era_opt) => {
       if (era_opt.isSome) {
         setCurrentExchangeRewardEra(era_opt.value.toNumber());
-        setPreviousExchangeRewardEra(era_opt.value.toNumber()-1)
+        setPreviousExchangeRewardEra(era_opt.value.toNumber() - 1)
       }
     });
     api.query.atochaFinance.exchangeRewardEraStartBn(currentExchangeRewardEra).then(res => {
       setAtoAtochaFinanceExchangeRewardEraStartBn(res.toJSON());
     });
+
+    // if (isOpenSmooth) {
+    //   const _accountAddr = await fillCurrentAccountIdWithSmooth()
+    //   await loadAccountPoints(_accountAddr)
+    // } else if (currentAccount) {
+    //   await loadAccountPoints(currentAccount.address)
+    // }
+
+
   },[api.query.atochaFinance.pointExchangeInfo, currentExchangeRewardEra,previousExchangeRewardEra,atoReloadTimes]);
 
   function handlerEvent(section, method, statusCallBack, data) {

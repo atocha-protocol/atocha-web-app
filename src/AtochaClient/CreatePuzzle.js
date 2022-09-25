@@ -11,6 +11,7 @@ import MakeAnswerSha256WithSimple from '../units/MakeAnswerSha256';
 import {web3FromSource} from '@polkadot/extension-dapp';
 import {hexToBigInt,hexToString} from "@polkadot/util";
 import TextType from "../units/TextType";
+import KButton from "./KButton";
 
 function Main (props) {
   const {api, currentAccount} = useSubstrateState();
@@ -319,8 +320,34 @@ function Main (props) {
 
   function handleIfPPT (content) {
     setAtoIfPPTChecked(!atoIfPPTChecked);
+  }
 
-  }  
+  function handlerEventWithWeb3(section, method, statusCallBack, data) {
+    // console.log("section.method = ", section, method)
+    // atochaFinance PreStorage
+    if(section == 'atochaFinance' &&  method == 'PreStorage') {
+      // Ok go next:
+      statusCallBack(1, "Submitting to arweave...")
+      axios.post(config.ARWEAVE_HTTP, storageJson).then(async response => {
+        if (response.data.result == 'ok') {
+          const ph = response.data.result_id;//puzzle hash
+          const pah = MakeAnswerSha256WithSimple(puzzleAnswer, response.data.result_id);//puzzle answer hash
+          setPuzzleHash(ph);
+          setPuzzleAnswerHash(pah);
+          await submitPuzzle2Atocha(ph, pah);
+          statusCallBack(0, "")
+        } else {
+          statusCallBack(2, "Something went wrong. Error code: TSC101")
+        }
+      }, err => {
+        statusCallBack(2, "Something went wrong. Error code: TSC102-1")
+      }).catch((err) => {
+        statusCallBack(2, "Something went wrong. Error code: TSC103")
+      })
+    }else if(section == 'system' &&  method == 'ExtrinsicFailed') {
+      statusCallBack(2, "Sorry, there was an unknown mistake.")
+    }
+  }
 
   function handleAnswer (inContent) {
     setPuzzleAnswer(inContent);
@@ -492,7 +519,26 @@ function Main (props) {
               inputParams: [storageHash, storageLength, maxFee],
               paramFields: [true, true, true]
             }}
-          /><div className='ato_form_div_explain'>You need to sign twice since your puzzle will be stored permanently on both Atocha blockchain and <a href="https://arweave.org">Arweave network</a>.</div>
+          />
+          <KButton
+            label={`Submit your puzzle2`}
+            type={`SIGNED-TX`}
+            attrs={{
+              palletRpc: 'atochaFinance',
+              callable: 'preStorage',
+              inputParams: [storageHash, storageLength, maxFee],
+              paramFields: [true, true, true],
+
+            }}
+            buttonKey={'atochaFinance_preStorage_on_click'}
+            preCheckCall= {()=>{
+              return new Promise((resolve => {
+                resolve(true)
+              }))
+            }}
+            handlerEvent= {handlerEventWithWeb3}
+          />
+          <div className='ato_form_div_explain'>You need to sign twice since your puzzle will be stored permanently on both Atocha blockchain and <a href="https://arweave.org">Arweave network</a>.</div>
         </Form.Field>
         <Form.Field>
           {status}

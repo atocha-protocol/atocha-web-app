@@ -22,11 +22,11 @@ function Main (props) {
   const { api, currentAccount } = useSubstrateState('');
   const { puzzle_hash } = props;
   const { account_id } = useParams();
-  const { apollo_client, gql, puzzleSets:{isOpenSmooth}, chainData: {pubBlockNumber, updatePubRefresh, userPoints} } = useAtoContext()
+  const { apollo_client, gql, puzzleSets:{isOpenSmooth, fillCurrentAccountIdWithSmooth, loadAccountPoints, currentAccountAddress}, chainData: {pubBlockNumber, updatePubRefresh, userPoints} } = useAtoContext()
 
   // Atocha user information.
   const [userBalance, setUserBalance] = useState(null);
-  const [playerPoints, setPlayerPoints] = useState(null);
+  // const [playerPoints, setPlayerPoints] = useState(null);
   const [relationInfos, setRelationInfos] = useState(null);
   const [currentAccountId, setCurrentAccountId] = useState(null);
 
@@ -36,10 +36,16 @@ function Main (props) {
   const [atoPuzzleSponsored, setAtoPuzzleSponsored] = useState([]);
   
   useEffect(async () => {
-    if (currentAccount) {
-      await fillCurrentAccountId();
+    console.log('isOpenSmooth ==== ', isOpenSmooth)
+    if(isOpenSmooth){
+      const _accountAddr = await fillCurrentAccountIdWithSmooth()
+      await loadAccountPoints(_accountAddr);
+      fillCurrentAccountId();
+    }else if (currentAccount) {
+      fillCurrentAccountId();
       loadAccountBalance();
-      getPlayerPoints();
+      // getPlayerPoints();
+      await loadAccountPoints(currentAccount.address);
       await loadReleationPuzzles();
     }
   }, [currentAccount, userBalance, pubBlockNumber]);
@@ -47,18 +53,18 @@ function Main (props) {
   //console.log("UserHome.js|Main|useEffect|currentAccount", currentAccount)
   //console.log("UserHome.js|Main|useEffect|currentAccount.address", currentAccount.address);
 
-  function getPlayerPoints() {
-        //alert("getPlayerPoints");
-        //alert(currentAccount);
-        //alert(currentAccountId);
-        currentAccount &&
-        api.query.atochaFinance
-          .atoPointLedger(currentAccountId, points =>{
-              //alert(currentAccountId+"|"+points);
-              setPlayerPoints(points.toHuman())
-          }) .then(unsub => {
-        }) .catch(console.error)
-  }
+  // function getPlayerPoints() {
+  //       //alert("getPlayerPoints");
+  //       //alert(currentAccount);
+  //       //alert(currentAccountId);
+  //       currentAccount &&
+  //       api.query.atochaFinance
+  //         .atoPointLedger(currentAccountId, points =>{
+  //             //alert(currentAccountId+"|"+points);
+  //             setPlayerPoints(points.toHuman())
+  //         }) .then(unsub => {
+  //       }) .catch(console.error)
+  // }
 
   function getDistinctPuzzleList(inputArr){
     //alert("in="+inputArr.length);
@@ -96,25 +102,17 @@ function Main (props) {
   }
 
   function fillCurrentAccountId(){
-    return new Promise((resolve, reject)=>{
-      if(isOpenSmooth){
-        // TODO:: Read account with smooth
-        console.log("TODO:: set currentid with smooth.")
-      }else{
-        if(account_id == 'self') {
-          setCurrentAccountId(currentAccount.address);
-        }
-        else if(account_id=='' || account_id==null || typeof(account_id)=="undefined"){
-          setCurrentAccountId(currentAccount.address);
-        }
-        else{
-          setCurrentAccountId(account_id);
-        }
-        resolve(true)
+    if(isOpenSmooth){
+      setCurrentAccountId(currentAccountAddress);
+    }else{
+      if(account_id == 'self') {
+        setCurrentAccountId(currentAccount.address);
+      } else if (account_id=='' || account_id==null || typeof(account_id)=="undefined"){
+        setCurrentAccountId(currentAccount.address);
+      } else {
+        setCurrentAccountId(account_id);
       }
-    })
-
-    //console.log("UserHome.js|Main|fillCurrentAccountId","account_id="+account_id+"|currentAccountId="+currentAccountId);
+    }
   }
 
   function loadAccountBalance() {
@@ -272,8 +270,8 @@ function Main (props) {
     <div>
       <h1>Player profile</h1>
       <div style={{textAlign:"center"}}>
-        {currentAccountId?<BindAddressToTwitter ato_address={currentAccountId} displayMode="icon_name" />:"Loading..."}
-        <h3 style={{lineHeight:"150%",marginTop:"6px"}}>{currentAccountId?(<span>{currentAccountId}&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}/accounts/${currentAccountId}`} target='_blank'><i className="external alternate icon"></i></a></span>):'loading...'}<br/>Points: {playerPoints?<AtoDeleteThousand withThousand={playerPoints} />:'Loading...'}</h3>
+        {currentAccountAddress?<BindAddressToTwitter ato_address={currentAccountAddress} displayMode="icon_name" />:"Loading..."}
+        <h3 style={{lineHeight:"150%",marginTop:"6px"}}>{currentAccountAddress?(<span>{currentAccountAddress}&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}/accounts/${currentAccountAddress}`} target='_blank'><i className="external alternate icon"></i></a></span>):'loading...'}<br/>Points: {userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}</h3>
       </div>
       <br/>
       <div className="ui stackable four column grid">

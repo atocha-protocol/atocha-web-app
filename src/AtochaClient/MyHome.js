@@ -29,49 +29,45 @@ function Main (props) {
     setBindModalOpen,
     setAuthPwdModalOpen,
     setRecoverPwdModalOpen,
-    isOpenSmooth
+    loadAccountPoints,
+    isOpenSmooth,
+    currentAccountAddress,
+    setCurrentAccountAddress,
+    fillCurrentAccountIdWithSmooth,
   }, } = useAtoContext()
 
   // Atocha user information.
   const [userBalance, setUserBalance] = useState(null);
   const [relationInfos, setRelationInfos] = useState(null);
-  const [currentAccountId, setCurrentAccountId] = useState(null);
+  // const [currentAccountId, setCurrentAccountId] = useState(null);
   
   useEffect(async () => {
     console.log('isOpenSmooth ==== ', isOpenSmooth)
     if(isOpenSmooth){
-      await fillCurrentAccountIdWithSmooth()
+      const _accountAddr = await fillCurrentAccountIdWithSmooth()
       loadAccountBalance();
       await loadReleationPuzzles();
+      console.log('smooth login ato address.', _accountAddr)
+      await loadAccountPoints(_accountAddr);
     }else{
       if (currentAccount) {
         fillCurrentAccountId();
         loadAccountBalance();
         await loadReleationPuzzles();
+        await loadAccountPoints(currentAccount.address);
       }
     }
   }, [currentAccount, userBalance, pubBlockNumber]);
 
   function fillCurrentAccountId(){
-    setCurrentAccountId(currentAccount.address);
-  }
-
-  async function fillCurrentAccountIdWithSmooth() {
-    const loginInfo = await getLoginInfos();
-    console.log('loginInfo === ', loginInfo)
-    if (!loginInfo.userId) {
-      setBindModalOpen(true)
-    } else if(!loginInfo.atoAddress) {
-      setAuthPwdModalOpen(true)
-    }else{
-      setCurrentAccountId(loginInfo.atoAddress)
-    }
+    // setCurrentAccountId(currentAccount.address);
+    setCurrentAccountAddress(currentAccount.address)
   }
 
   function loadAccountBalance() {
-    currentAccount &&
+    currentAccountAddress &&
     api.query.system
-      .account(currentAccountId, balance =>{
+      .account(currentAccountAddress, balance =>{
           //setUserBalance(balance.data.free.toHuman());
           setUserBalance(balance.data.free.toHuman());
       }) .then(unsub => {
@@ -146,14 +142,14 @@ function Main (props) {
   }
 
   async function loadReleationPuzzles() {
-    if (!currentAccountId){
+    if (!currentAccountAddress){
       return;
     }
     //console.log("currentAccount.address = ", currentAccountId);
     apollo_client.query({
       query: gql`
           query{
-              atochaUserStruct(id: "${currentAccountId}"){
+              atochaUserStruct(id: "${currentAccountAddress}"){
                   id,
                   ref_create_events(first: 0, last: 10000){
                       nodes{
@@ -190,14 +186,14 @@ function Main (props) {
       <h1>My account</h1>
       <h3>Basic information</h3>
       <div>
-        <div className="ui basic label">Address</div>&nbsp;&nbsp;&nbsp;&nbsp;{currentAccountId}&nbsp;&nbsp;&nbsp;&nbsp;
+        <div className="ui basic label">Address</div>&nbsp;&nbsp;&nbsp;&nbsp;{currentAccountAddress}&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="ui basic label">Balance</div>&nbsp;&nbsp;&nbsp;&nbsp;{userBalance?<AtoDeleteThousand withThousand={userBalance} />:'Loading...'}&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="ui basic label">Points</div>&nbsp;&nbsp;&nbsp;&nbsp;{userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}
       </div>
       <h3>Account management</h3>
       <div>      
         <ul>
-          <li>Browse your account for ATO balance and transactions: <a href={`${config.OCT_EXPLORER}/accounts/${currentAccountId}`} target="_blank">Octopus explorer <i className="external alternate icon"></i></a></li>
+          <li>Browse your account for ATO balance and transactions: <a href={`${config.OCT_EXPLORER}/accounts/${currentAccountAddress}`} target="_blank">Octopus explorer <i className="external alternate icon"></i></a></li>
           <li>Create new accounts, backup and restore existing accounts: use your PolkadotJS wallet browser extension.</li>
           <li>Transfer ATO to other accounts:  <a href={`${config.POLKADOT_EXPLORE}/?rpc=${config.PROVIDER_SOCKET}#/accounts`} target="_blank">PolkadotJS online wallet <i className="external alternate icon"></i></a></li>
           <li>Bridge ATO from your near accounts: <a href="https://mainnet.oct.network/bridge/near/atocha" target="_blank">Octopus network bridge <i className="external alternate icon"></i></a></li>
@@ -205,9 +201,9 @@ function Main (props) {
       </div>
       <h3>Social connection</h3>
       <div>
-        {currentAccountId?isOpenSmooth?
-          <SmoothTwitterInfos ato_address={currentAccountId} displayMode="icon_name_button" />
-          :<BindAddressToTwitter ato_address={currentAccountId} displayMode="icon_name_button" />:"Loading..."}
+        {currentAccountAddress?isOpenSmooth?
+          <SmoothTwitterInfos ato_address={currentAccountAddress} displayMode="icon_name_button" />
+          :<BindAddressToTwitter ato_address={currentAccountAddress} displayMode="icon_name_button" />:"Loading..."}
       </div>
       <h3>As a creator/solver/challenger, claim your ATO from the following puzzles:</h3>
       {relationInfos?

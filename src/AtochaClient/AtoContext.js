@@ -25,6 +25,7 @@ const AtoContextProvider = props => {
     const { apiState, apiError, keyringState, api, currentAccount} = useSubstrateState()
 
     const [helloWorld, setHelloWorld] = useState('None--')
+    const [currentAccountAddress, setCurrentAccountAddress] = useState(null)
     const [pubPuzzleList, setPubPuzzleList] = useState([])
     const [pubPuzzleListType, setPubPuzzleListType] = useState('UNSOLVED')
     const [pubBlockNumber, setPubBlockNumber] = useState(0)
@@ -159,14 +160,32 @@ const AtoContextProvider = props => {
         }, 3000);
     }
 
-    function loadAccountPoints() {
-        //console.log("==========AtoContext.js|main|loadAccountPoints");
-        currentAccount &&
-        api.query.atochaFinance
-          .atoPointLedger(currentAccount.address, points =>{
-              setUserPoints(points.toHuman())
-          }) .then(unsub => {
-        }) .catch(console.error)
+    function fillCurrentAccountIdWithSmooth() {
+        return new Promise(async (resolve, reject) => {
+            const loginInfo = await getLoginInfos();
+            console.log('loginInfo === ', loginInfo)
+            if (!loginInfo.userId) {
+                setBindModalOpen(true)
+                reject('need twitter login.')
+            } else if (!loginInfo.atoAddress) {
+                setAuthPwdModalOpen(true)
+                reject('need auth pwd.')
+            } else {
+                // setCurrentAccountId(loginInfo.atoAddress)
+                setCurrentAccountAddress(loginInfo.atoAddress)
+                resolve(loginInfo.atoAddress)
+            }
+        })
+    }
+
+    function loadAccountPoints(accAddress) {
+        return new Promise((resolve, reject)=>{
+            accAddress &&
+            api.query.atochaFinance.atoPointLedger(accAddress, points =>{
+                setUserPoints(points.toHuman())
+                resolve(points)
+            })
+        })
     }
 
     async function loadPuzlleList() {
@@ -360,7 +379,7 @@ const AtoContextProvider = props => {
                 unsubscribeAll = unsub
             }).catch(console.error)
             loadPuzlleList();
-            loadAccountPoints();
+            // loadAccountPoints();
         }
     }, [apiState, currentAccount, pubPuzzleListType, pubRefresh])
 
@@ -374,14 +393,18 @@ const AtoContextProvider = props => {
                     pubPuzzleRelist,
                     setPubPuzzleListType,
                     pubRefresh,
+                    currentAccountAddress,
+                    setCurrentAccountAddress,
                     updatePubRefresh,
                     tryToPollCheck,
                     checkUserLoggedIn,
                     checkUserSmoothIn,
                     getLoginInfos,
+                    loadAccountPoints,
                     setBindModalOpen,
                     setAuthPwdModalOpen,
                     setRecoverPwdModalOpen,
+                    fillCurrentAccountIdWithSmooth,
                     isOpenSmooth
                 },
                 extractErrorMsg
