@@ -6,7 +6,6 @@ import sha256 from 'sha256';
 import axios from 'axios';
 import config from '../config';
 
-import {TxButton} from '../substrate-lib/components';
 import MakeAnswerSha256WithSimple from '../units/MakeAnswerSha256';
 import {web3FromSource} from '@polkadot/extension-dapp';
 import {hexToBigInt,hexToString} from "@polkadot/util";
@@ -364,38 +363,38 @@ function Main (props) {
     setPuzzleDeposit(BigInt(num * (10 ** decimals)));
   }
 
-  function txStatusChanged (inNewStatus) {
-    console.log("CreatePuzzle.js|main|txStatusChanged|inNewStatus",inNewStatus)
-    if (inNewStatus.isInBlock) {
-      //console.log("Is InBlock")
-      //setStatus("Extrinsic succeed.")
-      //console.log('Submitting to arweave...');
-      setStatus("Submitting to arweave...");
-      axios.post(config.ARWEAVE_HTTP, storageJson).then(response => {
-        //console.log('Request data: ', response.data);
-        if (response.data.result == 'ok') {
-          const ph = response.data.result_id;//puzzle hash
-          const pah = MakeAnswerSha256WithSimple(puzzleAnswer, response.data.result_id);//puzzle answer hash
-          setPuzzleHash(ph);
-          setPuzzleAnswerHash(pah);
-          submitPuzzle2Atocha(ph, pah);
-        }else{
-          //console.log('Ar storage error : ', response);
-          setStatus("Something went wrong. Error code: TSC101");
-        }
-      }, err => {
-        //console.log('Request err:', err);
-        setStatus("Something went wrong. Error code: TSC102-1");
-      }).catch((err) => {
-        //console.log('Catch err:', err);
-        setStatus("Something went wrong. Error code: TSC103");
-      });
-    } else {
-      //console.log("Not InBlock")
-      //setStatus("Extrinsic failed.");
-      setStatus("Something went wrong. Error code: TSC104");
-    }
-  }
+  // function txStatusChanged (inNewStatus) {
+  //   console.log("CreatePuzzle.js|main|txStatusChanged|inNewStatus",inNewStatus)
+  //   if (inNewStatus.isInBlock) {
+  //     //console.log("Is InBlock")
+  //     //setStatus("Extrinsic succeed.")
+  //     //console.log('Submitting to arweave...');
+  //     setStatus("Submitting to arweave...");
+  //     axios.post(config.ARWEAVE_HTTP, storageJson).then(response => {
+  //       //console.log('Request data: ', response.data);
+  //       if (response.data.result == 'ok') {
+  //         const ph = response.data.result_id;//puzzle hash
+  //         const pah = MakeAnswerSha256WithSimple(puzzleAnswer, response.data.result_id);//puzzle answer hash
+  //         setPuzzleHash(ph);
+  //         setPuzzleAnswerHash(pah);
+  //         submitPuzzle2Atocha(ph, pah);
+  //       }else{
+  //         //console.log('Ar storage error : ', response);
+  //         setStatus("Something went wrong. Error code: TSC101");
+  //       }
+  //     }, err => {
+  //       //console.log('Request err:', err);
+  //       setStatus("Something went wrong. Error code: TSC102-1");
+  //     }).catch((err) => {
+  //       //console.log('Catch err:', err);
+  //       setStatus("Something went wrong. Error code: TSC103");
+  //     });
+  //   } else {
+  //     //console.log("Not InBlock")
+  //     //setStatus("Extrinsic failed.");
+  //     setStatus("Something went wrong. Error code: TSC104");
+  //   }
+  // }
 
   async function submitPuzzle2Atocha (inPuzzleHash, inAnswerHash) {
     if(storageJson.puzzle_title=="") {
@@ -506,22 +505,22 @@ function Main (props) {
           /><div className='ato_form_div_explain'>Minimum amount: {configAtochaModuleMinBonusOfPuzzle}</div>
         </Form.Field>
         <Form.Field style={{ textAlign: 'left' }}>
-          <TxButton
-            label='Submit your puzzle'
-            className="ui primary button blue"
-            color="blue"
-            type='SIGNED-TX'
-            setStatus={setStatus}
-            refStatus={txStatusChanged}
-            attrs={{
-              palletRpc: 'atochaFinance',
-              callable: 'preStorage',
-              inputParams: [storageHash, storageLength, maxFee],
-              paramFields: [true, true, true]
-            }}
-          />
+          {/*<TxButton*/}
+          {/*  label='Submit your puzzle'*/}
+          {/*  className="ui primary button blue"*/}
+          {/*  color="blue"*/}
+          {/*  type='SIGNED-TX'*/}
+          {/*  setStatus={setStatus}*/}
+          {/*  refStatus={txStatusChanged}*/}
+          {/*  attrs={{*/}
+          {/*    palletRpc: 'atochaFinance',*/}
+          {/*    callable: 'preStorage',*/}
+          {/*    inputParams: [storageHash, storageLength, maxFee],*/}
+          {/*    paramFields: [true, true, true]*/}
+          {/*  }}*/}
+          {/*/>*/}
           <KButton
-            label={`Submit your puzzle2`}
+            label={`Submit your puzzle`}
             type={`SIGNED-TX`}
             attrs={{
               palletRpc: 'atochaFinance',
