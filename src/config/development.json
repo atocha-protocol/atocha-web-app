@@ -8,5 +8,5 @@
   "API_ATOCHA_URL": "https://api.atocha.io",
   "APP_ATOCHA_URL": "https://play.atocha.io",
   "API2_ATOCHA_URL": "https://api.atocha.io",
-  "APP_IS_OPEN_SMOOTH": 0
+  "APP_IS_OPEN_SMOOTH": 1
 }

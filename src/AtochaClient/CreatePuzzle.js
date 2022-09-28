@@ -11,9 +11,11 @@ import {web3FromSource} from '@polkadot/extension-dapp';
 import {hexToBigInt,hexToString} from "@polkadot/util";
 import TextType from "../units/TextType";
 import KButton from "./KButton";
+import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
   const {api, currentAccount} = useSubstrateState();
+  const {puzzleSets: {isOpenSmooth, submitTxWithSmooth} } = useAtoContext()
 
   const getFromAcct = async () => {
     const {
@@ -321,8 +323,8 @@ function Main (props) {
     setAtoIfPPTChecked(!atoIfPPTChecked);
   }
 
-  function handlerEventWithWeb3(section, method, statusCallBack, data) {
-    // console.log("section.method = ", section, method)
+  function handlerEvent(section, method, statusCallBack, data) {
+    console.log("handlerEvent , ", section, method)
     // atochaFinance PreStorage
     if(section == 'atochaFinance' &&  method == 'PreStorage') {
       // Ok go next:
@@ -333,7 +335,11 @@ function Main (props) {
           const pah = MakeAnswerSha256WithSimple(puzzleAnswer, response.data.result_id);//puzzle answer hash
           setPuzzleHash(ph);
           setPuzzleAnswerHash(pah);
-          await submitPuzzle2Atocha(ph, pah);
+          if(isOpenSmooth){
+            await submitPuzzle2AtochaWithSmooth(ph, pah)
+          }else{
+            await submitPuzzle2AtochaWithWeb3(ph, pah)
+          }
           statusCallBack(0, "")
         } else {
           statusCallBack(2, "Something went wrong. Error code: TSC101")
@@ -347,6 +353,7 @@ function Main (props) {
       statusCallBack(2, "Sorry, there was an unknown mistake.")
     }
   }
+
 
   function handleAnswer (inContent) {
     setPuzzleAnswer(inContent);
@@ -396,7 +403,36 @@ function Main (props) {
   //   }
   // }
 
-  async function submitPuzzle2Atocha (inPuzzleHash, inAnswerHash) {
+  async function submitPuzzle2AtochaWithSmooth (inPuzzleHash, inAnswerHash) {
+    if(storageJson.puzzle_title=="") {
+      setStatus("Puzzle title can not be empty!");
+      alert("Puzzle title can not be empty!");
+      return;
+    }
+    setStatus("Submitting Puzzle to Atocha...");
+    console.log('inPuzzleHash, inAnswerHash', inPuzzleHash, inAnswerHash)
+
+    submitTxWithSmooth('atochaModule', 'createPuzzle', [inPuzzleHash, inAnswerHash, puzzleDeposit.toString(), 1]).then(res=>{
+      console.log('atochaModule.createPuzzle is done', res)
+      setStatus("😉 Done! This puzzle has been saved on the chain and will be showned on the puzzle list in a minute.");
+    })
+    // const fromAcct = await getFromAcct();
+    // const unsub = await api.tx.atochaModule
+    //   .createPuzzle(inPuzzleHash, inAnswerHash, puzzleDeposit, 1)
+    //   .signAndSend(fromAcct, (result) => {
+    //     //setStatus(`4444submit status: ${result.status}`);
+    //     if (result.status.isInBlock) {
+    //       //setStatus(`5555submit status: ${result.status} - ${result.status.asInBlock}`);
+    //       //setStatus("InBlock...");
+    //     } else if (result.status.isFinalized) {
+    //       //setStatus(`6666submit status: ${result.status} - ${result.status.asFinalized}`);
+    //       setStatus("😉 Done! This puzzle has been saved on the chain and will be showned on the puzzle list in a minute.");
+    //       unsub();
+    //     }
+    //   });
+  }
+
+  async function submitPuzzle2AtochaWithWeb3 (inPuzzleHash, inAnswerHash) {
     if(storageJson.puzzle_title=="") {
       setStatus("Puzzle title can not be empty!");
       alert("Puzzle title can not be empty!");
@@ -527,15 +563,15 @@ function Main (props) {
               callable: 'preStorage',
               inputParams: [storageHash, storageLength, maxFee],
               paramFields: [true, true, true],
-
             }}
             buttonKey={'atochaFinance_preStorage_on_click'}
             preCheckCall= {()=>{
               return new Promise((resolve => {
+                setStatus("Submitting PreStorage to Atocha... ");
                 resolve(true)
               }))
             }}
-            handlerEvent= {handlerEventWithWeb3}
+            handlerEvent= {handlerEvent}
           />
           <div className='ato_form_div_explain'>You need to sign twice since your puzzle will be stored permanently on both Atocha blockchain and <a href="https://arweave.org">Arweave network</a>.</div>
         </Form.Field>

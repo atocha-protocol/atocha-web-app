@@ -21,7 +21,7 @@ const utils = {
   atoApiRequestInstance(){
     return axios.create({
       baseURL: config.API2_ATOCHA_URL,
-      timeout: 20000,
+      timeout: 120000,
       responseType: 'json',
       responseEncoding: 'utf8',
       withCredentials: true,

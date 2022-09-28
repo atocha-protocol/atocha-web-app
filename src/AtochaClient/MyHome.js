@@ -31,6 +31,7 @@ function Main (props) {
     setRecoverPwdModalOpen,
     loadAccountPoints,
     isOpenSmooth,
+    submitTxWithSmooth,
     currentAccountAddress,
     setCurrentAccountAddress,
     fillCurrentAccountIdWithSmooth,
@@ -91,17 +92,25 @@ function Main (props) {
   };
 
   async function takeAnswerReward(hash) {
-    const fromAcct = await getFromAcct();
-    //console.log(fromAcct);
-    const unsub = await api.tx.atochaModule
-      .takeAnswerReward(hash)
-      .signAndSend(fromAcct, (result) => {
-        if (result.status.isInBlock) {
-        } else if (result.status.isFinalized) {
-          unsub();
-          updatePubRefresh();
-        }
-      });
+    if(isOpenSmooth){
+      console.log('TakeAnswerReward with Smooth')
+      submitTxWithSmooth('atochaModule', 'takeAnswerReward', [hash]).then(data=>{
+        console.log('takeAnswerReward smooth callback', data)
+        updatePubRefresh()
+      })
+    }else{
+      const fromAcct = await getFromAcct();
+      //console.log(fromAcct);
+      const unsub = await api.tx.atochaModule
+        .takeAnswerReward(hash)
+        .signAndSend(fromAcct, (result) => {
+          if (result.status.isInBlock) {
+          } else if (result.status.isFinalized) {
+            unsub();
+            updatePubRefresh();
+          }
+        });
+    }
   }
 
   function remainBonusItems(nodes){

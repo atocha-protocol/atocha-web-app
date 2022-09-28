@@ -2,29 +2,17 @@ import React, { useEffect, useState } from 'react';
 import sha256 from 'sha256';
 import {Form, Input, Grid, Card, Statistic, TextArea, Label, Button, Table} from 'semantic-ui-react';
 import config from '../config';
-import axios from "axios";
-import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
-import PuzzleList from "./PuzzleList";
-import {gql} from "@apollo/client";
-import StepCase from "../Step/StepCase";
-
-import {
-    useParams
-} from "react-router-dom";
-import PuzzleAnswer from "./PuzzleAnswer";
-import AnswerList from "./AnswerList";
-import ChallengeList from "./ChallengeList";
-import SponsorList from "./SponsorList";
 import {useAtoContext} from "./AtoContext";
 import {useSubstrateState} from "../substrate-lib";
 import {web3FromSource} from "@polkadot/extension-dapp";
 import utils from "../substrate-lib/utils";
 import {func} from "prop-types";
+import md5 from "md5";
 
 function Main (props) {
   const {label, type, attrs, handlerEvent, buttonKey, preCheckCall} = props
   const { api, currentAccount } = useSubstrateState();
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, setBindModalOpen, setAuthPwdModalOpen, setRecoverPwdModalOpen, checkUserLoggedIn, checkUserSmoothIn, isOpenSmooth} } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, setBindModalOpen, setAuthPwdModalOpen, setRecoverPwdModalOpen, checkUserLoggedIn, checkUserSmoothIn, isOpenSmooth, submitTxWithSmooth} } = useAtoContext()
   // 0 == nothing, 1 = ok , 2= failed, 3=loading
   const [callStatus, setCallStatus] = useState(0)
   const [callMessage, setCallMessage] = useState("")
@@ -134,16 +122,7 @@ function Main (props) {
     return false
   }
 
-  async function doClick() {
-
-    if(isOpenSmooth && false == await preCheckSmooth()) {
-      return ;
-    }
-
-    if(false == await preCheckCall(buttonKey, callStatus, statusCallBack)) {
-      return ;
-    }
-
+  async function executeWeb3Click() {
     const fromAcct = await getFromAcct();
     const {palletRpc, callable, inputParams, paramFields} = attrs
     const transformed = transformParams(paramFields, inputParams, {
@@ -167,6 +146,49 @@ function Main (props) {
           console.log("RUN finalized.111111111111111")
         }
       })
+  }
+
+  async function executeSmoothClick() {
+    const {palletRpc, callable, inputParams, paramFields} = attrs
+    console.log("Smooth Click ..", palletRpc, '|', callable, '|', inputParams, '|', paramFields)
+    const instance = utils.atoApiRequestInstance()
+    for(let idx in inputParams) {
+      console.log(idx, inputParams[idx], typeof inputParams[idx] == "bigint")
+      if(typeof inputParams[idx] == "bigint"){
+        inputParams[idx] = inputParams[idx].toString()
+      }
+    }
+    submitTxWithSmooth(palletRpc, callable, inputParams).then(res=>{
+      if(res.status.toLowerCase() == 'success') {
+        const eventList = res.data[1]
+        for(let idx in eventList){
+          handlerEvent(eventList[idx][1], eventList[idx][0], statusCallBack, eventList[idx][2])
+        }
+      }else{
+        console.error('Call smooth click had an error A:', res)
+        setCallStatus(2)
+      }
+    }).catch(err=>{
+      console.error('Call smooth click had an error B:', err)
+      setCallStatus(2)
+    })
+  }
+
+  async function doClick() {
+
+    if(isOpenSmooth && false == await preCheckSmooth()) {
+      return ;
+    }
+
+    if(false == await preCheckCall(buttonKey, callStatus, statusCallBack)) {
+      return ;
+    }
+
+    if(isOpenSmooth){
+      await executeSmoothClick()
+    }else{
+      await executeWeb3Click()
+    }
   }
 
   function loadSystemEvents() {

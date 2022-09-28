@@ -52,6 +52,20 @@ const AtoContextProvider = props => {
         setPubRefresh(pubRefresh+1)
     }
 
+    function submitTxWithSmooth(palletRpc, callable, inputParams) {
+        return new Promise((resolve, rejects)=>{
+            const instance = utils.atoApiRequestInstance()
+            instance.post(`${config.API2_ATOCHA_URL}/web3/adapter`, {palletRpc, callable, inputParams}).then( res => {
+                // console.log('/web3/adapter', res)
+                if(res.data.status.toLowerCase() == 'success') {
+                    resolve(res.data)
+                }else{
+                    rejects(res.data)
+                }
+            })
+        })
+    }
+
     function checkUserLoggedIn() {
         return new Promise((resolve, reject)=>{
             const instance = utils.atoApiRequestInstance()
@@ -405,7 +419,8 @@ const AtoContextProvider = props => {
                     setAuthPwdModalOpen,
                     setRecoverPwdModalOpen,
                     fillCurrentAccountIdWithSmooth,
-                    isOpenSmooth
+                    isOpenSmooth,
+                    submitTxWithSmooth
                 },
                 extractErrorMsg
             }}>
