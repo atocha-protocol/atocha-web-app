@@ -10,7 +10,7 @@ import AtoBlock2Time from "./AtoBlock2Time";
 function Main (props) {
   const { api } = useSubstrateState();
   const { puzzle_hash, challengeDepositList,puzzle_challengeDeadline} = props;
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, isOpenSmooth}, chainData: {pubBlockNumber}, } = useAtoContext();
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, isOpenSmooth}, chainData: {pubBlockNumber}, extractErrorMsg} = useAtoContext();
 
   // Puzzle information.
   const [deposit, setDeposit] = useState(0);
