@@ -35,19 +35,21 @@ function Main (props) {
   const [atoPuzzleChallenged, setAtoPuzzleChallenged] = useState([]);
   const [atoPuzzleSponsored, setAtoPuzzleSponsored] = useState([]);
   
-  useEffect(async () => {
-    console.log('isOpenSmooth ==== ', isOpenSmooth)
-    if(isOpenSmooth){
-      const _accountAddr = await fillCurrentAccountIdWithSmooth()
-      await loadAccountPoints(_accountAddr);
-      fillCurrentAccountId();
-    }else if (currentAccount) {
-      fillCurrentAccountId();
-      loadAccountBalance();
-      // getPlayerPoints();
-      await loadAccountPoints(currentAccount.address);
-      await loadReleationPuzzles();
+  useEffect( () => {
+    async function fetchData() {
+      if(isOpenSmooth){
+        const _accountAddr = await fillCurrentAccountIdWithSmooth()
+        await loadAccountPoints(_accountAddr);
+        fillCurrentAccountId();
+      }else if (currentAccount) {
+        fillCurrentAccountId();
+        loadAccountBalance();
+        // getPlayerPoints();
+        await loadAccountPoints(currentAccount.address);
+        await loadReleationPuzzles();
+      }
     }
+    fetchData()
   }, [currentAccount, userBalance, pubBlockNumber]);
 
   //console.log("UserHome.js|Main|useEffect|currentAccount", currentAccount)

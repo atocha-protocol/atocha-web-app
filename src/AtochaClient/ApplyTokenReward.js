@@ -29,42 +29,44 @@ function Main (props) {
 
   const [atoAtochaFinanceExchangeRewardEraStartBn, setAtoAtochaFinanceExchangeRewardEraStartBn] = useState(-1);
   
-  useEffect(async () => {
-    api.query.atochaFinance.pointExchangeInfo(currentExchangeRewardEra).then(res => {
-      console.log('exchangeInfo current = ', res.toHuman());
-      setExchangeInfo(res.toHuman());
-    });
-    api.query.atochaFinance.pointExchangeInfo(previousExchangeRewardEra).then(res => {
-      console.log('exchangeInfo previous = ', res.toHuman());
-      setPreviousExchangeInfo(res.toHuman());
-    });
-    api.query.atochaFinance.currentExchangeRewardEra((era_opt) => {
-      if (era_opt.isSome) {
-        setCurrentExchangeRewardEra(era_opt.value.toNumber());
-        setPreviousExchangeRewardEra(era_opt.value.toNumber() - 1)
+  useEffect(() => {
+    async function fetchData() {
+      api.query.atochaFinance.pointExchangeInfo(currentExchangeRewardEra).then(res => {
+        console.log('exchangeInfo current = ', res.toHuman());
+        setExchangeInfo(res.toHuman());
+      });
+      api.query.atochaFinance.pointExchangeInfo(previousExchangeRewardEra).then(res => {
+        console.log('exchangeInfo previous = ', res.toHuman());
+        setPreviousExchangeInfo(res.toHuman());
+      });
+      api.query.atochaFinance.currentExchangeRewardEra((era_opt) => {
+        if (era_opt.isSome) {
+          setCurrentExchangeRewardEra(era_opt.value.toNumber());
+          setPreviousExchangeRewardEra(era_opt.value.toNumber() - 1)
+        }
+      });
+
+      api.query.atochaFinance.atoConfig2().then(res => {
+        console.log("------------------------------", res);
+        console.log("------------------------------", res.toJSON().exchangeEraBlockLength);
+        setAtoAtochaFinanceConfigExchangeEraBlockLength(res.toJSON().exchangeEraBlockLength);
+        setAtoConfigAtochaFinance(res.toJSON());
+      });
+
+      api.query.atochaFinance.exchangeRewardEraStartBn(currentExchangeRewardEra).then(res => {
+        setAtoAtochaFinanceExchangeRewardEraStartBn(res.toJSON());
+      });
+
+      loadLastUpdateBN();
+
+      if(isOpenSmooth){
+        const _accountAddr = await fillCurrentAccountIdWithSmooth()
+        await loadAccountPoints(_accountAddr)
+      }else if(currentAccount){
+        await loadAccountPoints(currentAccount.address)
       }
-    });
-
-    api.query.atochaFinance.atoConfig2().then(res => {
-      console.log("------------------------------", res);
-      console.log("------------------------------", res.toJSON().exchangeEraBlockLength);
-      setAtoAtochaFinanceConfigExchangeEraBlockLength(res.toJSON().exchangeEraBlockLength);
-      setAtoConfigAtochaFinance(res.toJSON());
-    });
-
-    api.query.atochaFinance.exchangeRewardEraStartBn(currentExchangeRewardEra).then(res => {
-      setAtoAtochaFinanceExchangeRewardEraStartBn(res.toJSON());
-    });
-
-    loadLastUpdateBN();
-
-    if(isOpenSmooth){
-      const _accountAddr = await fillCurrentAccountIdWithSmooth()
-      await loadAccountPoints(_accountAddr)
-    }else if(currentAccount){
-      await loadAccountPoints(currentAccount.address)
     }
-
+    fetchData()
   }, [api.query.atochaModule, api.query.atochaFinance.lastUpdateBlockInfoOfPointExchage, api.query.atochaFinance.pointExchangeInfo, currentExchangeRewardEra, previousExchangeRewardEra, pubRefresh]);
 
   function loadLastUpdateBN() {

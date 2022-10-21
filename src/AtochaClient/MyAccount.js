@@ -10,6 +10,7 @@ import config from '../config';
 import UserHomeLink from "./UserHomeLink";
 import AtoDeleteThousand from "./AtoDeleteThousand";
 import BindAddressToTwitter from "./BindAddressToTwitter";
+import {hexToBigInt} from "@polkadot/util";
 
 function Main (props) {
   const { api, currentAccount } = useSubstrateState('');
@@ -20,15 +21,16 @@ function Main (props) {
   const [userBalance, setUserBalance] = useState(null);
   const [relationInfos, setRelationInfos] = useState(null);
   const [currentAccountId, setCurrentAccountId] = useState(null);
-  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
   
-  useEffect(async () => {
-    console.log("currentAccount = ", currentAccount)
-    if (currentAccount) {
-      fillCurrentAccountId();
-      loadAccountBalance();
-      await loadReleationPuzzles();
+  useEffect( () => {
+    async function fetchData() {
+      if (currentAccount) {
+        fillCurrentAccountId();
+        loadAccountBalance();
+        await loadReleationPuzzles();
+      }
     }
+    fetchData()
   }, [currentAccount, userBalance, pubBlockNumber]);
 
   function fillCurrentAccountId(){

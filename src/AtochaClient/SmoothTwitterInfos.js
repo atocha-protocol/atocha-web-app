@@ -42,7 +42,7 @@ function Main (props) {
   }
 
   // Puzzle information.
-  useEffect(async () => {
+  useEffect( () => {
     getBindTwitter()
   }, []);
 

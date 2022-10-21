@@ -271,22 +271,22 @@ function Main (props) {
     //console.log('debug=', sha256(encodeURIComponent('加油加油，中文')));
   }, [api.query.atochaFinance, puzzleTitle, puzzleTextContent, puzzleFileContent, puzzleFullScreenContent,puzzleAnswerFormatContent,atoIfPPTChecked]);
   
-  useEffect(async () => {
-    if(configAtochaModule == null) {
-      const cam = await api.query.atochaModule.atoConfig();
-      setConfigAtochaModule(cam.toJSON());
+  useEffect( () => {
+    async function fetchData() {
+      if(configAtochaModule == null) {
+        const cam = await api.query.atochaModule.atoConfig();
+        setConfigAtochaModule(cam.toJSON());
+      }
+      if(configAtochaFinance == null) {
+        const caf = await api.query.atochaFinance.atoConfig2();
+        setConfigAtochaFinance(caf.toJSON());
+      }
+      if(configAtochaModule){
+        setConfigAtochaModuleMinBonusOfPuzzle((parseFloat(hexToBigInt(configAtochaModule.minBonusOfPuzzle)/BigInt(10**14)).toString())/10000);
+      }
     }
+    fetchData()
 
-    if(configAtochaFinance == null) {
-      const caf = await api.query.atochaFinance.atoConfig2();
-      setConfigAtochaFinance(caf.toJSON());
-    }
-
-    if(configAtochaModule){
-      setConfigAtochaModuleMinBonusOfPuzzle((parseFloat(hexToBigInt(configAtochaModule.minBonusOfPuzzle)/BigInt(10**14)).toString())/10000);
-    }
-
-    console.log('CreatePuzzle.js|main|useEffect|async');
   }, [configAtochaModule, configAtochaFinance]);
 
   function handleFileChosen (file) {

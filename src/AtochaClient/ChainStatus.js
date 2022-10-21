@@ -30,20 +30,22 @@ function Main (props) {
   const [ financeConfig, setFinanceConfig ] = useState(null);
   const [ moduleConfig, setModuleConfig ] = useState(null);
 
-  useEffect(async () => {
+  useEffect( () => {
 
-    // atochaFinance.atoConfig2
-    if(financeConfig == null) {
-      const conf1 = await api.query.atochaFinance.atoConfig2()
-      setFinanceConfig(conf1.toJSON());
-    }
-    // atochaModule.atoConfig
-    if(moduleConfig == null) {
-      const conf2 = await api.query.atochaModule.atoConfig()
-      setModuleConfig(conf2.toJSON())
+    async function fetchData() {
+      // atochaFinance.atoConfig2
+      if(financeConfig == null) {
+        const conf1 = await api.query.atochaFinance.atoConfig2()
+        setFinanceConfig(conf1.toJSON());
+      }
+      // atochaModule.atoConfig
+      if(moduleConfig == null) {
+        const conf2 = await api.query.atochaModule.atoConfig()
+        setModuleConfig(conf2.toJSON())
+      }
     }
 
-    console.log('financeConfig = ', financeConfig);
+    fetchData()
 
   }, [financeConfig, moduleConfig]);
 

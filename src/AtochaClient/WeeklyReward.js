@@ -61,7 +61,7 @@ function Main (props) {
     return null;
   }
 
-  useEffect(async () => {
+  useEffect( () => {
     console.log("WeeklyReward.js|main|useEffect");
     //alert("WeeklyReward.js|main|useEffect");
     // getBlockNoLinked();
@@ -94,15 +94,6 @@ function Main (props) {
     api.query.atochaFinance.exchangeRewardEraStartBn(currentExchangeRewardEra).then(res => {
       setAtoAtochaFinanceExchangeRewardEraStartBn(res.toJSON());
     });
-
-    // if (isOpenSmooth) {
-    //   const _accountAddr = await fillCurrentAccountIdWithSmooth()
-    //   await loadAccountPoints(_accountAddr)
-    // } else if (currentAccount) {
-    //   await loadAccountPoints(currentAccount.address)
-    // }
-
-
   },[api.query.atochaFinance.pointExchangeInfo, currentExchangeRewardEra,previousExchangeRewardEra,atoReloadTimes]);
 
   function handlerEvent(section, method, statusCallBack, data) {

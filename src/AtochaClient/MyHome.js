@@ -42,22 +42,25 @@ function Main (props) {
   const [relationInfos, setRelationInfos] = useState(null);
   // const [currentAccountId, setCurrentAccountId] = useState(null);
   
-  useEffect(async () => {
+  useEffect(() => {
     console.log('isOpenSmooth ==== ', isOpenSmooth)
-    if(isOpenSmooth){
-      const _accountAddr = await fillCurrentAccountIdWithSmooth()
-      loadAccountBalance();
-      await loadReleationPuzzles();
-      console.log('smooth login ato address.', _accountAddr)
-      await loadAccountPoints(_accountAddr);
-    }else{
-      if (currentAccount) {
-        fillCurrentAccountId();
+    async function fetchData() {
+      if(isOpenSmooth){
+        const _accountAddr = await fillCurrentAccountIdWithSmooth()
         loadAccountBalance();
         await loadReleationPuzzles();
-        await loadAccountPoints(currentAccount.address);
+        console.log('smooth login ato address.', _accountAddr)
+        await loadAccountPoints(_accountAddr);
+      }else{
+        if (currentAccount) {
+          fillCurrentAccountId();
+          loadAccountBalance();
+          await loadReleationPuzzles();
+          await loadAccountPoints(currentAccount.address);
+        }
       }
     }
+    fetchData()
   }, [currentAccount, userBalance, pubBlockNumber]);
 
   function fillCurrentAccountId(){
