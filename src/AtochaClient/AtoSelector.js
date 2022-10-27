@@ -5,12 +5,17 @@ import {
     web3FromSource,
 } from '@polkadot/extension-dapp';
 import { stringToHex } from "@polkadot/util";
+import {Feed, List, Segment} from "semantic-ui-react";
+import BaseIdentityIcon from "@polkadot/react-identicon";
 
-export default function AtoSelector() {
-
-    const [selectedAccount, setSelectedAccount] = useState(null);
+function Main (props) {
+    const {onSelected} = props
     const [accounts, setAccounts] = useState([]);
     const [connected, setConnected] = useState(false)
+
+    useEffect(() => {
+        connect()
+    }, []);
 
     const connect = async () => {
         if (typeof window !== "undefined") {
@@ -28,17 +33,8 @@ export default function AtoSelector() {
     }
 
     const signMessage = async () => {
-        // returns an array of { address, meta: { name, source } }
-        // meta.source contains the name of the extension that provides this account
-        // const allInjected = await web3Enable('my cool dapp');
-        // `account` is of type InjectedAccountWithMeta 
-        // We arbitrarily select the first account returned from the above snippet
-        // to be able to retrieve the signer interface from this account
-        // we can use web3FromSource which will return an InjectedExtension type
         try {
             const injector = await web3FromSource(selectedAccount.meta.source);
-            // // this injector object has a signer and a signRaw method
-            // // to be able to sign raw bytes
             const signRaw = injector?.signer?.signRaw;
             if (!!signRaw) {
                 // after making sure that signRaw is defined
@@ -57,18 +53,38 @@ export default function AtoSelector() {
 
     return (
         <div>
+            <Segment raised style={{
+                height: 400,
+                overflow:'auto'
+            }}>
             {connected ?
-                <select
-                    onChange={(e) => {
-                        setSelectedAccount(accounts[e.target.value]);
-                    }}>
-                    {accounts.map((account, index) => {
-                        return <option key={index} value={index}>{account.meta.name}</option>
-                    })
-                    }
-                </select> : <button onClick={connect}>Connect</button>
+              <List selection verticalAlign='middle'>
+                  {accounts.map((account, index) => {
+                      return <List.Item key={index}>
+                          <List.Content>
+                              <Feed>
+                                  <Feed.Event onClick={()=>{ onSelected(account) }} >
+                                      <Feed.Label>
+                                          <BaseIdentityIcon value={account.address} size={30} theme="polkadot" />
+                                      </Feed.Label>
+                                      <Feed.Content>
+                                          <Feed.Summary>
+                                              <List.Header>{account.meta.name}</List.Header>
+                                          </Feed.Summary>
+                                      </Feed.Content>
+                                  </Feed.Event>
+                              </Feed>
+                          </List.Content>
+                      </List.Item>
+                  })}
+              </List>:<div>Need polkadot plugin</div>
             }
-            {selectedAccount ? <button onClick={signMessage}>Sign</button> : <></>}
+            </Segment>
+
         </div>
     )
+}
+
+export default function AtoSelector (props) {
+    return <Main {...props} />;
 }

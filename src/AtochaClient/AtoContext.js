@@ -41,12 +41,35 @@ const AtoContextProvider = props => {
     const [confirmPassword, setConfirmPassword] = React.useState('')
     const [authPwdModalTipMsg, setAuthPwdModalTipMsg] = React.useState('')
 
+    const [used3Account, setUsed3Account] = useState(null)
+    const CONST_LOCAL_STORAGE_USED_SMOOTH_STATUS = 'local_storage_usedSmoothStatus'
+    const [usedSmoothStatus, setUsedSmoothStatus] = useState(false)
 
 
     const apollo_client = new ApolloClient({
         uri: config.SUBQUERY_HTTP,
         cache: new InMemoryCache(),
     });
+
+    function initUsedSmoothStatusWithLocalStorage() {
+        if(window.localStorage){
+            let storage=window.localStorage;
+            const status = storage[CONST_LOCAL_STORAGE_USED_SMOOTH_STATUS] ;
+            console.log('local stoage stauts = ', status)
+            setUsedSmoothStatus(status=='true'? true: false)
+        }
+    }
+
+    function setUsedSmoothStatusWithLocalStorage(status) {
+        if(!window.localStorage){
+            alert('The browser does not support LocalStorage, which may cause some functions to be unavailable.');
+        }else{
+            console.log('set with LocalStorage ', status)
+            let storage=window.localStorage;
+            storage[CONST_LOCAL_STORAGE_USED_SMOOTH_STATUS] = status;
+        }
+        setUsedSmoothStatus(status)
+    }
 
     function updatePubRefresh() {
         setPubRefresh(pubRefresh+1)
@@ -98,6 +121,32 @@ const AtoContextProvider = props => {
               function (error) {
                   console.log('/twitter/login_infos had an error.', error)
                   rejects('/twitter/login_infos had an error.')
+              }
+            )
+        })
+    }
+
+    // Will remove and instead with common function
+    function getTwitterAtoInfos(ato_address) {
+        return new Promise((resolve, reject) => {
+            const instance = utils.atoApiRequestInstance()
+            instance.get(`/twitter/ato_info?addr=${ato_address}`).then(
+              function (response) {
+                  if(!response.data){
+                      resolve(null)
+                  } else if(response.data?.status.toLowerCase() == `success` && response.data?.data?.screen_name){
+                      instance.get(`/twitter/show_user?screen_name=${response.data?.data.screen_name}`).then(twitter_user_info=>{
+                          response.data.data.detail = twitter_user_info
+                          resolve(response.data)
+                      })
+                  }else{
+                      resolve(null)
+                  }
+              }
+            ).catch(
+              function (error) {
+                  console.log('Bing request Error ================= ', error)
+                  reject(error)
               }
             )
         })
@@ -395,6 +444,7 @@ const AtoContextProvider = props => {
             loadPuzlleList();
             // loadAccountPoints();
         }
+        initUsedSmoothStatusWithLocalStorage()
     }, [apiState, currentAccount, pubPuzzleListType, pubRefresh])
 
     return (
@@ -414,13 +464,20 @@ const AtoContextProvider = props => {
                     checkUserLoggedIn,
                     checkUserSmoothIn,
                     getLoginInfos,
+                    getTwitterAtoInfos,
                     loadAccountPoints,
                     setBindModalOpen,
                     setAuthPwdModalOpen,
                     setRecoverPwdModalOpen,
                     fillCurrentAccountIdWithSmooth,
                     isOpenSmooth,
-                    submitTxWithSmooth
+                    submitTxWithSmooth,
+                    setUsed3Account,
+                    setUsedSmoothStatus,
+                    used3Account,
+                    usedSmoothStatus,
+                    setUsedSmoothStatusWithLocalStorage,
+                    initUsedSmoothStatusWithLocalStorage,
                 },
                 extractErrorMsg
             }}>

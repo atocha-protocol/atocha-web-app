@@ -36,13 +36,8 @@ function Main (props) {
   }
 
 
+  // Will remove and instead with common function
   function getBindTwitter() {
-    // const instance = axios.create({
-    //   baseURL: config.API2_ATOCHA_URL,
-    //   timeout: 20000,
-    //   responseType: 'json',
-    //   responseEncoding: 'utf8',
-    // });
     const instance = utils.atoApiRequestInstance()
     instance.get(`/twitter/bind_info?addr=${ato_address}`).then(
       function (response) {
