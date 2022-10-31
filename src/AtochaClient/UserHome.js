@@ -22,7 +22,7 @@ function Main (props) {
   const { api, currentAccount } = useSubstrateState('');
   const { puzzle_hash } = props;
   const { account_id } = useParams();
-  const { apollo_client, gql, puzzleSets:{isOpenSmooth, fillCurrentAccountIdWithSmooth, loadAccountPoints, currentAccountAddress}, chainData: {pubBlockNumber, updatePubRefresh, userPoints} } = useAtoContext()
+  const { apollo_client, gql, puzzleSets:{usedSmoothStatus, fillCurrentAccountIdWithSmooth, loadAccountPoints, currentAccountAddress}, chainData: {pubBlockNumber, updatePubRefresh, userPoints} } = useAtoContext()
 
   // Atocha user information.
   const [userBalance, setUserBalance] = useState(null);
@@ -37,7 +37,7 @@ function Main (props) {
   
   useEffect( () => {
     async function fetchData() {
-      if(isOpenSmooth){
+      if(usedSmoothStatus){
         const _accountAddr = await fillCurrentAccountIdWithSmooth()
         await loadAccountPoints(_accountAddr);
         fillCurrentAccountId();
@@ -104,7 +104,7 @@ function Main (props) {
   }
 
   function fillCurrentAccountId(){
-    if(isOpenSmooth){
+    if(usedSmoothStatus){
       setCurrentAccountId(currentAccountAddress);
     }else{
       if(account_id == 'self') {

@@ -46,6 +46,7 @@ import DevTest from "./AtochaClient/DevTest";
 import DevTaskReward from "./AtochaClient/DevTaskReward";
 import SmoothLogin from "./AtochaClient/SmoothLogin";
 import SmoothRegister from "./AtochaClient/SmoothRegister";
+import UserWindow from "./AtochaClient/UserWindow";
 
 function Main() {
   const { apiState, apiError, keyringState} = useSubstrateState();
@@ -129,7 +130,8 @@ function Main() {
   return (
     <div ref={contextRef}>
       <Sticky context={contextRef}>
-        <AccountSelector />
+          {/*<AccountSelector />*/}
+          <UserWindow mode={'bar'} />
       </Sticky>
       <br/><br/>
       <Container>

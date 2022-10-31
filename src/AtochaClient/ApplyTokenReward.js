@@ -13,7 +13,7 @@ import AtoBlock2Time from "./AtoBlock2Time";
 
 function Main (props) {
   const { api, currentAccount } = useSubstrateState('');
-  const { chainData: {userPoints,pubBlockNumber},puzzleSets: {pubRefresh, updatePubRefresh, isOpenSmooth, loadAccountPoints, fillCurrentAccountIdWithSmooth}, extractErrorMsg} = useAtoContext()
+  const { chainData: {userPoints,pubBlockNumber},puzzleSets: {pubRefresh, updatePubRefresh, usedSmoothStatus, loadAccountPoints, fillCurrentAccountIdWithSmooth}, extractErrorMsg} = useAtoContext()
   // Puzzle information.
   const [exchangeInfo, setExchangeInfo] = useState([]);
   const [previousExchangeInfo, setPreviousExchangeInfo] = useState([]);
@@ -59,7 +59,7 @@ function Main (props) {
 
       loadLastUpdateBN();
 
-      if(isOpenSmooth){
+      if(usedSmoothStatus){
         const _accountAddr = await fillCurrentAccountIdWithSmooth()
         await loadAccountPoints(_accountAddr)
       }else if(currentAccount){
@@ -179,7 +179,7 @@ function Main (props) {
             buttonKey={'atochaFinance_applyPointReward_onClick'}
             preCheckCall= {preCheckCall}
             handlerEvent= {handlerEvent}
-            isOpenSmooth= {isOpenSmooth}
+            isOpenSmooth= {usedSmoothStatus}
           />            
         </Form.Field>
         <Form.Field>

@@ -3,7 +3,7 @@ import sha256 from 'sha256';
 import {Form, Input, Grid, Card, Statistic, TextArea, Label, Button, Table} from 'semantic-ui-react';
 import config from '../config';
 import {useAtoContext} from "./AtoContext";
-import {useSubstrateState} from "../substrate-lib";
+import {useSubstrate, useSubstrateState} from "../substrate-lib";
 import {web3FromSource} from "@polkadot/extension-dapp";
 import utils from "../substrate-lib/utils";
 import {func} from "prop-types";
@@ -12,7 +12,7 @@ import md5 from "md5";
 function Main (props) {
   const {label, type, attrs, handlerEvent, buttonKey, preCheckCall} = props
   const { api, currentAccount } = useSubstrateState();
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, setBindModalOpen, setAuthPwdModalOpen, setRecoverPwdModalOpen, checkUserLoggedIn, checkUserSmoothIn, isOpenSmooth, submitTxWithSmooth} } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, setBindModalOpen, setAuthPwdModalOpen, setRecoverPwdModalOpen, checkUserLoggedIn, checkUserSmoothIn, usedSmoothStatus, used3Account, submitTxWithSmooth} } = useAtoContext()
   // 0 == nothing, 1 = ok , 2= failed, 3=loading
   const [callStatus, setCallStatus] = useState(0)
   const [callMessage, setCallMessage] = useState("")
@@ -22,14 +22,20 @@ function Main (props) {
     setCallMessage(message)
   }
 
+  const {
+    state: { keyring },
+  } = useSubstrate()
+
+
   const getFromAcct = async () => {
     const {
       address,
       meta: { source, isInjected }
-    } = currentAccount;
+    } = keyring.getPair(used3Account.address)
     let fromAcct;
     if (isInjected) {
       const injected = await web3FromSource(source);
+      console.log('injected == ', injected)
       fromAcct = address;
       api.setSigner(injected.signer);
     } else {
@@ -176,7 +182,7 @@ function Main (props) {
 
   async function doClick() {
 
-    if(isOpenSmooth && false == await preCheckSmooth()) {
+    if(usedSmoothStatus && false == await preCheckSmooth()) {
       return ;
     }
 
@@ -184,7 +190,7 @@ function Main (props) {
       return ;
     }
 
-    if(isOpenSmooth){
+    if(usedSmoothStatus){
       await executeSmoothClick()
     }else{
       await executeWeb3Click()

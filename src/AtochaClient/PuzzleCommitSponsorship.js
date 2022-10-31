@@ -9,7 +9,7 @@ import KButton from "./KButton";
 function Main (props) {
   const { api } = useSubstrateState();
   const { puzzle_hash, puzzleDepositList } = props;
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, isOpenSmooth}, extractErrorMsg} = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, usedSmoothStatus}, extractErrorMsg} = useAtoContext()
 
   // Puzzle information.
   const [deposit, setDeposit] = useState(0);
@@ -114,7 +114,7 @@ function Main (props) {
           buttonKey={'sponsor_on_click'}
           preCheckCall= {preCheckCall}
           handlerEvent= {handlerEvent}
-          isOpenSmooth= {isOpenSmooth}
+          isOpenSmooth= {usedSmoothStatus}
         />
       </Form.Field>
     </Form>

@@ -11,18 +11,25 @@ import {
 import config from "../config";
 import error_info from "../config/error.json";
 
-import {useSubstrateState} from "../substrate-lib";
+import {useSubstrate, useSubstrateState} from "../substrate-lib";
 import {Button, Form, Header, Image, Input, Modal} from "semantic-ui-react";
 import utils from "../substrate-lib/utils";
 import md5 from "md5";
+import {web3Accounts, web3Enable} from "@polkadot/extension-dapp";
+import {accounts} from "@polkadot/ui-keyring/observable/accounts";
 
-const isOpenSmooth = config.APP_IS_OPEN_SMOOTH == 1 ? true : false
+// const isOpenSmooth = config.APP_IS_OPEN_SMOOTH == 1 ? true : false
 console.log('config.IS_OPEN_SMOOTH  === ', config.APP_IS_OPEN_SMOOTH )
 
 const AtoContext = createContext(null)
 
 const AtoContextProvider = props => {
     const { apiState, apiError, keyringState, api, currentAccount} = useSubstrateState()
+
+    // const {
+    //     setCurrentAccount,
+    //     state: { keyring },
+    // } = useSubstrate()
 
     const [helloWorld, setHelloWorld] = useState('None--')
     const [currentAccountAddress, setCurrentAccountAddress] = useState(null)
@@ -43,13 +50,43 @@ const AtoContextProvider = props => {
 
     const [used3Account, setUsed3Account] = useState(null)
     const CONST_LOCAL_STORAGE_USED_SMOOTH_STATUS = 'local_storage_usedSmoothStatus'
+    const CONST_LOCAL_STORAGE_USED_WEB_ADDR = 'local_storage_usedWebAddr'
     const [usedSmoothStatus, setUsedSmoothStatus] = useState(false)
-
+    const [smoothError, setSmoothError] = useState([null, ''])
 
     const apollo_client = new ApolloClient({
         uri: config.SUBQUERY_HTTP,
         cache: new InMemoryCache(),
     });
+
+    // Get the list of accounts we possess the private key for
+    // const keyringOptions = keyring.getPairs().map(account => ({
+    //     key: account.address,
+    //     value: account.address,
+    //     text: account.meta.name.toUpperCase(),
+    //     icon: 'user',
+    // }))
+    //
+    // const initialAddress =
+    //   keyringOptions.length > 0 ? keyringOptions[0].value : ''
+
+    function connPolkadot() {
+        return new Promise(async (resolve, reject) => {
+            if (typeof window !== "undefined") {
+                try {
+                    const allInjected = await web3Enable('PostThread')
+                    // console.log(allInjected);
+                    const allAccounts = await web3Accounts()
+                    // console.log(allAccounts);
+                    resolve(allAccounts)
+                } catch (err) {
+                    reject(err)
+                }
+            } else {
+                reject('Need window.')
+            }
+        })
+    }
 
     function initUsedSmoothStatusWithLocalStorage() {
         if(window.localStorage){
@@ -61,6 +98,7 @@ const AtoContextProvider = props => {
     }
 
     function setUsedSmoothStatusWithLocalStorage(status) {
+        setUsedSmoothStatus(status)
         if(!window.localStorage){
             alert('The browser does not support LocalStorage, which may cause some functions to be unavailable.');
         }else{
@@ -68,7 +106,32 @@ const AtoContextProvider = props => {
             let storage=window.localStorage;
             storage[CONST_LOCAL_STORAGE_USED_SMOOTH_STATUS] = status;
         }
-        setUsedSmoothStatus(status)
+    }
+
+    function initUsedWeb3AddressWithLocalStorage() {
+        if(window.localStorage){
+            let storage=window.localStorage;
+            const web3Addr = storage[CONST_LOCAL_STORAGE_USED_WEB_ADDR] ;
+            console.log('local stoage addr = ', web3Addr)
+            connPolkadot().then(accounts => {
+                for(let idx in accounts) {
+                    if(accounts[idx].address == web3Addr) {
+                        setUsed3Account(accounts[idx])
+                    }
+                }
+            })
+        }
+    }
+
+    function setUsedWeb3AddressWithLocalStorage(web3acc) {
+        setUsed3Account(web3acc)
+        if(!window.localStorage){
+            alert('The browser does not support LocalStorage, which may cause some functions to be unavailable.');
+        }else{
+            console.log('set with LocalStorage ', web3acc.address)
+            let storage=window.localStorage;
+            storage[CONST_LOCAL_STORAGE_USED_WEB_ADDR] = web3acc.address;
+        }
     }
 
     function updatePubRefresh() {
@@ -78,6 +141,7 @@ const AtoContextProvider = props => {
     function submitTxWithSmooth(palletRpc, callable, inputParams) {
         return new Promise((resolve, rejects)=>{
             const instance = utils.atoApiRequestInstance()
+            setSmoothError([null, 0])
             instance.post(`${config.API2_ATOCHA_URL}/web3/adapter`, {palletRpc, callable, inputParams}).then( res => {
                 // console.log('/web3/adapter', res)
                 if(res.data.status.toLowerCase() == 'success') {
@@ -85,6 +149,8 @@ const AtoContextProvider = props => {
                 }else{
                     rejects(res.data)
                 }
+            }).catch(err=>{
+                setSmoothError(['/web3/adapter interface err', '220717-2'])
             })
         })
     }
@@ -92,6 +158,7 @@ const AtoContextProvider = props => {
     function checkUserLoggedIn() {
         return new Promise((resolve, reject)=>{
             const instance = utils.atoApiRequestInstance()
+            setSmoothError([null, 0])
             instance.get(`/twitter/has_login`).then(response=>{
                 console.log(' --- ---- User is already bound', response.data.data.isLogin)
                 if(response.data.data.isLogin == true) {
@@ -100,6 +167,7 @@ const AtoContextProvider = props => {
                     resolve(false)
                 }
             }).catch(err=>{
+                setSmoothError(['/twitter/has_login interface err', '220717-1'])
                 reject(err)
             })
         })
@@ -234,9 +302,32 @@ const AtoContextProvider = props => {
                 setAuthPwdModalOpen(true)
                 reject('need auth pwd.')
             } else {
-                // setCurrentAccountId(loginInfo.atoAddress)
                 setCurrentAccountAddress(loginInfo.atoAddress)
                 resolve(loginInfo.atoAddress)
+            }
+        })
+    }
+
+    function rebirthAccount() {
+        return new Promise((resolve, reject) => {
+            if(usedSmoothStatus == true){
+                getLoginInfos().then(data=>{
+                    if(data.userId > 0 && data.atoAddress == null){
+                        resolve(data)
+                    }else if(data.atoAddress){
+                        getTwitterAtoInfos(data.atoAddress).then(bindInfoData=>{
+                            // console.log('bindInfoData', bindInfoData.data.screen_name)
+                            setUsed3Account({address: data.atoAddress, meta: {name: bindInfoData.data.screen_name}})
+                            resolve(data)
+                        }).catch(err=>{
+                            reject(err)
+                        })
+                    }
+                }).catch(err=>{
+                    reject(err)
+                })
+            }else{
+                initUsedWeb3AddressWithLocalStorage()
             }
         })
     }
@@ -470,7 +561,6 @@ const AtoContextProvider = props => {
                     setAuthPwdModalOpen,
                     setRecoverPwdModalOpen,
                     fillCurrentAccountIdWithSmooth,
-                    isOpenSmooth,
                     submitTxWithSmooth,
                     setUsed3Account,
                     setUsedSmoothStatus,
@@ -478,6 +568,12 @@ const AtoContextProvider = props => {
                     usedSmoothStatus,
                     setUsedSmoothStatusWithLocalStorage,
                     initUsedSmoothStatusWithLocalStorage,
+                    initUsedWeb3AddressWithLocalStorage,
+                    setUsedWeb3AddressWithLocalStorage,
+                    smoothError,
+                    setSmoothError,
+                    rebirthAccount,
+                    connPolkadot,
                 },
                 extractErrorMsg
             }}>
@@ -570,7 +666,7 @@ const AtoContextProvider = props => {
                                   instance.post(`${config.API2_ATOCHA_URL}/twitter/control_wallet`, {operation: 'create', pwd: md5(confirmPassword)}).then( res => {
                                       console.log('/twitter/create_wallet', res)
                                       if(res.data.status.toLowerCase() == 'success') {
-
+                                          rebirthAccount()
                                       }else{
                                           setAuthPwdModalTipMsg(`Error code ${res.data.code}, ${res.data.msg}`)
                                       }
@@ -643,6 +739,7 @@ const AtoContextProvider = props => {
                                       console.log('/twitter/create_wallet', res)
                                       if(res.data.status.toLowerCase() == 'success') {
                                           setAuthPwdModalOpen(false)
+                                          rebirthAccount()
                                       }else{
                                           setAuthPwdModalTipMsg(`Error code ${res.data.code}, ${res.data.msg}`)
                                       }
@@ -696,6 +793,7 @@ const AtoContextProvider = props => {
                                   console.log('/twitter/create_wallet', res)
                                   if(res.data.status.toLowerCase() == 'success') {
                                       setRecoverPwdModalOpen(false)
+                                      rebirthAccount()
                                   }else{
                                       setAuthPwdModalTipMsg(`Error code ${res.data.code}, ${res.data.msg}`)
                                   }

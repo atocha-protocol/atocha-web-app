@@ -15,13 +15,18 @@ import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
   const {api, currentAccount} = useSubstrateState();
-  const {puzzleSets: {isOpenSmooth, submitTxWithSmooth} } = useAtoContext()
+  const {puzzleSets: {usedSmoothStatus, submitTxWithSmooth, rebirthAccount, used3Account} } = useAtoContext()
+
+  const {
+      state: { keyring },
+  } = useSubstrate()
 
   const getFromAcct = async () => {
+
     const {
       address,
       meta: { source, isInjected }
-    } = currentAccount;
+    } = keyring.getPair(used3Account.address);;
     let fromAcct;
     if (isInjected) {
       const injected = await web3FromSource(source);
@@ -238,7 +243,9 @@ function Main (props) {
   const [configAtochaFinance, setConfigAtochaFinance] = useState(null);
   const [configAtochaModuleMinBonusOfPuzzle, setConfigAtochaModuleMinBonusOfPuzzle] = useState(0);
 
-  useEffect(() => { 
+  useEffect(() => {
+    rebirthAccount()
+
     const puzzleIfPPTContent={
       type: 'text',
       data: atoIfPPTChecked,
@@ -336,7 +343,7 @@ function Main (props) {
           const pah = MakeAnswerSha256WithSimple(puzzleAnswer, response.data.result_id);//puzzle answer hash
           setPuzzleHash(ph);
           setPuzzleAnswerHash(pah);
-          if(isOpenSmooth){
+          if(usedSmoothStatus){
             await submitPuzzle2AtochaWithSmooth(ph, pah)
           }else{
             await submitPuzzle2AtochaWithWeb3(ph, pah)

@@ -22,7 +22,7 @@ var atoReloadTimes=0;
 
 function Main (props) {
   const {api, currentAccount} = useSubstrateState();
-  const { apollo_client, gql, puzzleSets:{isOpenSmooth, fillCurrentAccountIdWithSmooth, loadAccountPoints} } = useAtoContext()
+  const { apollo_client, gql, puzzleSets:{usedSmoothStatus, fillCurrentAccountIdWithSmooth, loadAccountPoints} } = useAtoContext()
 
   // const apollo_client = new ApolloClient({
   //   uri: config.SUBQUERY_HTTP,
@@ -197,7 +197,7 @@ function Main (props) {
             buttonKey={'atochaFinance_applyPointReward_onClick'}
             preCheckCall= {preCheckCall}
             handlerEvent= {handlerEvent}
-            isOpenSmooth= {isOpenSmooth}
+            isOpenSmooth= {usedSmoothStatus}
           />            
         </Form.Field>
         <Form.Field>

@@ -10,7 +10,7 @@ import AtoBlock2Time from "./AtoBlock2Time";
 function Main (props) {
   const { api } = useSubstrateState();
   const { puzzle_hash, challengeDepositList,puzzle_challengeDeadline} = props;
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, isOpenSmooth}, chainData: {pubBlockNumber}, extractErrorMsg} = useAtoContext();
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, usedSmoothStatus}, chainData: {pubBlockNumber}, extractErrorMsg} = useAtoContext();
 
   // Puzzle information.
   const [deposit, setDeposit] = useState(0);
@@ -103,7 +103,7 @@ function Main (props) {
           buttonKey={'challenge_b_on_click'}
           preCheckCall= {preCheckCall}
           handlerEvent= {handlerEvent}
-          isOpenSmooth= {isOpenSmooth}
+          isOpenSmooth= {usedSmoothStatus}
         />         
       </Form.Field>      
     </Form> 

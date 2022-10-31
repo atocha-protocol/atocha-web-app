@@ -7,30 +7,35 @@ import {
 import { stringToHex } from "@polkadot/util";
 import {Feed, List, Segment} from "semantic-ui-react";
 import BaseIdentityIcon from "@polkadot/react-identicon";
+import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
     const {onSelected} = props
     const [accounts, setAccounts] = useState([]);
     const [connected, setConnected] = useState(false)
+    const {puzzleSets: {connPolkadot} } = useAtoContext()
 
     useEffect(() => {
-        connect()
+        connPolkadot().then(accounts => {
+            setAccounts(accounts);
+            setConnected(true);
+        })
     }, []);
 
-    const connect = async () => {
-        if (typeof window !== "undefined") {
-            try {
-                const allInjected = await web3Enable('PostThread');
-                console.log(allInjected);
-                const allAccounts = await web3Accounts();
-                console.log(allAccounts);
-                setAccounts(allAccounts);
-                setConnected(true);
-            } catch (e) {
-                console.log(e);
-            }
-        }
-    }
+    // const connect = async () => {
+    //     if (typeof window !== "undefined") {
+    //         try {
+    //             const allInjected = await web3Enable('PostThread');
+    //             // console.log(allInjected);
+    //             const allAccounts = await web3Accounts();
+    //             // console.log(allAccounts);
+    //             setAccounts(allAccounts);
+    //             setConnected(true);
+    //         } catch (e) {
+    //             console.log(e);
+    //         }
+    //     }
+    // }
 
     const signMessage = async () => {
         try {

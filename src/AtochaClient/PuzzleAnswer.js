@@ -12,7 +12,7 @@ import KButton from "./KButton";
 function Main (props) {
   const { api, currentAccount } = useSubstrateState();
   const { puzzle_hash, answerList } = props;
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, setBindModalOpen, setAuthPwdModalOpen, setRecoverPwdModalOpen, checkUserLoggedIn, checkUserSmoothIn, isOpenSmooth}, extractErrorMsg} = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, setBindModalOpen, setAuthPwdModalOpen, setRecoverPwdModalOpen, checkUserLoggedIn, checkUserSmoothIn, usedSmoothStatus}, extractErrorMsg} = useAtoContext()
 
   // Puzzle information.
   const [answerTxt, setAnswerTxt] = useState('');
@@ -125,7 +125,7 @@ function Main (props) {
             buttonKey={'puzzle_answer_on_click'}
             preCheckCall= {preCheckCall}
             handlerEvent= {handlerEvent}
-            isOpenSmooth= {isOpenSmooth}
+            isOpenSmooth= {usedSmoothStatus}
           />
       </Form.Field>
       <Form.Field>

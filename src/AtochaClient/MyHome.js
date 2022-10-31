@@ -30,7 +30,7 @@ function Main (props) {
     setAuthPwdModalOpen,
     setRecoverPwdModalOpen,
     loadAccountPoints,
-    isOpenSmooth,
+    usedSmoothStatus,
     submitTxWithSmooth,
     currentAccountAddress,
     setCurrentAccountAddress,
@@ -43,9 +43,9 @@ function Main (props) {
   // const [currentAccountId, setCurrentAccountId] = useState(null);
   
   useEffect(() => {
-    console.log('isOpenSmooth ==== ', isOpenSmooth)
+    console.log('isOpenSmooth ==== ', usedSmoothStatus)
     async function fetchData() {
-      if(isOpenSmooth){
+      if(usedSmoothStatus){
         const _accountAddr = await fillCurrentAccountIdWithSmooth()
         loadAccountBalance();
         await loadReleationPuzzles();
@@ -95,7 +95,7 @@ function Main (props) {
   };
 
   async function takeAnswerReward(hash) {
-    if(isOpenSmooth){
+    if(usedSmoothStatus){
       console.log('TakeAnswerReward with Smooth')
       submitTxWithSmooth('atochaModule', 'takeAnswerReward', [hash]).then(data=>{
         console.log('takeAnswerReward smooth callback', data)
@@ -213,7 +213,7 @@ function Main (props) {
       </div>
       <h3>Social connection</h3>
       <div>
-        {currentAccountAddress?isOpenSmooth?
+        {currentAccountAddress?usedSmoothStatus?
           <SmoothTwitterInfos ato_address={currentAccountAddress} displayMode="icon_name_button" />
           :<BindAddressToTwitter ato_address={currentAccountAddress} displayMode="icon_name_button" />:"Loading..."}
       </div>

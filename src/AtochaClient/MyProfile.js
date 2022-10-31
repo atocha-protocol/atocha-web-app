@@ -10,7 +10,7 @@ import {useAtoContext, useAtoContextState} from "./AtoContext";
 import UserHome from "./UserHome";
 
 function Main (props) {
-  const {apollo_client, gql, puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType, loadAccountPoints, isOpenSmooth, fillCurrentAccountIdWithSmooth} , chainData: {pubBlockNumber} } = useAtoContext()
+  const {apollo_client, gql, puzzleSets: {pubPuzzleList, setPubPuzzleList, setPubPuzzleListType, loadAccountPoints, usedSmoothStatus, fillCurrentAccountIdWithSmooth} , chainData: {pubBlockNumber} } = useAtoContext()
   const { api } = useSubstrateState();
   
 

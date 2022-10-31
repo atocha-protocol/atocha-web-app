@@ -13,6 +13,7 @@ import {
   List,
   Image, Feed, Icon, Header
 } from 'semantic-ui-react';
+import { web3Accounts, web3Enable, web3FromSource } from '@polkadot/extension-dapp';
 import BaseIdentityIcon from '@polkadot/react-identicon';
 import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import AtoSelector from "./AtoSelector";
@@ -36,39 +37,35 @@ function Main(props) {
     checkUserSmoothIn,
     setAuthPwdModalOpen,
     setRecoverPwdModalOpen,
-    setUsed3Account,
+    setUsedWeb3AddressWithLocalStorage,
     setUsedSmoothStatusWithLocalStorage,
     used3Account,
-    usedSmoothStatus} } = useAtoContext()
+    usedSmoothStatus,
+    smoothError,
+    setSmoothError,
+    rebirthAccount,
+  } } = useAtoContext()
 
   useEffect(() => {
     console.log('### usedSmoothStatus', usedSmoothStatus, typeof usedSmoothStatus)
-    if(usedSmoothStatus == true){
-      console.log('Smooth login useEffect , usedSmoothStatus = ', usedSmoothStatus)
-      getSmoothLoginInfos()
-    }
+    rebirthAccount().then(data=>{
+      if(usedSmoothStatus == true){
+        if(data.userId > 0 && data.atoAddress == null){
+          twitterButtonClick()
+        }
+      }
+    })
   }, [usedSmoothStatus]);
 
-  function getSmoothLoginInfos() {
-    getLoginInfos().then(data=>{
-      console.log('data = ', data)
-      console.log('data.data.atoAddress', data.atoAddress)
-      if(data.userId > 0 && data.atoAddress == null){
-        setTwitterButtonTxt('set wallet')
-        twitterButtonClick()
-      }else if(data.atoAddress){
-        console.log('RUN 2 #############', data.atoAddress)
-        setTwitterButtonTxt('logout with smooth')
-        // Get smooth user infos
-        setUsedSmoothStatusWithLocalStorage(true)
-        getTwitterAtoInfos(data.atoAddress).then(bindInfoData=>{
-          // console.log('bindInfoData', bindInfoData.data.screen_name)
-          setUsed3Account({address: data.atoAddress, meta: {name: bindInfoData.data.screen_name}})
-        })
+  async function web3ButtonClick(isOpen) {
+    if (isOpen) {
+      const extensions = await web3Enable('Atocha dapp.');
+      if (extensions.length === 0) {
+        alert(`Need to install polkadot plugin: https://polkadot.js.org/extension/`)
+        return
       }
-    }).catch(err=>{
-      console.log('err = ', err)
-    })
+    }
+    setOpenSelector(isOpen)
   }
 
   async function twitterButtonClick() {
@@ -79,7 +76,6 @@ function Main(props) {
     } else {
       const smoothData = await checkUserSmoothIn()
       if (smoothData && smoothData.hasLogin && smoothData.hasPwd && smoothData.hasAtoAcc) {
-        getSmoothLoginInfos()
         return true
       } else {
         if (smoothData.hasLogin && !smoothData.hasPwd && !smoothData.hasAtoAcc) {
@@ -98,25 +94,6 @@ function Main(props) {
     }
   }
 
-  // function chooseLoginAccount(acc) {
-  //   // setSelectedWebAccount(acc)
-  //
-  //   setUsed3Account(acc)
-  //   // setUsedSmoothStatusWithLocalStorage(false)
-  //
-  //   let unsubscribe
-  //   acc &&
-  //   api.query.system
-  //     .account(acc.address, balance =>
-  //       setFreeBalance(balance.data.free.toHuman())
-  //     )
-  //     .then(unsub => (unsubscribe = unsub))
-  //     .catch(console.error)
-  //   if (unsubscribe)
-  //     unsubscribe()
-  //
-  // }
-
   return (
     <>
       <h1>SmoothLogin</h1>
@@ -127,49 +104,54 @@ function Main(props) {
             {used3Account && false == usedSmoothStatus?
                 <div>
                   <Button secondary size='tiny' onClick={()=>{
-                    setOpenSelector(!openSelector)
+                    setUsedSmoothStatusWithLocalStorage(false)
+                    setSmoothError([null, 0])
+                    web3ButtonClick(!openSelector)
                   }}>Change web3 account</Button>
                   <Button button size='tiny' onClick={()=>{
+                    setUsedSmoothStatusWithLocalStorage(true)
                     twitterButtonClick()
                   }}>or {twitterButtonTxt}</Button>
                 </div>
              : true == usedSmoothStatus? <div>
                 <div>
                   <Button size='tiny' onClick={()=>{
-                    setOpenSelector(!openSelector)
+                    setUsedSmoothStatusWithLocalStorage(false)
+                    setSmoothError([null, 0])
+                    web3ButtonClick(!openSelector)
                   }}>Change web3 account</Button>
                   <Button secondary button size='tiny' onClick={()=>{
+                    setUsedSmoothStatusWithLocalStorage(true)
                     twitterButtonClick()
                   }}>Log out with twitter</Button>
                 </div>
               </div>:<div>
               <Button secondary size='tiny' onClick={()=>{
-                setOpenSelector(!openSelector)
+                setUsedSmoothStatusWithLocalStorage(false)
+                setSmoothError([null, 0])
+                web3ButtonClick(!openSelector)
               }}>Login with polkadot wallet</Button>
               <Button secondary size='tiny' onClick={()=>{
+                setUsedSmoothStatusWithLocalStorage(true)
                 twitterButtonClick()
               }}>{twitterButtonTxt}</Button>
               </div>
             }
           </Grid.Column>
         </Grid.Row>
+        {smoothError[0]?<Grid.Row><Grid.Column>
+          <p style={{color: 'RED'}}>ERR:{smoothError[0]} CODE:{smoothError[1]}</p>
+        </Grid.Column></Grid.Row>:null}
         {openSelector?<Grid.Row>
           <Grid.Column>
             <AtoSelector onSelected={(acc) => {
-              console.log('############ setUsedSmoothStatus = false')
               setTwitterButtonTxt('Login with twitter')
-              setOpenSelector(false)
+              web3ButtonClick(false)
               setUsedSmoothStatusWithLocalStorage(false)
-              setUsed3Account(acc)
-              console.log('------- END')
-              // chooseLoginAccount(acc)
-              // if(onWeb3Selected){
-              //   onWeb3Selected(acc)
-              // }
+              setUsedWeb3AddressWithLocalStorage(acc)
             }}/>
           </Grid.Column>
         </Grid.Row>:null}
-
       </Grid>
     </>
   );
