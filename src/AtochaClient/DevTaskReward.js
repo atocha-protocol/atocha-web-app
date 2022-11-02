@@ -10,6 +10,7 @@ import {
 } from "@apollo/client";
 import config from '../config';
 import axios from "axios";
+import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
 
@@ -17,6 +18,7 @@ function Main (props) {
   const [taskList, setTaskList] = useState([])
   const [requestList, setRequestList] = useState([])
   const [updateCount, setUpdateCount] = useState(0)
+  const {puzzleSets:{rebirthAccount}} = useAtoContext();
 
   // const taskList = [
   //     {taskId: 101,taskTitle:"Share a puzzle to Twitter 2",taskDetail:"Share a puzzle to Twitter...",taskPrize:100,taskStatus:1},
@@ -109,7 +111,7 @@ function Main (props) {
   }
 
   useEffect(() => {
-    console.log("################## ################## ################## ################## ################## ")
+    rebirthAccount()
     initRewardTask()
     fillRequestList()
   }, [currentAccount, updateCount]);

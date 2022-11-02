@@ -35,6 +35,7 @@ function Main (props) {
     currentAccountAddress,
     setCurrentAccountAddress,
     fillCurrentAccountIdWithSmooth,
+    rebirthAccount,
   }, } = useAtoContext()
 
   // Atocha user information.
@@ -44,6 +45,7 @@ function Main (props) {
   
   useEffect(() => {
     console.log('isOpenSmooth ==== ', usedSmoothStatus)
+    rebirthAccount()
     async function fetchData() {
       if(usedSmoothStatus){
         const _accountAddr = await fillCurrentAccountIdWithSmooth()
@@ -52,27 +54,26 @@ function Main (props) {
         console.log('smooth login ato address.', _accountAddr)
         await loadAccountPoints(_accountAddr);
       }else{
-        if (currentAccount) {
+        if (currentAccountAddress) {
           fillCurrentAccountId();
           loadAccountBalance();
           await loadReleationPuzzles();
-          await loadAccountPoints(currentAccount.address);
+          await loadAccountPoints(currentAccountAddress);
         }
       }
     }
     fetchData()
-  }, [currentAccount, userBalance, pubBlockNumber]);
+  }, [currentAccountAddress, userBalance, pubBlockNumber]);
 
   function fillCurrentAccountId(){
     // setCurrentAccountId(currentAccount.address);
-    setCurrentAccountAddress(currentAccount.address)
+    setCurrentAccountAddress(currentAccountAddress)
   }
 
   function loadAccountBalance() {
     currentAccountAddress &&
     api.query.system
       .account(currentAccountAddress, balance =>{
-          //setUserBalance(balance.data.free.toHuman());
           setUserBalance(balance.data.free.toHuman());
       }) .then(unsub => {
     }) .catch(console.error)
@@ -103,7 +104,6 @@ function Main (props) {
       })
     }else{
       const fromAcct = await getFromAcct();
-      //console.log(fromAcct);
       const unsub = await api.tx.atochaModule
         .takeAnswerReward(hash)
         .signAndSend(fromAcct, (result) => {

@@ -57,15 +57,27 @@ function Main(props) {
     })
   }, [usedSmoothStatus]);
 
-  async function web3ButtonClick(isOpen) {
-    if (isOpen) {
+  function checkPolkadotPlugin() {
+    return new Promise((async (resolve, reject) => {
       const extensions = await web3Enable('Atocha dapp.');
       if (extensions.length === 0) {
-        alert(`Need to install polkadot plugin: https://polkadot.js.org/extension/`)
-        return
+        resolve(false)
+      }else{
+        resolve(true)
       }
-    }
-    setOpenSelector(isOpen)
+    }))
+  }
+
+  async function web3ButtonClick(isOpen) {
+    checkPolkadotPlugin().then(hasPlugin=>{
+      if(hasPlugin){
+        setUsedSmoothStatusWithLocalStorage(false)
+        setSmoothError([null, 0])
+        setOpenSelector(isOpen)
+      }else{
+        alert(`Need to install polkadot plugin: https://polkadot.js.org/extension/`)
+      }
+    })
   }
 
   async function twitterButtonClick() {
@@ -104,8 +116,6 @@ function Main(props) {
             {used3Account && false == usedSmoothStatus?
                 <div>
                   <Button secondary size='tiny' onClick={()=>{
-                    setUsedSmoothStatusWithLocalStorage(false)
-                    setSmoothError([null, 0])
                     web3ButtonClick(!openSelector)
                   }}>Change web3 account</Button>
                   <Button button size='tiny' onClick={()=>{
@@ -116,8 +126,6 @@ function Main(props) {
              : true == usedSmoothStatus? <div>
                 <div>
                   <Button size='tiny' onClick={()=>{
-                    setUsedSmoothStatusWithLocalStorage(false)
-                    setSmoothError([null, 0])
                     web3ButtonClick(!openSelector)
                   }}>Change web3 account</Button>
                   <Button secondary button size='tiny' onClick={()=>{
@@ -127,8 +135,6 @@ function Main(props) {
                 </div>
               </div>:<div>
               <Button secondary size='tiny' onClick={()=>{
-                setUsedSmoothStatusWithLocalStorage(false)
-                setSmoothError([null, 0])
                 web3ButtonClick(!openSelector)
               }}>Login with polkadot wallet</Button>
               <Button secondary size='tiny' onClick={()=>{

@@ -10,16 +10,15 @@ import {
 } from "@apollo/client";
 import config from '../config';
 import axios from "axios";
+import {useAtoContext} from "./AtoContext";
 
 function Main (props) {
 
   const { api, currentAccount } = useSubstrateState('')
-  // const [taskList, setTaskList] = useState([])
-  // const [requestList, setRequestList] = useState([])
-  // const [updateCount, setUpdateCount] = useState(0)
+  const {puzzleSets:{rebirthAccount}} = useAtoContext();
 
   useEffect(() => {
-
+    rebirthAccount()
   }, []);
 
   return (

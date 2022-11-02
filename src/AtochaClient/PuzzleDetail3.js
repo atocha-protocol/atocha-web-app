@@ -22,7 +22,8 @@ import AtoBlock2Time from "./AtoBlock2Time";
 import AtoBlockWithLink from "./AtoBlockWithLink";
 
 function Main (props) {
-  const {apollo_client, gql, puzzleSets: {pubRefresh} , chainData: {pubBlockNumber}, } = useAtoContext();
+
+  const {apollo_client, gql, puzzleSets: {pubRefresh, rebirthAccount} , chainData: {pubBlockNumber}, } = useAtoContext();
   const {puzzle_hash} = useParams();
   const request = `${config.ARWEAVE_EXPLORE}/${puzzle_hash}`;
   const [arweaveInfo, setArweaveInfo] = useState(null);
@@ -314,6 +315,7 @@ function Main (props) {
   }
 
   useEffect( () => {
+    rebirthAccount()
     async function fetchData() {
       if(arweaveInfo===null) {
         loadJsonData();

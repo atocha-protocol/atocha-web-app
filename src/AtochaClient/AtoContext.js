@@ -54,21 +54,12 @@ const AtoContextProvider = props => {
     const [usedSmoothStatus, setUsedSmoothStatus] = useState(false)
     const [smoothError, setSmoothError] = useState([null, ''])
 
+    const [rebirthDone, setRebirthDone] = useState(false)
+
     const apollo_client = new ApolloClient({
         uri: config.SUBQUERY_HTTP,
         cache: new InMemoryCache(),
     });
-
-    // Get the list of accounts we possess the private key for
-    // const keyringOptions = keyring.getPairs().map(account => ({
-    //     key: account.address,
-    //     value: account.address,
-    //     text: account.meta.name.toUpperCase(),
-    //     icon: 'user',
-    // }))
-    //
-    // const initialAddress =
-    //   keyringOptions.length > 0 ? keyringOptions[0].value : ''
 
     function connPolkadot() {
         return new Promise(async (resolve, reject) => {
@@ -109,18 +100,29 @@ const AtoContextProvider = props => {
     }
 
     function initUsedWeb3AddressWithLocalStorage() {
-        if(window.localStorage){
-            let storage=window.localStorage;
-            const web3Addr = storage[CONST_LOCAL_STORAGE_USED_WEB_ADDR] ;
-            console.log('local stoage addr = ', web3Addr)
-            connPolkadot().then(accounts => {
-                for(let idx in accounts) {
-                    if(accounts[idx].address == web3Addr) {
-                        setUsed3Account(accounts[idx])
+        return new Promise(((resolve, reject) => {
+            if(window.localStorage){
+                let storage=window.localStorage;
+                const web3Addr = storage[CONST_LOCAL_STORAGE_USED_WEB_ADDR] ;
+                console.log('local stoage addr = ', web3Addr)
+                connPolkadot().then(accounts => {
+                    let findAcc =false
+                    for(let idx in accounts) {
+                        console.log('--------', accounts[idx].address , web3Addr)
+                        if(accounts[idx].address == web3Addr) {
+                            console.log('setUsed3Account == ', accounts[idx])
+                            setUsed3Account(accounts[idx])
+                            resolve(accounts[idx])
+                            findAcc=true
+                            break;
+                        }
                     }
-                }
-            })
-        }
+                    if(!findAcc) resolve(null)
+                }).catch(err=>{
+                    reject(err)
+                })
+            }
+        }))
     }
 
     function setUsedWeb3AddressWithLocalStorage(web3acc) {
@@ -310,24 +312,39 @@ const AtoContextProvider = props => {
 
     function rebirthAccount() {
         return new Promise((resolve, reject) => {
-            if(usedSmoothStatus == true){
-                getLoginInfos().then(data=>{
-                    if(data.userId > 0 && data.atoAddress == null){
-                        resolve(data)
-                    }else if(data.atoAddress){
-                        getTwitterAtoInfos(data.atoAddress).then(bindInfoData=>{
-                            // console.log('bindInfoData', bindInfoData.data.screen_name)
-                            setUsed3Account({address: data.atoAddress, meta: {name: bindInfoData.data.screen_name}})
+            if(rebirthDone == false){
+                if(usedSmoothStatus == true){
+                    getLoginInfos().then(data=>{
+                        if(data.userId > 0 && data.atoAddress == null){
+                            setRebirthDone(true)
                             resolve(data)
-                        }).catch(err=>{
-                            reject(err)
-                        })
-                    }
-                }).catch(err=>{
-                    reject(err)
-                })
+                        }else if(data.atoAddress){
+                            getTwitterAtoInfos(data.atoAddress).then(bindInfoData=>{
+                                // console.log('bindInfoData', bindInfoData.data.screen_name)
+                                setCurrentAccountAddress(data.atoAddress)
+                                setUsed3Account({address: data.atoAddress, meta: {name: bindInfoData.data.screen_name}})
+                                setRebirthDone(true)
+                                resolve(data)
+                            }).catch(err=>{
+                                reject(err)
+                            })
+                        }
+                    }).catch(err=>{
+                        reject(err)
+                    })
+                }else{
+                    initUsedWeb3AddressWithLocalStorage().then(data=>{
+                        console.log("initUsedWeb3AddressWithLocalStorage -- ### ", data)
+                        console.log('setRebirthDone = true ')
+                        setRebirthDone(true)
+                        setCurrentAccountAddress(data.address)
+                        resolve(data)
+                    }).catch(err=>{
+                        reject(err)
+                    })
+                }
             }else{
-                initUsedWeb3AddressWithLocalStorage()
+                resolve(null)
             }
         })
     }
@@ -572,6 +589,7 @@ const AtoContextProvider = props => {
                     setUsedWeb3AddressWithLocalStorage,
                     smoothError,
                     setSmoothError,
+                    rebirthDone,
                     rebirthAccount,
                     connPolkadot,
                 },

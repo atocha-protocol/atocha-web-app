@@ -4,24 +4,6 @@ import BaseIdentityIcon from '@polkadot/react-identicon';
 import AtoDeleteThousand from "./AtoDeleteThousand";
 import {useSubstrateState} from "../substrate-lib";
 import {Button, Container, Dropdown, Grid, Header, Icon, Image, Menu, Segment} from "semantic-ui-react";
-import {CopyToClipboard} from "react-copy-to-clipboard";
-import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
-import AtochaHome from "./AtochaHome";
-import PuzzleList2 from "./PuzzleList2";
-import ClientAtochaCreator from "./ClientAtochaCreator";
-import CreatePuzzle from "./CreatePuzzle";
-import CreatePuzzle3 from "./CreatePuzzle3";
-import MyProfile from "./MyProfile";
-import MyHome from "./MyHome";
-import WeeklyReward from "./WeeklyReward";
-import ChainStatus from "./ChainStatus";
-import UserHome from "./UserHome";
-import PuzzleDetail2 from "./PuzzleDetail2";
-import PuzzleDetail3 from "./PuzzleDetail3";
-import DevTest from "./DevTest";
-import DevTaskReward from "./DevTaskReward";
-import SmoothLogin from "./SmoothLogin";
-import SmoothRegister from "./SmoothRegister";
 
 function Main(props) {
   const {mode} = props
@@ -80,7 +62,7 @@ function Main(props) {
               </div>
             </Menu.Item>
             <Menu.Item>
-              <a href="/login">Change</a>
+              <a href="/login">Account settings</a>
             </Menu.Item>
           </Menu>
         </Container>

@@ -14,6 +14,7 @@ import ArweaveTitle from "./ArweaveTitle";
 import UserHomeLink from "./UserHomeLink";
 import AtoBlockWithLink from "./AtoBlockWithLink";
 import BindAddressToTwitter from "./BindAddressToTwitter";
+import {useAtoContext} from "./AtoContext";
 
 var atoReloadTimes=0;
 
@@ -34,6 +35,7 @@ function Main (props) {
   const [atoCurrentPuzzleListStatusOrder, setAtoCurrentPuzzleListStatusOrder] = useState("ordered by creation time");
   const [atoCurrentPage, setAtoCurrentPage] = useState(1);
   const [atoCurrentPuzzleListArr, setAtoCurrentPuzzleListArr] = useState([]);
+  const {puzzleSets:{rebirthAccount}} = useAtoContext();
 
   function getBlockNoLinked(){    
     api.derive.chain.bestNumber(number => {
@@ -291,8 +293,8 @@ function Main (props) {
   }
 
   useEffect(() => {
-    //alert("PuzzleList2.js|main|useEffect");
     console.log("PuzzleList2.js|main|useEffect");
+    rebirthAccount()
     atoReloadTimes=0;
     getBlockNoLinked();
     getPuzzleList();

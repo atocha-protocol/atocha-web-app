@@ -27,7 +27,7 @@ import {hexToBigInt, hexToString} from "@polkadot/util";
 function Main (props) {
   //alert("AtochaHome.js|main");
   const {api,currentAccount} = useSubstrateState();
-  const {chainData:{pubBlockNumber}} = useAtoContext();
+  const {puzzleSets:{rebirthAccount}} = useAtoContext();
 
   var atoIfRemoteJsLoaded=false;
   if(typeof(atoFeatured)=="undefined" || typeof(atoIframe)=="undefined"){
@@ -38,7 +38,7 @@ function Main (props) {
   }
 
   useEffect(() => {
-    //alert("atochaHome.js|main|useEffect");
+    // rebirthAccount()
   });
 
   return (

@@ -29,9 +29,10 @@ function Main (props) {
   const { api, currentAccount } = useSubstrateState();
   const [ financeConfig, setFinanceConfig ] = useState(null);
   const [ moduleConfig, setModuleConfig ] = useState(null);
+  const {puzzleSets:{rebirthAccount}} = useAtoContext();
 
   useEffect( () => {
-
+    rebirthAccount()
     async function fetchData() {
       // atochaFinance.atoConfig2
       if(financeConfig == null) {

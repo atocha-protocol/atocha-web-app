@@ -22,7 +22,8 @@ function Main (props) {
   const { api, currentAccount } = useSubstrateState('');
   const { puzzle_hash } = props;
   const { account_id } = useParams();
-  const { apollo_client, gql, puzzleSets:{usedSmoothStatus, fillCurrentAccountIdWithSmooth, loadAccountPoints, currentAccountAddress}, chainData: {pubBlockNumber, updatePubRefresh, userPoints} } = useAtoContext()
+
+  const { apollo_client, gql, puzzleSets:{usedSmoothStatus, fillCurrentAccountIdWithSmooth, loadAccountPoints, currentAccountAddress, rebirthAccount, rebirthDone, used3Account}, chainData: {pubBlockNumber, updatePubRefresh, userPoints} } = useAtoContext()
 
   // Atocha user information.
   const [userBalance, setUserBalance] = useState(null);
@@ -37,36 +38,24 @@ function Main (props) {
   
   useEffect( () => {
     async function fetchData() {
+      await rebirthAccount()
+      console.log('rebirthAccount', usedSmoothStatus, used3Account, currentAccount, rebirthDone)
       if(usedSmoothStatus){
+        console.log("RUN A1 ", usedSmoothStatus)
         const _accountAddr = await fillCurrentAccountIdWithSmooth()
         await loadAccountPoints(_accountAddr);
         fillCurrentAccountId();
-      }else if (currentAccount) {
+      }else if (used3Account && used3Account.address) {
+        console.log("RUN A2 ### ", used3Account.address)
         fillCurrentAccountId();
+        console.log('RUN A2.2 ### ')
         loadAccountBalance();
-        // getPlayerPoints();
-        await loadAccountPoints(currentAccount.address);
-        await loadReleationPuzzles();
+        await loadAccountPoints(used3Account.address);
+        await loadReleationPuzzles(used3Account.address);
       }
     }
     fetchData()
-  }, [currentAccount, userBalance, pubBlockNumber]);
-
-  //console.log("UserHome.js|Main|useEffect|currentAccount", currentAccount)
-  //console.log("UserHome.js|Main|useEffect|currentAccount.address", currentAccount.address);
-
-  // function getPlayerPoints() {
-  //       //alert("getPlayerPoints");
-  //       //alert(currentAccount);
-  //       //alert(currentAccountId);
-  //       currentAccount &&
-  //       api.query.atochaFinance
-  //         .atoPointLedger(currentAccountId, points =>{
-  //             //alert(currentAccountId+"|"+points);
-  //             setPlayerPoints(points.toHuman())
-  //         }) .then(unsub => {
-  //       }) .catch(console.error)
-  // }
+  }, [rebirthDone]); // [used3Account, userBalance, pubBlockNumber]
 
   function getDistinctPuzzleList(inputArr){
     //alert("in="+inputArr.length);
@@ -108,9 +97,12 @@ function Main (props) {
       setCurrentAccountId(currentAccountAddress);
     }else{
       if(account_id == 'self') {
-        setCurrentAccountId(currentAccount.address);
+        console.log('used3Account.address= 1', used3Account.address)
+        setCurrentAccountId(used3Account.address);
       } else if (account_id=='' || account_id==null || typeof(account_id)=="undefined"){
-        setCurrentAccountId(currentAccount.address);
+        console.log('used3Account.address= 2', used3Account.address)
+        setCurrentAccountId(used3Account.address);
+        console.log('used3Account.address= 2.1')
       } else {
         setCurrentAccountId(account_id);
       }
@@ -118,7 +110,8 @@ function Main (props) {
   }
 
   function loadAccountBalance() {
-    currentAccount &&
+    console.log('loadAccountBalance , ', currentAccountId)
+    currentAccountId &&
     api.query.system
       .account(currentAccountId, balance =>{
           setUserBalance(balance.data.free.toHuman());
@@ -126,75 +119,75 @@ function Main (props) {
     }) .catch(console.error)
   }
 
-  const getFromAcct = async () => {
-    const {
-      address,
-      meta: { source, isInjected }
-    } = currentAccount;
-    let fromAcct;
-    if (isInjected) {
-      const injected = await web3FromSource(source);
-      fromAcct = address;
-      api.setSigner(injected.signer);
-    } else {
-      fromAcct = accountPair;
-    }
-    return fromAcct;
-  };
+  // const getFromAcct = async () => {
+  //   const {
+  //     address,
+  //     meta: { source, isInjected }
+  //   } = used3Account;
+  //   let fromAcct;
+  //   if (isInjected) {
+  //     const injected = await web3FromSource(source);
+  //     fromAcct = address;
+  //     api.setSigner(injected.signer);
+  //   } else {
+  //     fromAcct = accountPair;
+  //   }
+  //   return fromAcct;
+  // };
 
-  async function takeAnswerReward(hash) {
-    const fromAcct = await getFromAcct();
-    //console.log(fromAcct);
-    const unsub = await api.tx.atochaModule
-      .takeAnswerReward(hash)
-      .signAndSend(fromAcct, (result) => {
-        // setStatus(`submit status: ${result.status}`);
-        if (result.status.isInBlock) {
-          // setStatus(`submit status: ${result.status} - ${result.status.asInBlock}`);
-        } else if (result.status.isFinalized) {
-          // setStatus(`submit status: ${result.status} - ${result.status.asFinalized}`);
-          unsub();
-          updatePubRefresh();
-        }
-      });
-  }
+  // async function takeAnswerReward(hash) {
+  //   const fromAcct = await getFromAcct();
+  //   //console.log(fromAcct);
+  //   const unsub = await api.tx.atochaModule
+  //     .takeAnswerReward(hash)
+  //     .signAndSend(fromAcct, (result) => {
+  //       // setStatus(`submit status: ${result.status}`);
+  //       if (result.status.isInBlock) {
+  //         // setStatus(`submit status: ${result.status} - ${result.status.asInBlock}`);
+  //       } else if (result.status.isFinalized) {
+  //         // setStatus(`submit status: ${result.status} - ${result.status.asFinalized}`);
+  //         unsub();
+  //         updatePubRefresh();
+  //       }
+  //     });
+  // }
 
-  function remainBonusItems(nodes){
-    let result = [];
-    let duplication_keys = [];
-    for(let k in nodes) {
-      let dynPuzzleStatus = nodes[k].puzzleInfo.dynPuzzleStatus;
-      let dynChallengeStatus = nodes[k].puzzleInfo.dynChallengeStatus;
-      let dynRaiseDeadline = nodes[k].puzzleInfo.dynRaiseDeadline;
-      let dynChallengeDeadline = nodes[k].puzzleInfo.dynChallengeDeadline;
-      let remain = false;
-      if(dynPuzzleStatus == "PUZZLE_STATUS_IS_FINAL" && dynChallengeStatus != "JudgePassed") {
-        remain=true;
-      }else if(dynChallengeStatus == "JudgeRejected") {
-        remain=true;
-      }else if(dynChallengeStatus == "RaiseFundsBack") {
-        remain=true;
-      }else if(dynPuzzleStatus == "PUZZLE_STATUS_IS_SOLVED" &&
-        dynRaiseDeadline == 0 &&
-        dynChallengeDeadline <= pubBlockNumber
-      ){
-        remain=true;
-      }else if(dynPuzzleStatus == "PUZZLE_STATUS_IS_SOLVED" &&
-        dynChallengeStatus =="Raise" &&
-        dynRaiseDeadline > 0 &&
-        dynRaiseDeadline <= pubBlockNumber
-      ){
-        remain=true;
-      }
-      if(remain){
-        if(nodes[k].puzzleInfoId && !duplication_keys.includes(nodes[k].puzzleInfoId)){
-          duplication_keys.push(nodes[k].puzzleInfoId);
-          result.push(nodes[k]);
-        }
-      }
-    }
-    return result;
-  }
+  // function remainBonusItems(nodes){
+  //   let result = [];
+  //   let duplication_keys = [];
+  //   for(let k in nodes) {
+  //     let dynPuzzleStatus = nodes[k].puzzleInfo.dynPuzzleStatus;
+  //     let dynChallengeStatus = nodes[k].puzzleInfo.dynChallengeStatus;
+  //     let dynRaiseDeadline = nodes[k].puzzleInfo.dynRaiseDeadline;
+  //     let dynChallengeDeadline = nodes[k].puzzleInfo.dynChallengeDeadline;
+  //     let remain = false;
+  //     if(dynPuzzleStatus == "PUZZLE_STATUS_IS_FINAL" && dynChallengeStatus != "JudgePassed") {
+  //       remain=true;
+  //     }else if(dynChallengeStatus == "JudgeRejected") {
+  //       remain=true;
+  //     }else if(dynChallengeStatus == "RaiseFundsBack") {
+  //       remain=true;
+  //     }else if(dynPuzzleStatus == "PUZZLE_STATUS_IS_SOLVED" &&
+  //       dynRaiseDeadline == 0 &&
+  //       dynChallengeDeadline <= pubBlockNumber
+  //     ){
+  //       remain=true;
+  //     }else if(dynPuzzleStatus == "PUZZLE_STATUS_IS_SOLVED" &&
+  //       dynChallengeStatus =="Raise" &&
+  //       dynRaiseDeadline > 0 &&
+  //       dynRaiseDeadline <= pubBlockNumber
+  //     ){
+  //       remain=true;
+  //     }
+  //     if(remain){
+  //       if(nodes[k].puzzleInfoId && !duplication_keys.includes(nodes[k].puzzleInfoId)){
+  //         duplication_keys.push(nodes[k].puzzleInfoId);
+  //         result.push(nodes[k]);
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }
 
   function filterNotMatcha(nodes) {
     //return nodes;
@@ -212,15 +205,16 @@ function Main (props) {
     return resultArr
   }
 
-  async function loadReleationPuzzles() {
-    if (!currentAccountId){
+  async function loadReleationPuzzles(acc) {
+    console.log('loadReleationPuzzles', acc)
+    if (!acc){
       return;
     }
-    //console.log("currentAccount.address = ", currentAccountId);
+
     apollo_client.query({
       query: gql`
           query{
-              atochaUserStruct(id: "${currentAccountId}"){
+              atochaUserStruct(id: "${acc}"){
                   id,
                   ref_create_events(first: 0, last: 10000){
                       nodes{

@@ -22,7 +22,7 @@ var atoReloadTimes=0;
 
 function Main (props) {
   const {api, currentAccount} = useSubstrateState();
-  const { apollo_client, gql, puzzleSets:{usedSmoothStatus, fillCurrentAccountIdWithSmooth, loadAccountPoints} } = useAtoContext()
+  const { apollo_client, gql, puzzleSets:{usedSmoothStatus, fillCurrentAccountIdWithSmooth, loadAccountPoints, rebirthAccount} } = useAtoContext()
 
   // const apollo_client = new ApolloClient({
   //   uri: config.SUBQUERY_HTTP,
@@ -36,9 +36,8 @@ function Main (props) {
   const [previousExchangeRewardEra, setPreviousExchangeRewardEra] = useState(0);
   const [atoAtochaFinanceConfigExchangeEraBlockLength,setAtoAtochaFinanceConfigExchangeEraBlockLength] = useState(-1);
   const [atoAtochaFinanceExchangeRewardEraStartBn, setAtoAtochaFinanceExchangeRewardEraStartBn] = useState(-1);
-
   const [atoBlockNo, setAtoBlockNo] = useState("-1");  
-  const [atoSavedBlockNo, setAtoSavedBlockNo] = useState("-1"); 
+  const [atoSavedBlockNo, setAtoSavedBlockNo] = useState("-1");
 
   function getBlockNoLinked(){
     api.derive.chain.bestNumber(number => {
@@ -63,8 +62,7 @@ function Main (props) {
 
   useEffect( () => {
     console.log("WeeklyReward.js|main|useEffect");
-    //alert("WeeklyReward.js|main|useEffect");
-    // getBlockNoLinked();
+    rebirthAccount()
 
     api.query.atochaFinance.atoConfig2().then(res => {
       //console.log("------------------------------",res);
