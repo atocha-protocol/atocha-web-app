@@ -11,8 +11,8 @@ import md5 from "md5";
 
 function Main (props) {
   const {label, type, attrs, handlerEvent, buttonKey, preCheckCall} = props
-  const { api, currentAccount } = useSubstrateState();
-  const {apollo_client, gql, puzzleSets: {pubRefresh, updatePubRefresh, tryToPollCheck, setBindModalOpen, setAuthPwdModalOpen, setRecoverPwdModalOpen, checkUserLoggedIn, checkUserSmoothIn, usedSmoothStatus, used3Account, submitTxWithSmooth} } = useAtoContext()
+  const { api } = useSubstrateState();
+  const {apollo_client, gql, puzzleSets: {currentAccountAddress, setBindModalOpen, setAuthPwdModalOpen, setRecoverPwdModalOpen, checkUserLoggedIn, checkUserSmoothIn, usedSmoothStatus, used3Account, submitTxWithSmooth} } = useAtoContext()
   // 0 == nothing, 1 = ok , 2= failed, 3=loading
   const [callStatus, setCallStatus] = useState(0)
   const [callMessage, setCallMessage] = useState("")
@@ -181,6 +181,10 @@ function Main (props) {
   }
 
   async function doClick() {
+    if(!currentAccountAddress) {
+      alert("Need login.")
+      return ;
+    }
 
     if(usedSmoothStatus && false == await preCheckSmooth()) {
       return ;
