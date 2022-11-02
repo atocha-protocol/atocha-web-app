@@ -38,7 +38,7 @@ function Main (props) {
   }
 
   useEffect(() => {
-    // rebirthAccount()
+    rebirthAccount()
   });
 
   return (
