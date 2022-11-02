@@ -310,11 +310,14 @@ const AtoContextProvider = props => {
         })
     }
 
-    function rebirthAccount() {
+    function rebirthAccount(force=false) {
         return new Promise((resolve, reject) => {
-            if(rebirthDone == false){
+            console.log('rebirthAccount running rebirthDone =', rebirthDone)
+            if(rebirthDone == false || force){
+                console.log('rebirthAccount running usedSmoothStatus = ', usedSmoothStatus)
                 if(usedSmoothStatus == true){
                     getLoginInfos().then(data=>{
+                        console.log('rebirthAccount running getLoginInfos() = ', data)
                         if(data.userId > 0 && data.atoAddress == null){
                             setRebirthDone(true)
                             resolve(data)
@@ -684,7 +687,10 @@ const AtoContextProvider = props => {
                                   instance.post(`${config.API2_ATOCHA_URL}/twitter/control_wallet`, {operation: 'create', pwd: md5(confirmPassword)}).then( res => {
                                       console.log('/twitter/create_wallet', res)
                                       if(res.data.status.toLowerCase() == 'success') {
-                                          rebirthAccount()
+                                          rebirthAccount(true).then(rebirthData=>{
+                                              console.log('rebirthData', rebirthData)
+                                              setRecoverPwdModalOpen(false)
+                                          })
                                       }else{
                                           setAuthPwdModalTipMsg(`Error code ${res.data.code}, ${res.data.msg}`)
                                       }
@@ -756,8 +762,10 @@ const AtoContextProvider = props => {
                                   instance.post(`${config.API2_ATOCHA_URL}/twitter/control_wallet`, {operation: 'create', pwd: md5(confirmPassword)}).then( res => {
                                       console.log('/twitter/create_wallet', res)
                                       if(res.data.status.toLowerCase() == 'success') {
-                                          setAuthPwdModalOpen(false)
-                                          rebirthAccount()
+                                          rebirthAccount(true).then(rebirthData=>{
+                                              console.log('rebirthData', rebirthData)
+                                              setAuthPwdModalOpen(false)
+                                          })
                                       }else{
                                           setAuthPwdModalTipMsg(`Error code ${res.data.code}, ${res.data.msg}`)
                                       }
@@ -810,8 +818,10 @@ const AtoContextProvider = props => {
                               instance.post(`${config.API2_ATOCHA_URL}/twitter/control_wallet`, {operation: 'recover', pwd: md5(authPassword)}).then( res => {
                                   console.log('/twitter/create_wallet', res)
                                   if(res.data.status.toLowerCase() == 'success') {
-                                      setRecoverPwdModalOpen(false)
-                                      rebirthAccount()
+                                      rebirthAccount(true).then(rebirthData=>{
+                                          console.log('rebirthData', rebirthData)
+                                          setRecoverPwdModalOpen(false)
+                                      })
                                   }else{
                                       setAuthPwdModalTipMsg(`Error code ${res.data.code}, ${res.data.msg}`)
                                   }
