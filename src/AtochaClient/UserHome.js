@@ -23,36 +23,34 @@ function Main (props) {
   const { puzzle_hash } = props;
   const { account_id } = useParams();
 
-  const { apollo_client, gql, puzzleSets:{usedSmoothStatus, fillCurrentAccountIdWithSmooth, loadAccountPoints, currentAccountAddress, rebirthAccount, rebirthDone, used3Account}, chainData: {pubBlockNumber, updatePubRefresh, userPoints} } = useAtoContext()
+  const { apollo_client, gql, puzzleSets:{usedSmoothStatus, fillCurrentAccountIdWithSmooth, loadAccountPoints, currentAccountAddress, setCurrentAccountAddress, rebirthAccount, rebirthDone, used3Account}, chainData: {pubBlockNumber, updatePubRefresh, userPoints} } = useAtoContext()
 
   // Atocha user information.
   const [userBalance, setUserBalance] = useState(null);
-  // const [playerPoints, setPlayerPoints] = useState(null);
   const [relationInfos, setRelationInfos] = useState(null);
-  const [currentAccountId, setCurrentAccountId] = useState(null);
 
   const [atoPuzzleCreated, setAtoPuzzleCreated] = useState([]);
   const [atoPuzzleSolved, setAtoPuzzleSolved] = useState([]);
   const [atoPuzzleChallenged, setAtoPuzzleChallenged] = useState([]);
   const [atoPuzzleSponsored, setAtoPuzzleSponsored] = useState([]);
+  const [pageAccount, setPageAccount] = useState(null);
   
   useEffect( () => {
     async function fetchData() {
       await rebirthAccount()
-      console.log('rebirthAccount', usedSmoothStatus, used3Account, currentAccount, rebirthDone)
-      if(usedSmoothStatus){
-        console.log("RUN A1 ", usedSmoothStatus)
-        const _accountAddr = await fillCurrentAccountIdWithSmooth()
-        await loadAccountPoints(_accountAddr);
-        fillCurrentAccountId();
-      }else if (used3Account && used3Account.address) {
-        console.log("RUN A2 ### ", used3Account.address)
-        fillCurrentAccountId();
-        console.log('RUN A2.2 ### ')
-        loadAccountBalance();
-        await loadAccountPoints(used3Account.address);
-        await loadReleationPuzzles(used3Account.address);
+      console.log('rebirthAccount A', currentAccountAddress, usedSmoothStatus, used3Account, currentAccount, rebirthDone)
+      console.log("DEBUG :  account_id === ", account_id)
+      let _pageAccount = currentAccountAddress
+      if(setCurrentAccountAddress && account_id && account_id!='self') {
+        _pageAccount = account_id
       }
+
+      setPageAccount(_pageAccount)
+
+      console.log('Page account :: ', _pageAccount)
+      loadAccountBalance(_pageAccount);
+      await loadAccountPoints(_pageAccount);
+      await loadReleationPuzzles(_pageAccount);
     }
     fetchData()
   }, [rebirthDone]); // [used3Account, userBalance, pubBlockNumber]
@@ -92,28 +90,29 @@ function Main (props) {
     return pll;
   }
 
-  function fillCurrentAccountId(){
-    if(usedSmoothStatus){
-      setCurrentAccountId(currentAccountAddress);
-    }else{
-      if(account_id == 'self') {
-        console.log('used3Account.address= 1', used3Account.address)
-        setCurrentAccountId(used3Account.address);
-      } else if (account_id=='' || account_id==null || typeof(account_id)=="undefined"){
-        console.log('used3Account.address= 2', used3Account.address)
-        setCurrentAccountId(used3Account.address);
-        console.log('used3Account.address= 2.1')
-      } else {
-        setCurrentAccountId(account_id);
-      }
-    }
-  }
+  // function fillCurrentAccountId(){
+  //   console.log("DEBUG :  account_id === ", account_id)
+  //   console.log("DEBUG : currentAccountAddress == ", currentAccountAddress)
+  //
+  //   if(account_id == 'self') {
+  //     console.log('used3Account.address= 1', currentAccountAddress)
+  //     setCurrentAccountId(currentAccountAddress);
+  //   } else if (account_id=='' || account_id==null || typeof(account_id)=="undefined"){
+  //     console.log('used3Account.address= 2', currentAccountAddress)
+  //     setCurrentAccountId(currentAccountAddress);
+  //     console.log('used3Account.address= 2.1')
+  //   } else {
+  //     console.log('##### SET gusid', account_id)
+  //     setCurrentAccountId(account_id);
+  //   }
+  // }
 
-  function loadAccountBalance() {
-    console.log('loadAccountBalance , ', currentAccountId)
-    currentAccountId &&
+
+  function loadAccountBalance(acc) {
+    console.log('loadAccountBalance , ', acc)
+    acc &&
     api.query.system
-      .account(currentAccountId, balance =>{
+      .account(acc, balance =>{
           setUserBalance(balance.data.free.toHuman());
       }) .then(unsub => {
     }) .catch(console.error)
@@ -266,8 +265,8 @@ function Main (props) {
     <div>
       <h1>Player profile</h1>
       <div style={{textAlign:"center"}}>
-        {currentAccountAddress?<BindAddressToTwitter ato_address={currentAccountAddress} displayMode="icon_name" />:"Loading..."}
-        <h3 style={{lineHeight:"150%",marginTop:"6px"}}>{currentAccountAddress?(<span>{currentAccountAddress}&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}/accounts/${currentAccountAddress}`} target='_blank'><i className="external alternate icon"></i></a></span>):'loading...'}<br/>Points: {userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}</h3>
+        {pageAccount?<BindAddressToTwitter ato_address={pageAccount} displayMode="icon_name" />:"Loading..."}
+        <h3 style={{lineHeight:"150%",marginTop:"6px"}}>{pageAccount?(<span>{pageAccount}&nbsp;&nbsp;<a href={`${config.OCT_EXPLORER}/accounts/${pageAccount}`} target='_blank'><i className="external alternate icon"></i></a></span>):'loading...'}<br/>Points: {userPoints?<AtoDeleteThousand withThousand={userPoints} />:'Loading...'}</h3>
       </div>
       <br/>
       <div className="ui stackable four column grid">

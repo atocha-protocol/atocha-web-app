@@ -112,6 +112,7 @@ const AtoContextProvider = props => {
                         if(accounts[idx].address == web3Addr) {
                             console.log('setUsed3Account == ', accounts[idx])
                             setUsed3Account(accounts[idx])
+                            setCurrentAccountAddress(accounts[idx].address)
                             resolve(accounts[idx])
                             findAcc=true
                             break;
@@ -131,8 +132,9 @@ const AtoContextProvider = props => {
             alert('The browser does not support LocalStorage, which may cause some functions to be unavailable.');
         }else{
             console.log('set with LocalStorage ', web3acc.address)
-            let storage=window.localStorage;
-            storage[CONST_LOCAL_STORAGE_USED_WEB_ADDR] = web3acc.address;
+            let storage=window.localStorage
+            storage[CONST_LOCAL_STORAGE_USED_WEB_ADDR] = web3acc.address
+            setCurrentAccountAddress(web3acc.address)
         }
     }
 
@@ -337,10 +339,8 @@ const AtoContextProvider = props => {
                     })
                 }else{
                     initUsedWeb3AddressWithLocalStorage().then(data=>{
-                        console.log("initUsedWeb3AddressWithLocalStorage -- ### ", data)
-                        console.log('setRebirthDone = true ')
+                        console.log("initUsedWeb3AddressWithLocalStorage -- ### ", data.address)
                         setRebirthDone(true)
-                        setCurrentAccountAddress(data.address)
                         resolve(data)
                     }).catch(err=>{
                         reject(err)

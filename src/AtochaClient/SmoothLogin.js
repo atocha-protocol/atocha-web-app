@@ -152,9 +152,11 @@ function Main(props) {
           <Grid.Column>
             <AtoSelector onSelected={(acc) => {
               setTwitterButtonTxt('Login with twitter')
-              web3ButtonClick(false)
-              setUsedSmoothStatusWithLocalStorage(false)
-              setUsedWeb3AddressWithLocalStorage(acc)
+              web3ButtonClick(false).then(_data=>{
+                setUsedSmoothStatusWithLocalStorage(false)
+                console.log('New selected acc == ', acc)
+                setUsedWeb3AddressWithLocalStorage(acc)
+              })
             }}/>
           </Grid.Column>
         </Grid.Row>:null}
