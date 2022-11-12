@@ -183,7 +183,7 @@ function Main (props) {
                   <img className="ui top aligned small image" src="https://atocha.io/wp-content/uploads/2021/12/img_210318.png" />
                 </div>
               :
-                <span><Link to={`/user_home/${ato_address}`}>{ato_address?getKeyringName(ato_address):'*'}</Link></span>
+                <span><Link to={`/user_home/${ato_address}`}>{ twitterBind?twitterBind?.data?.detail?.data.name:ato_address?getKeyringName(ato_address):'*'}</Link></span>
               } 
             </>
           }  
