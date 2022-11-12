@@ -21,6 +21,7 @@ function Main (props) {
     pubPuzzleRelist,
     setPubPuzzleListType,
     pubRefresh,
+    used3Account,
     updatePubRefresh,
     tryToPollCheck,
     checkUserLoggedIn,
@@ -79,11 +80,27 @@ function Main (props) {
     }) .catch(console.error)
   }
 
+  // const getFromAcct = async () => {
+  //   const {
+  //     address,
+  //     meta: { source, isInjected }
+  //   } = currentAccount;
+  //   let fromAcct;
+  //   if (isInjected) {
+  //     const injected = await web3FromSource(source);
+  //     fromAcct = address;
+  //     api.setSigner(injected.signer);
+  //   } else {
+  //     fromAcct = accountPair;
+  //   }
+  //   return fromAcct;
+  // };
+
   const getFromAcct = async () => {
     const {
       address,
       meta: { source, isInjected }
-    } = currentAccount;
+    } = keyring.getPair(used3Account.address);;
     let fromAcct;
     if (isInjected) {
       const injected = await web3FromSource(source);
@@ -95,7 +112,53 @@ function Main (props) {
     return fromAcct;
   };
 
+
+  // async function submitPuzzle2AtochaWithSmooth (inPuzzleHash, inAnswerHash) {
+  //   if(storageJson.puzzle_title=="") {
+  //     setStatus("Puzzle title can not be empty!");
+  //     alert("Puzzle title can not be empty!");
+  //     return;
+  //   }
+  //   setStatus("Submitting Puzzle to Atocha...");
+  //   console.log('inPuzzleHash, inAnswerHash', inPuzzleHash, inAnswerHash)
+  //
+  //   submitTxWithSmooth('atochaModule', 'createPuzzle', [inPuzzleHash, inAnswerHash, puzzleDeposit.toString(), 1]).then(res=>{
+  //     console.log('atochaModule.createPuzzle is done', res)
+  //     setStatus("😉 Done! This puzzle has been saved on the chain and will be showned on the puzzle list in a minute.");
+  //   })
+  // }
+  //
+  // async function takeAnswerRewardWithWeb3 () {
+  //   if(storageJson.puzzle_title=="") {
+  //     setStatus("Puzzle title can not be empty!");
+  //     alert("Puzzle title can not be empty!");
+  //     return;
+  //   }
+  //   setStatus("Submitting to Atocha...");
+  //   const fromAcct = await getFromAcct();
+  //   const unsub = await api.tx.atochaModule
+  //     .createPuzzle(inPuzzleHash, inAnswerHash, puzzleDeposit, 1)
+  //     .signAndSend(fromAcct, (result) => {
+  //       //setStatus(`4444submit status: ${result.status}`);
+  //       if (result.status.isInBlock) {
+  //         //setStatus(`5555submit status: ${result.status} - ${result.status.asInBlock}`);
+  //         //setStatus("InBlock...");
+  //       } else if (result.status.isFinalized) {
+  //         //setStatus(`6666submit status: ${result.status} - ${result.status.asFinalized}`);
+  //         setStatus("😉 Done! This puzzle has been saved on the chain and will be showned on the puzzle list in a minute.");
+  //         unsub();
+  //       }
+  //     });
+  // }
+
   async function takeAnswerReward(hash) {
+
+    // if(usedSmoothStatus){
+    //   // await submitPuzzle2AtochaWithSmooth(ph, pah)
+    // }else{
+    //   await takeAnswerRewardWithWeb3()
+    // }
+
     if(usedSmoothStatus){
       console.log('TakeAnswerReward with Smooth')
       submitTxWithSmooth('atochaModule', 'takeAnswerReward', [hash]).then(data=>{

@@ -424,20 +424,6 @@ function Main (props) {
       console.log('atochaModule.createPuzzle is done', res)
       setStatus("😉 Done! This puzzle has been saved on the chain and will be showned on the puzzle list in a minute.");
     })
-    // const fromAcct = await getFromAcct();
-    // const unsub = await api.tx.atochaModule
-    //   .createPuzzle(inPuzzleHash, inAnswerHash, puzzleDeposit, 1)
-    //   .signAndSend(fromAcct, (result) => {
-    //     //setStatus(`4444submit status: ${result.status}`);
-    //     if (result.status.isInBlock) {
-    //       //setStatus(`5555submit status: ${result.status} - ${result.status.asInBlock}`);
-    //       //setStatus("InBlock...");
-    //     } else if (result.status.isFinalized) {
-    //       //setStatus(`6666submit status: ${result.status} - ${result.status.asFinalized}`);
-    //       setStatus("😉 Done! This puzzle has been saved on the chain and will be showned on the puzzle list in a minute.");
-    //       unsub();
-    //     }
-    //   });
   }
 
   async function submitPuzzle2AtochaWithWeb3 (inPuzzleHash, inAnswerHash) {
