@@ -4,7 +4,7 @@ import {Form, Input, Grid, Card, Statistic, TextArea, Label, Table, Button} from
 import {useSubstrate, useSubstrateState} from '../substrate-lib';
 import ArweaveTitle from "./ArweaveTitle";
 import {useAtoContext} from "./AtoContext";
-import {web3FromSource} from "@polkadot/extension-dapp";
+import {web3Accounts, web3FromSource} from "@polkadot/extension-dapp";
 import config from '../config';
 
 import UserHomeLink from "./UserHomeLink";
@@ -274,12 +274,14 @@ function Main (props) {
           <li>Bridge ATO from your near accounts: <a href="https://mainnet.oct.network/bridge/near/atocha" target="_blank">Octopus network bridge <i className="external alternate icon"></i></a></li>
         </ul>
       </div>
-      <h3>Social connection</h3>
-      <div>
-        {currentAccountAddress?usedSmoothStatus?
-          <SmoothTwitterInfos ato_address={currentAccountAddress} displayMode="icon_name_button" />
-          :<BindAddressToTwitter ato_address={currentAccountAddress} displayMode="icon_name_button" />:"Loading..."}
-      </div>
+      {usedSmoothStatus?<>
+        <h3>Social connection</h3>
+        <div>
+          {currentAccountAddress?usedSmoothStatus?
+            <SmoothTwitterInfos ato_address={currentAccountAddress} displayMode="icon_name_button" />
+            :<BindAddressToTwitter ato_address={currentAccountAddress} displayMode="icon_name_button" />:"Loading..."}
+        </div>
+      </>:null}
       <h3>As a creator/solver/challenger, claim your ATO from the following puzzles:</h3>
       {relationInfos?
         <Table className="ui very basic celled table" style={{width:"100%"}}>
