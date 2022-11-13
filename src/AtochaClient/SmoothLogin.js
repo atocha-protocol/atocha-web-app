@@ -15,7 +15,7 @@ import {
 } from 'semantic-ui-react';
 import { web3Accounts, web3Enable, web3FromSource } from '@polkadot/extension-dapp';
 import BaseIdentityIcon from '@polkadot/react-identicon';
-import {useSubstrate, useSubstrateState} from '../substrate-lib';
+import {useSubstrate, useSubstrateState, utils} from '../substrate-lib';
 import AtoSelector from "./AtoSelector";
 import AtoDeleteThousand from "./AtoDeleteThousand";
 import {useAtoContext} from "./AtoContext";
@@ -37,9 +37,12 @@ function Main(props) {
     checkUserSmoothIn,
     setAuthPwdModalOpen,
     setRecoverPwdModalOpen,
+    currentAccountAddress,
+    setCurrentAccountAddress,
     setUsedWeb3AddressWithLocalStorage,
     setUsedSmoothStatusWithLocalStorage,
     used3Account,
+    setUsed3Account,
     usedSmoothStatus,
     smoothError,
     setSmoothError,
@@ -77,6 +80,19 @@ function Main(props) {
       }else{
         alert(`Need to install polkadot plugin: https://polkadot.js.org/extension/`)
       }
+    })
+  }
+
+  async function twitterLogoutClick() {
+
+    const instance = utils.atoApiRequestInstance()
+    instance.get(`/twitter/logout`).then(data=>{
+      setUsedSmoothStatusWithLocalStorage(false)
+      setCurrentAccountAddress(null)
+      setUsed3Account(null)
+      rebirthAccount(true).then(data=>{
+        console.log('Twitter logout and rebirth account.', data)
+      })
     })
   }
 
@@ -123,14 +139,14 @@ function Main(props) {
                     twitterButtonClick()
                   }}>or {twitterButtonTxt}</Button>
                 </div>
-             : true == usedSmoothStatus? <div>
+             : true == usedSmoothStatus && currentAccountAddress? <div>
                 <div>
                   <Button size='tiny' onClick={()=>{
                     web3ButtonClick(!openSelector)
                   }}>Change web3 account</Button>
                   <Button secondary button size='tiny' onClick={()=>{
-                    setUsedSmoothStatusWithLocalStorage(true)
-                    twitterButtonClick()
+
+                    twitterLogoutClick()
                   }}>Log out with twitter</Button>
                 </div>
               </div>:<div>

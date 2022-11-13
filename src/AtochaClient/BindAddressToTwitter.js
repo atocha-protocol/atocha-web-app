@@ -39,13 +39,11 @@ function Main (props) {
   // Will remove and instead with common function
   function getBindTwitter() {
     const instance = utils.atoApiRequestInstance()
-    instance.get(`/twitter/bind_info?addr=${ato_address}`).then(
+    instance.get(`/twitter/ato_info?addr=${ato_address}`).then(
       function (response) {
-        // console.log(' --- ----222 User is already bound', response.data)
         if(!response.data){
           setTwitterBind(null)
         } else if(response.data?.status.toLowerCase() == `success` && response.data?.data?.screen_name){
-          // console.log(' --- --- Try to get twitter user infos.')
           // Try to get twitter infos
           instance.get(`/twitter/show_user?screen_name=${response.data?.data.screen_name}`).then(twitter_user_info=>{
             response.data.data.detail = twitter_user_info
@@ -130,6 +128,7 @@ function Main (props) {
 
   // Puzzle information.
   useEffect( () => {
+    console.log('+++++++ A0')
     getBindTwitter()
   }, []);
 
