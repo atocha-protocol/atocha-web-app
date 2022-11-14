@@ -36,9 +36,10 @@ function Main (props) {
   const [pageAccount, setPageAccount] = useState(null);
   
   useEffect( () => {
+    console.log("UserHome useEffect.")
     async function fetchData() {
       await rebirthAccount()
-      console.log('rebirthAccount A', currentAccountAddress, usedSmoothStatus, used3Account, currentAccount, rebirthDone)
+      console.log('UserHome rebirthAccount A', currentAccountAddress, usedSmoothStatus, used3Account, currentAccount, rebirthDone)
       console.log("DEBUG :  account_id === ", account_id)
       let _pageAccount = currentAccountAddress
       if(setCurrentAccountAddress && account_id && account_id!='self') {

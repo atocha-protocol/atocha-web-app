@@ -315,8 +315,10 @@ const AtoContextProvider = props => {
     function rebirthAccount(force=false) {
         return new Promise((resolve, reject) => {
             console.log('rebirthAccount running rebirthDone =', rebirthDone)
+            // console.log("RUN A1")
             if(rebirthDone == false || force){
                 console.log('rebirthAccount running usedSmoothStatus = ', usedSmoothStatus)
+                // console.log("RUN A2")
                 if(usedSmoothStatus == true){
                     getLoginInfos().then(data=>{
                         console.log('rebirthAccount running getLoginInfos() = ', data)
@@ -339,9 +341,13 @@ const AtoContextProvider = props => {
                     })
                 }else{
                     initUsedWeb3AddressWithLocalStorage().then(data=>{
-                        console.log("initUsedWeb3AddressWithLocalStorage -- ### ", data.address)
-                        setRebirthDone(true)
-                        resolve(data)
+                        if(data) {
+                            console.log("initUsedWeb3AddressWithLocalStorage -- ### ", data.address)
+                            setRebirthDone(true)
+                            resolve(data)
+                        }else{
+                            resolve(null)
+                        }
                     }).catch(err=>{
                         reject(err)
                     })
