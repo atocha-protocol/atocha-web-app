@@ -129,7 +129,7 @@ function Main (props) {
     setStatus("Submitting to the chain...")
     const fromAcct = await getFromAcct();
     const unsub = await api.tx.atochaModule
-      .createPuzzle(puzzle_hash, answer_hash, deposit, 1)
+      .createPuzzle(puzzle_hash, answer_hash, deposit, 1, 0)
       .signAndSend(fromAcct, (result) => {
         //setStatus(`4444submit status: ${result.status}`);
         if (result.status.isInBlock) {

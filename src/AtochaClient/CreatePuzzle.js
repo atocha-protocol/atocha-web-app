@@ -420,7 +420,8 @@ function Main (props) {
     setStatus("Submitting Puzzle to Atocha...");
     console.log('inPuzzleHash, inAnswerHash', inPuzzleHash, inAnswerHash)
 
-    submitTxWithSmooth('atochaModule', 'createPuzzle', [inPuzzleHash, inAnswerHash, puzzleDeposit.toString(), 1]).then(res=>{
+    // TODO:: createPuzzle with smooth.
+    submitTxWithSmooth('atochaModule', 'createPuzzle', [inPuzzleHash, inAnswerHash, puzzleDeposit.toString(), 1, 0]).then(res=>{
       console.log('atochaModule.createPuzzle is done', res)
       setStatus("😉 Done! This puzzle has been saved on the chain and will be showned on the puzzle list in a minute.");
     })
@@ -435,7 +436,7 @@ function Main (props) {
     setStatus("Submitting to Atocha...");
     const fromAcct = await getFromAcct();
     const unsub = await api.tx.atochaModule
-      .createPuzzle(inPuzzleHash, inAnswerHash, puzzleDeposit, 1)
+      .createPuzzle(inPuzzleHash, inAnswerHash, puzzleDeposit, 1, 0)
       .signAndSend(fromAcct, (result) => {
         //setStatus(`4444submit status: ${result.status}`);
         if (result.status.isInBlock) {
