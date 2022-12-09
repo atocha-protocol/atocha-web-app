@@ -22,12 +22,12 @@ function Main (props) {
   const [currentAccountId, setCurrentAccountId] = useState(null);
   console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
   
-  useEffect(async () => {
+  useEffect( () => {
     console.log("currentAccount = ", currentAccount)
     if (currentAccount) {
       fillCurrentAccountId();
       loadAccountBalance();
-      await loadReleationPuzzles();
+      loadReleationPuzzles();
     }
   }, [currentAccount, userBalance, pubBlockNumber]);
 

@@ -318,20 +318,21 @@ function Main (props) {
     atoIfRemoteJsLoaded=true;
   }
 
-  useEffect(async () => {
-        //alert("3222e");
-        //console.log("PuzzleDetail.js|main|useEffect");
-        if(arweaveInfo===null) {
-            loadJsonData();
-        }
-        // atochaFinance.atoConfig2
-        if(financeConfig == null) {
-          const conf1 = await api.query.atochaFinance.atoConfig2()
-          setFinanceConfig(conf1.toJSON());
-        }
-        loadPuzzleInfoOnChain()
-        loadDepositInfo()
-        loadMatchAnswerBn()
+  useEffect( () => {
+    async function fetchData() {
+      if(arweaveInfo===null) {
+        loadJsonData();
+      }
+      // atochaFinance.atoConfig2
+      if(financeConfig == null) {
+        const conf1 = await api.query.atochaFinance.atoConfig2()
+        setFinanceConfig(conf1.toJSON());
+      }
+      loadPuzzleInfoOnChain()
+      loadDepositInfo()
+      loadMatchAnswerBn()
+    }
+    fetchData()
   }, [setArweaveInfo, setPuzzleInfo, pubRefresh]);
 
   function handleOpenFull(){

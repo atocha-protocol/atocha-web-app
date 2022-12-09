@@ -62,15 +62,13 @@ function Main (props) {
     });
   }
 
-  useEffect(async () => {
+  useEffect( () => {
     console.log('Run use effect ... ');
     // Get puzzle infos.
     if (puzzleHash !== '') {
       refreshPuzzleInfo();
     }
-
     updateAtochaModuleConfig();
-
     api.derive.chain.bestNumber(number => {
       setBlockNumber(number.toNumber());
     });

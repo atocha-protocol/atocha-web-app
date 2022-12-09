@@ -35,12 +35,12 @@ function Main (props) {
   const [atoPuzzleChallenged, setAtoPuzzleChallenged] = useState([]);
   const [atoPuzzleSponsored, setAtoPuzzleSponsored] = useState([]);
   
-  useEffect(async () => {
+  useEffect( () => {
     if (currentAccount) {
       fillCurrentAccountId();
       loadAccountBalance();
       getPlayerPoints();
-      await loadReleationPuzzles();
+      loadReleationPuzzles();
     }
   }, [currentAccount, userBalance, pubBlockNumber]);
 

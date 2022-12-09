@@ -163,7 +163,7 @@ function Main (props) {
   }
 
     // Puzzle information.
-    useEffect(async () => {
+    useEffect( () => {
       // loadSystemEvents()
     }, [callStatus, setCallStatus]);
 

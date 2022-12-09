@@ -61,7 +61,7 @@ function Main (props) {
     });
   }
 
-  useEffect(async () => {
+  useEffect( () => {
     console.log("Run use effect ... ");
     // Get puzzle infos.
     if (puzzleHash !== '') {
