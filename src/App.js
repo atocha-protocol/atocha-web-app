@@ -169,7 +169,7 @@ function Main() {
         <br/>
         <div className="ui divider"></div>
         <div className="ui text menu">
-          <div className="header item">Atocha Puzzles v220730a</div>
+          <div className="header item">Atocha Puzzles v221209a</div>
           <a className="item" href="https://app.ref.finance/#wrap.near|atocha-token.near" target="_blank">Get ATO</a>
           <a className="item" href="https://atochaprotocol.gitbook.io/atocha-protocol-wiki">Doc/Wiki/Help</a>
           <a className="item" href="https://polkadot.js.org/extension/">PolkadotJS wallet browser extension</a>          
